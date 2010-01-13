@@ -1,0 +1,16 @@
+Domain glosary:
+================================================================
+ENCS: Concordia Faculty of Engineering and Computer Science
+Student: An individual taking courses at Concordia
+Course: one unit of a study program, ex: COMP 348
+Class: an instance of a course, ex: COMP 348 F08/AA
+Term: a period of the year around which the school is synchronised, ex: F10 stands for Fall (sept-dec) 2010
+Pre-Requisite: a course that should be taken prior to another
+Co-Requisite: a course that should be taken prior to another or at the same time.
+
+
+Technical glosary:
+================================================================
+git:
+php:
+???
