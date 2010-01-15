@@ -1,0 +1,19 @@
+Friday Jan 15, 2010
+
+
+- Scope
+- Modules & diagrams
+- database diagrams : ERI
+- entity-relationship model : SEB & MATT
+- Archetecture diagram : how the modules are connected
+
+- Authentication module: login/logout - CORE & ANDREAS
+- Presentation module: renders the schedule - jquery, AJAX - shouldn't access database at all - scheduling passes data directly to presentation - MATT & JULIA
+- Scheduling module: checks for conflicts/constraints - MySQL - ERI, MATT, JULIA
+- Registration module: save function - ANDREAS
+- Student record module: talk to db independently from presentation/scheduling - SEB
+- Course module: list of all courses - JB
+	- Sequence sub-module: list of connections between courses & when their offered
+- Database module: give module general query and returns specific query - SEB
+
+
