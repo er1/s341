@@ -7,10 +7,18 @@ Class: an instance of a course, ex: COMP 348 F08/AA
 Term: a period of the year around which the school is synchronised, ex: F10 stands for Fall (sept-dec) 2010
 Pre-Requisite: a course that should be taken prior to another
 Co-Requisite: a course that should be taken prior to another or at the same time.
+Browser: a web browser is an application that translates HTML documents into a human-readable representation on a screen display. It also uses the HTTP protocol to fetch document from web servers.
 
 
 Technical glosary:
 ================================================================
 git:
 php:
-???
+jQuery: popular javascript library making abstraction on ajax queries, cross browser issues, animation and front-end. (http://www.jquery.com)
+JSON: javascript object notation, a way of encoding a message competing with XML. (http://www.json.org)
+HTML: Hyper Text Markup Language, standard developed to efficiently share information on the web. It consist of a set of syntactic tags organized so browsers can render page with them.
+HTTP: Hyper Text Transport Protocol, a TCP protocol that define how web pages and other resources (images, JSON query, flash animation, css sheets) are to be transmitted.
+CSS: Cascading Style Sheet, standard way of separating presentation and styling of web pages form the HTML itself.
+Cookies: information sent by a web server while responding a request that is to be transmitted back from the browser to the server in each and every future request. Usually used to establish unique session identifier to remember state of a program on the 2nd tier.
+Recordset: set of rows or records returned by a database manager in response to a sql query
+SQL: Structured Query Language, standard way of formulating queries in the relational database world.
