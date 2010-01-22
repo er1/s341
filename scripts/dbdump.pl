@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 # Perl routines to dump Concordia database information
 
+use strict;
+use warnings;
+
 use IO::Handle;
 use WWW::Curl::Easy;
 
@@ -9,76 +12,152 @@ my $page;
 my $status;
 my $curl = new WWW::Curl::Easy;
 
-my $yrsess;
-my $faculty;
-my $type;
-my $Course;
-
-my @courseNames;
+my @courses;
+my @departments;
 
 my $baseURL = "http://regsis.concordia.ca/class_schedule/";
 
+
 open($tmp, ">", \$page);
-
-$yrsess = '2009' . '4';
-$faculty = '04';
-$type = 'U';
-
-#$curl->setopt(CURLOPT_COOKIEJAR, 'cookies.txt');
-#$curl->setopt(CURLOPT_COOKIEFILE, 'cookies.txt');
-$curl->setopt(CURLOPT_REFERER, $baseURL . "Sel_yrses.html");
-$curl->setopt(CURLOPT_URL, $baseURL . "ww701f.exe");
-$curl->setopt(CURLOPT_POSTFIELDS, 'yrsess='.$yrsess.'&faculty='.$faculty.'&type='.$type);
 $curl->setopt(CURLOPT_WRITEDATA, $tmp);
 
-$status = $curl->perform;
+&getFacultyDepartments("04", "2009", "4", "U");
+#&printDepartments();
 
-my @lines = split(/\n/, $page);
+foreach my $dept (@departments) {
+	&getDepartmentCourses($dept, "2010", "1", "04", "U");
+}
 
-foreach my $line (@lines)
+#&getDepartmentCourses("MECH", "2009", "4", "04", "U");
+&printCourses();
+
+
+sub getFacultyDepartments
 {
-	while($line =~ m/<option value=\"(\S+)\s+\"/g)
+	my ($faculty, $year, $session, $type) = @_;
+
+	$curl->setopt(CURLOPT_REFERER, $baseURL . "Sel_yrses.html");
+	$curl->setopt(CURLOPT_URL, $baseURL . "ww701f.exe");
+	
+	$curl->setopt(CURLOPT_POSTFIELDS,
+		'yrsess='.$year.$session.
+		'&faculty='.$faculty.
+		'&type='.$type);
+
+	$status = $curl->perform;
+
+	my @lines = split(/\n/, $page);
+
+	foreach my $line (@lines)
 	{
-		print "$1\n";
-		push(@courseNames, $1);
-	}
+		while($line =~ m/<option value=\"(\S+)\s+\"/g)
+		{
+			push(@departments, $1);
+		}
+	}  
 }
 
-$curl->setopt(CURLOPT_REFERER, $baseURL . "ww701f.exe");
-$curl->setopt(CURLOPT_URL, $baseURL . "ww701f.exe");
-
-foreach $courseName (@courseNames) {
-
-$Course = $courseName . "+" x (14 - length($courseName));
-
-$curl->setopt(CURLOPT_POSTFIELDS, 'Course='.$Course.'&courno=&campus=All&yrsess='.$yrsess.'&faculty='.$faculty.'&type='.$type.'&TABLE=MAIN');
-
-$status = $curl->perform;
-
-my @lines = split(/\n/, $page);
-
-foreach my $line (@lines)
+sub getDepartmentCourses
 {
-	if($line =~ m/.*<img src="\/image\/\S+\.jpg"><\/td><td width=8% align=center>(\S+)\s+<\/td><td width=8% align=center>(\S+)\s*<\/td><td width=64% align=center>([^<]+)<\/td><td width=15% align=center>\((\d+) credits\)<\/td>.*/g)
-	{
-		print "$1\t$2\t$3\t$4 credits\n";
-	}
+	my ($department, $year, $session, $faculty, $type) = @_;
 
-	if($line =~ m/.*<tr><td width=3%>\/(\d)<\/td><td witdh=15%>(<b><\/b>|\.+)\s+(\w{3}) (\w+)<\/td><td width=8%>(\S+)<\/td><td width=20%>(\S+) (\w+)\&nbsp\;\&nbsp\;<\/td><td width=9%>([^<]*)<\/td><td width=16%>([^<]+)<\/td>.*/g)
+	$department .= "+" x (14 - length($department));
+
+	$curl->setopt(CURLOPT_REFERER, $baseURL . "ww701f.exe");
+	$curl->setopt(CURLOPT_URL, $baseURL . "ww701f.exe"); 
+
+	$curl->setopt(CURLOPT_POSTFIELDS, 'Course='.$department.
+		'&courno=&campus=All&yrsess='.$year.$session.
+		'&faculty='.$faculty.
+		'&type='.$type.
+		'&TABLE=MAIN');
+
+	$status = $curl->perform;
+
+	my @lines = split(/\n/, $page);
+
+	foreach my $line (@lines)
 	{
-		print "$1 $3 $4 $5 $6 $7 $8 $9 $10\n";
+		# Remove some trash that makes parsing harder
+                $line =~ s/\&nbsp\;//g;
+		$line =~ s/<b>//g;
+		$line =~ s/<\/b>//g;
+		$line =~ s/\(\d\)//g;
+		$line =~ s/\.\.\.\.\.\.\.\.\.\.//g;
+
+		if($line =~ m/.*<img\ src="\/image\/\S+\.jpg"><\/td> # The dot image on the left
+			<td\ width=8%\ align=center>(\S+)\s*<\/td> # Department, such as "SOEN"
+			<td\ width=8%\ align=center>(\d+)\s*<\/td> # Number, such as "341"
+			<td\ width=64%\ align=center>([^<]+)<\/td> # Course name, in words
+			<td\ width=15%\ align=center>\(([\d\.]+)\ credits\)<\/td>.*/x) # Credits
+		{
+			my %course = ();
+			$course{'department'} = $1;
+			$course{'number'} = $2;
+			$course{'name'} = $3;
+			$course{'credits'} = $4;
+
+                        my @classes = ();
+			$course{'classes'} = \@classes;
+			push(@courses, \%course);
+		}
+
+
+			#<td width=3%>/4</td>
+			#<td width=15%><b></b>    Lab MI</td>
+			#<td width=8%>--W----</td>
+			#<td width=20%>12:00-16:00 SGW&nbsp;&nbsp;</td>
+			#<td width=9%>H- 549       </td>
+			#<td width=16%>CHEUNG, JOHN</td>
+
+		if($line =~ m/.*<td\ width=3%>\/(\d)<\/td> # Semester, such as "4" for Fall
+			<td\ witdh=15%>.*(Lec|Lab|Tut)\s+(\w+)\s*<\/td> # Type (Lec, Tut, Lab) and group
+			<td\ width=8%>([\-A-Z]+)<\/td> # Day
+			<td\ width=20%>([\d\-\:]+)\s*(\w+)[^<]*<\/td> 
+			<td\ width=9%>([\w\d\-\s]*)<\/td> # Room
+			<td\ width=16%>([^<]+)<\/td>.*/x) # Teacher's name
+		{
+			my %class = ();
+
+			$class{'semester'} = $1;
+			$class{'type'} = $2;
+			$class{'group'} = $3;
+			$class{'days'} = $4;
+			$class{'time'} = $5;
+			$class{'campus'} = $6;
+			$class{'room'} = $7;
+			$class{'teacher'} = $8;
+
+			$class{'room'} =~ s/\s//; # Trim whitespaces
+
+			push(@{$courses[-1]->{'classes'}}, \%class);
+		}
 	}
 }
 
+sub printDepartments
+{
+	foreach my $department (@departments)
+	{
+          	print "$department\n"; 
+	}
 }
 
+sub printCourses
+{
+	foreach my $course (@courses)
+	{
+          	print "$course->{'department'} $course->{'number'}\t$course->{'name'} ($course->{'credits'} credits)\n";
 
-
-
-
-
-
-
+		my @classes = @{$course->{'classes'}};
+		
+		foreach my $class (@classes)
+		{
+			print "$class->{'semester'} $class->{'type'} $class->{'group'} $class->{'days'} $class->{'time'} $class->{'campus'} $class->{'room'} $class->{'teacher'}\n";
+		}
+		print "\n";
+	}
+}
 
 
 
