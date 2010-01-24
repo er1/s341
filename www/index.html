@@ -17,6 +17,7 @@
 		<!-- section where we include references to stylesheets -->
 		<link media="screen" type="text/css" href="css/redmond/jquery-ui-1.7.2.custom.css" rel="stylesheet">
 		<link media="screen" type="text/css" href="css/style.css" rel="stylesheet">
+		<link media="screen" type="text/css" href="css/jquery.weekcalendar.css" rel="stylesheet">
 
 
 		<!-- Section for including various scripts/plugin -->
@@ -26,6 +27,7 @@
 		    google.load("jqueryui", "1.7");
 		</script>
 		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/jquery.weekcalendar.js"></script>
 	</head>
 	<body>
 		<div class=wrapper>
@@ -40,8 +42,12 @@
 					<li><a href="#tabAcademicRecord">Academic Record</a></li>
 					<li><a href="#coolTab">Cool Tab</a></li>
 				</ul>
+
+				<div class=tabInstance id=tabViewSchedule>
+					<div id=calViewSchedule>
+					</div>
+				</div>
 				
-				<div class=tabInstance id=tabViewSchedule>This is where the schedule is</div>
 				<div class=tabInstance id=tabBrowseCourse>Course List</div>
 				<div class=tabInstance id=tabProgramRequirement>Course sequence</div>
 				<div class=tabInstance id=tabSequencePlanner>I will help you with your sequence</div>
