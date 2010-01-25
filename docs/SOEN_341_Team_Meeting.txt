@@ -126,3 +126,23 @@ Next Meetings topic:
 - Resource Evaluation
 
 -----------------
+
+Mon Jan 25, 2010
+
+- Introduction - Julia
+- Project Description - Andreas
+- Goal & Constraints - Matt & Julia
+- Resource Evaluation - Eri (4.1), MA (4.2)
+- Scoping - JB
+- Solution Sketch - MA (6.1), Eri (6.2)
+- Plan - JB, Corey, Seb, Andreas
+
+- First draft due Friday Jan 29
+- Final drafts due Wed Feb 3 to Julia for proof-reading
+
+- UML diagram
+	- Sequence planar: connects to academic record & courses
+	- Front-end portion
+
+----------------
+
