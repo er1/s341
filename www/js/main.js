@@ -14,6 +14,21 @@ $(function() {	//To be run when DOM is constructed
 		{
 			alert('Obviously you should not drag&drop courses you are in but its just a demo');
 		
-		}	
-	});
+		}
+		
+		
+		});
+
+
+		$("#modalLogin").dialog({
+					modal: true,
+					resizable:false, 
+					buttons: {
+						Ok: function() {
+							$(this).dialog('close');
+						}
+					}
+
+				});
+		
 });
