@@ -49,7 +49,24 @@ Meeting Times: Wed 11:30  9th floor
 
 Wednesday Jan 13, 2010
 
-﻿- using ArgoUML for UML diagrams – java based app- requirements:	- login, logout	- view schedule	- browse courses	- create a list of suggested course options	- view the sequence of courses to follow	- next suggested courses	- academic recordsx- possible options:	- choosing tec elec with combobox- sequence planner	- generate all possibilites	- be able to select courses from sequence- populate database on our own- can use library---------
+﻿- using ArgoUML for UML diagrams – java based app
+- requirements:
+	- login, logout
+	- view schedule
+	- browse courses
+	- create a list of suggested course options
+	- view the sequence of courses to follow
+	- next suggested courses
+	- academic recordsx
+- possible options:
+	- choosing tec elec with combobox
+- sequence planner
+	- generate all possibilites
+	- be able to select courses from sequence
+- populate database on our own
+- can use library
+
+---------
 
 Friday Jan 15, 2010
 
@@ -107,7 +124,7 @@ Wednesday Jan 20, 2010
 	- course description
 - Student Record:
 	- transcript module
-		- student id, grades, courses, major, minor, age, program, entry year, login name
+		- student id, grades, courses, major, minor, age program, entry year, login name
 		- 30 hours (a lot of database)
 		- design: 15 hours
 		- implentation: rest
@@ -146,3 +163,12 @@ Mon Jan 25, 2010
 
 ----------------
 
+Fri Jan 29, 2010
+
+- use cases: added open app & made browse course list public
+- CORE: login, generate schedule
+	- can be scoped out: history log, browse course list, sequence, 1st tier academic record
+- plan: see table
+- everything scoped in needs to be included in estimate
+
+----------------
