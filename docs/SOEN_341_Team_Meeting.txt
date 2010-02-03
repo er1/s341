@@ -172,3 +172,18 @@ Fri Jan 29, 2010
 - everything scoped in needs to be included in estimate
 
 ----------------
+
+Wed Feb 3, 2010
+
+- project description half done
+- domain model needs to be done - JB
+- constraints & qualities done
+- use cases done
+- use case diagram needs to be completed
+- human resources - take a look and modify it if you want to
+- technical resources & technologies in use located in Development_Environment_and_Resources.doc; missing ui languages/libraries
+- scoping done
+- architcture = software design doc
+- activites & artifacts & project estimates & activites assignments = tables
+- schedule = gantt chart
+
