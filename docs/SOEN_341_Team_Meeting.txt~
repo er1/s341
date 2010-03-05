@@ -144,6 +144,37 @@ Next Meetings topic:
 
 -----------------
 
+Fri Jan 22, 2010
+
+Tut Notes
+
+- estimation graded on realistic aspect of estimation
+- work breakdown structure (wbs): decomposition of each task of overall project
+- use clear numbering system 
+- 100% rule = everything to be included in the project must be included in the wbs
+- this rule is recursive in that each level should be 100% represented of all the taks that make up that level
+- should be planning schedule according to work to be done, not how it will be accomplished
+- estimating available resources - be realistic - how much time can each member put into it
+- limit the size of project - quality over quantity
+- over-scoping will cost more than a limited program
+- gantt chart is expected
+- risk - ability to complete tasks & priority of tasks in relation to other tasks
+- use case model 
+	- system boundary contains everything system does
+	- everyone that acts on the system is outside this boundary
+	- can have inheritence in UCM diagram
+- domain model	
+	- start with noun analysis
+	- domain level objects : concepts used to build system
+		- 2 parts: name & varibales it needs
+	- DLO associations contain a name (action - phrased as verb) and a connecting line between two DLOs
+	- multiplicities should be included in DLO associations (how one DLO maps to another - one-to-many, many-to-one, one, many
+- tracing requirements: use case numbers should correspond to all those artifacts produced in respect of the use case
+	- SSDs, contracts, SDs
+
+
+-----------------
+
 Mon Jan 25, 2010
 
 - Introduction - Julia
@@ -184,5 +215,51 @@ Wed Feb 3, 2010
 - technical resources & technologies in use located in Development_Environment_and_Resources.doc; missing ui languages/libraries
 - scoping done
 - architcture = software design doc
-- 
+- activites & artifacts & project estimates & activites assignments = tables
+- schedule = gantt chart
+
+----------------
+
+Fri Feb 19, 2010
+
+Tut Notes
+
+- 4+1 view
+http://en.wikipedia.org/wiki/4%2B1_Architectural_View_Model
+http://en.wikipedia.org/wiki/4%2B1_Architectural_View_Model
+- don't need to write methods within package diagram
+- connections expressed in component diagram different from package diagram
+- don't model package diagrams as seen in wiki
+- package includes name of package, class, association between class and package
+- component lines should be dashed
+- meet an interface has circle symbol
+- deployment diagram: series of boxes, outmost box is physical system, middle boxes are logic, innermost boxes are interface
+- dB server, OS, server it's running on, artifact (labeled with pic of doc)
+- along line write the protocol it's communicating with
+- activity diagram is like a flow chart
+- start of activity: black circle - outside of box
+- end of activity: black circle inside white circle - also outside of box, opposite end of start
+- each step is listed in an ellipse
+- make a decision - diamond
+- split/join step - includes solid lines
+
+Deliverable 2
+-  2.2 - interface between the components expressed in 2.1
+- component = logically separate piece of code
+- 3.1 - class diagram
+- 3.2 - describe each class
+- 4 - not login, choose long ones, SSD, CO, SD
+
+----------------
+
+Fri Mar 5, 2010
+
+Deliverable 2
+- Class diagram - MA & Andreas
+- Sequence Diagram - Seb
+- Activity Diagram - Matt & Julia
+- Component diagram - Corey
+- Deployment diagram - JB
+
+
 
