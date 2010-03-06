@@ -66,9 +66,21 @@
 	<div id="modalLogin" title="Login to Planzilla">
 		<p>
 			<span class="ui-icon ui-icon-locked" style="float:left; margin:0 7px 50px 0;"></span>
-			You have to be logged in to continue
+			You have to be logged in to continue<br>
+			<form>
+				<label for="username">Username</label><input type="text" class="username" name="username" value="test"><br>
+				<label for="password">Password</label><input type="password" class="password" name="password" value="test">
+			</form>
 		</p>
 	</div>
+
+	<div id="modalTimeout" title="Connection Error">
+		<p>
+			<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
+				Network Error, check your network and try again
+		</p>
+	</div>
+
 		
 	</body>
 	
