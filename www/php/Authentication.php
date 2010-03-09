@@ -7,12 +7,12 @@
 class Authentication
 {
 	/**
-	 * User authentication level
+	 * @brief User authentication level.
 	 *
-	 * @value -1 Not authenticated
-	 * @value 0 Administrator
-	 * @value 1 Teacher
-	 * @value 2 Student
+	 * @arg -1 = Not authenticated.
+	 * @arg 0  = Administrator.
+	 * @arg 1  = Teacher.
+	 * @arg 2  = Student.
 	 */
 	public $AuthenticationLevel;
 
