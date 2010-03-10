@@ -261,5 +261,17 @@ Deliverable 2
 - Component diagram - Corey
 - Deployment diagram - JB
 
+Begin coding this weekend.
+
+----------------
+
+Wed Mar 10, 2010
+
+Deployment diagram:
+- no php files in presentation layer
+- apache contains php files
+- js files under web browser
+
+Class diagram:
 
 
