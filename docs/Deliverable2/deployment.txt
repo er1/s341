@@ -1,0 +1,7 @@
+The deployment of Planzilla's architecture is simple and straightforward. Only two physical device entities are requires. One of them is physical server. This device will be running using a OpenSolaris platform which will contain three virtual environments will communicate between each other and execute the required tasks.
+
+The first environment is the web server application : Apache. This layer takes care of receiving information from the clients and process it. It will then select the php script to be executed and send the command for execution to the php interpreter, the second virtual environment. Finally, if needed, the php interpreter will communicate with the database, the third virtual environment in this server, to perform database operations such as querying for information or modifying the database.
+
+The other physical entity in the architecture is the actual user client. In order to optimize the speed and efficiency of Planzilla, the presentation layer of this application will be processed by the client's browser. The web server will initially upload all the necessary javascript files to the client. Only actual data such as course data or scheduling information will be sent when the user clicks on a link. The javascript will take of displaying the information to the user.
+
+Using this architecture, there should be less data needed to be sent between the client and server. Also, the web page will appear to load much faster.
