@@ -32,10 +32,17 @@ function getData(endpoint, params, callback)
 function showNetworkError(endpoint, params, callback)
 {
 		var modalNetworkError = $("#modalTimeout");	
-		modalNetworkError.dialog({modal:true, resizable:false, buttons: {
-			Ok: function() {
-					getData(endpoint, params, function() { 					modalNetworkError.dialog('close'); callback(); })
-				}		
+		modalNetworkError.dialog({
+                    modal:true,
+                    resizable:false,
+                    buttons: {
+			Ok: function()
+                        {
+                            getData(endpoint, params, function() {
+                                modalNetworkError.dialog('close');
+                                callback();
+                            })
+			}		
 		}})
 
 }
@@ -50,7 +57,8 @@ function showLogin(callback)
 				authenticateLogin(modalWindow.find(".username").val(), modalWindow.find(".password").val(), function() 
 				{ 
 					modalWindow.dialog('close');
-					callback();			
+                                        $("#loggedInAs")[0].style.visibility = "visible";
+                                        callback();
 				});
 			}
 		}
@@ -69,6 +77,5 @@ function authenticateLogin(username, password, callback)
 
 	//Post-conditions, session is opened on the server.
 }
-
 
 
