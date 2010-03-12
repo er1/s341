@@ -32,28 +32,15 @@
 	<body>
 		<div class=wrapper>
 			<h1>Planzilla</h1>
-			<div id=loggedInAs>Logged in as <span class=username>noname</span>, <a href=# class=fakeLink>logout</a></div>
+			<div id=loggedInAs>Logged in as <span class=username>noname</span>, <a href="php/logout.php" class=fakeLink>logout</a></div>
 			<div id="tabs">
 				<ul>
-					<li><a href="#tabViewSchedule">View Schedule</a></li>
-					<li><a href="#tabBrowseCourse">Browse Course</a></li>
-					<li><a href="#tabProgramRequirement">Program Requirement</a></li>
-					<li><a href="#tabSequencePlanner">Sequence Planner</a></li>
-					<li><a href="#tabAcademicRecord">Academic Record</a></li>
-					<li><a href="#coolTab">Cool Tab</a></li>
-				</ul>
-
-				<div class=tabInstance id=tabViewSchedule>
-					<div id=calViewSchedule>
-					</div>
-				</div>
-				
-				<div class=tabInstance id=tabBrowseCourse>Course List</div>
-				<div class=tabInstance id=tabProgramRequirement>Course sequence</div>
-				<div class=tabInstance id=tabSequencePlanner>I will help you with your sequence</div>
-				<div class=tabInstance id=tabAcademicRecord>So that's how good your grades are</div>
-				<div class=tabInstance id=coolTab>Soooo Cool</div>
-			
+					<li><a href="tabs/view_schedule.html" title="View Schedule">View Schedule</a></li>
+					<li><a href="tabs/browse_course.html" title="Browse Course">Browse Course</a></li>
+					<li><a href="tabs/program_requirement.html" title="Program Requirement">Program Requirement</a></li>
+					<li><a href="tabs/sequence_planner.html" title="Sequence Planner">Sequence Planner</a></li>
+					<li><a href="tabs/academic_record.html" title="Academic Record">Academic Record</a></li>
+				</ul>			
 			</div>
 			<div class=push></div>
 		</div>
@@ -63,7 +50,7 @@
 		</div>
 
 
-	<div id="modalLogin" title="Login to Planzilla">
+	<div id="modalLogin" title="Login to Planzilla" style="display:none">
 		<p>
 			<span class="ui-icon ui-icon-locked" style="float:left; margin:0 7px 50px 0;"></span>
 			You have to be logged in to continue<br>
@@ -74,7 +61,7 @@
 		</p>
 	</div>
 
-	<div id="modalTimeout" title="Connection Error">
+	<div id="modalTimeout" title="Connection Error" style="display:none">
 		<p>
 			<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
 				Network Error, check your network and try again

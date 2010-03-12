@@ -6,7 +6,7 @@
 {"error":"true","reason":"notLoggedIn"}
 	<?php	
 		 exit();
-	} else {
+	} else { 
 	?>
 	{
     "events": [

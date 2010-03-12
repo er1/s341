@@ -1,34 +1,15 @@
-$(function() {	//To be run when DOM is constructed
-	$("#tabs").tabs({fx: { opacity: 'toggle' } });
-	showSchedule();
+var a;
 
+$(function() {	//To be run when DOM is constructed
+	$("#tabs").tabs({
+						fx: { opacity: 'toggle' } 
+						, show: function(event, ui) {
+							{ tabCallBack(); }
+						}
+					});
 		
 });
 
-function showSchedule()
-{
-	getData("php/viewSchedule.php", {}, function(scheduleData) {
-		$('#calViewSchedule').weekCalendar({
-		readonly:false
-		,date:new Date(2010, 00,5)
-		,businessHours: {start:8, end:22, limitDisplay:true}
-		,timeslotsPerHour: 4
-		,data: scheduleData
-		,height: function($calendar){
-			return $(window).height()-200;
-		}
-		,eventDrop:function(calEvent, element)
-		{
-			alert('Obviously you should not drag&drop courses you are in but its just a demo');
-		
-		}
-		
-		
-		});
-	})
-
-
-}
 
 function getData(endpoint, params, callback)
 {
@@ -88,3 +69,6 @@ function authenticateLogin(username, password, callback)
 
 	//Post-conditions, session is opened on the server.
 }
+
+
+
