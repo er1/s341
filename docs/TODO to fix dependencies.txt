@@ -1,0 +1,8 @@
+- UPDATE NEEDED [Logged by Mathieu on March 11] Review "Figure 2.1.2 shows a diagram of the 3-tier architecture used for PlanZilla." to make sure Pages consumes data from Logic Tier only through CORE (this will actually remove a loofa of arrows and make the thing much easier to read). We will use the CORE to handle error.
+
+- INCONSISTENCY [Logged by Mathieu on March 11] Use case state two different actors (registered and unregistered users) while software design.doc (deliverable #1) names 3 : student/professor/administrator. 
+
+- INCONSISTENCY [Logged by Mathieu on March 11] Scope&Plan.doc figure 3.2.1.1 (Login should be replaced by User) should we add Teacher/Prof? Unregistered user (public) is not there.  Also, it doesn't make distinction between course and class (actually class is not there)
+
+- JUST WEIRD [Logged by Mathieu on March 11] Is it me or 3.3/3.4 should be named 3.2/3.3 instead??? It looks like we are talking requirement/domain/requirements once again..
+

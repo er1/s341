@@ -265,4 +265,14 @@ Begin coding this weekend.
 
 ----------------
 
+Wed Mar 10, 2010
+
+Deployment diagram:
+- no php files in presentation layer
+- apache contains php files
+- js files under web browser
+
+Final versions of diagrams due Friday midnight.
+
+-----------------
 

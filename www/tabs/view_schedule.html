@@ -1,0 +1,37 @@
+<div id="calViewSchedule"></div>
+
+<script>
+$(document).ready(function() {
+	showSchedule();
+
+})
+
+
+function showSchedule(callback)
+{
+		getData("php/viewSchedule.php", {}, function(response) {
+			$('#calViewSchedule').weekCalendar({
+				readonly:false
+				,date:new Date(2010, 00,5)
+				,businessHours: {start:8, end:22, limitDisplay:true}
+				,timeslotsPerHour: 4
+				,data: response
+				,height: function($calendar){
+					return $(window).height()-200;
+				}
+				,eventDrop:function(calEvent, element)
+				{
+					alert('Obviously you should not drag&drop courses you are in but its just a demo');
+				
+				}
+				
+						
+			});
+			if (callback) callback();
+	});
+
+}
+
+function tabCallBack()
+{ $("#calViewSchedule").weekCalendar("refresh"); }
+</script>
