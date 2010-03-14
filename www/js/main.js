@@ -16,7 +16,7 @@ function getData(endpoint, params, callback)
 	$.ajax({"cache":"false", "data":params, "dataType":"json", "url":endpoint, "success": function(response) {
 		if (!response)
 			showNetworkError(endpoint, params, callback);
-		if (response.error && response.error=="true")
+		if (responseshowNetworkError.error && response.error=="true")
 		{	if (response.reason == "notLoggedIn")
 				showLogin(function() { getData(endpoint, params, callback); });
 			else
@@ -57,8 +57,8 @@ function showLogin(callback)
 				authenticateLogin(modalWindow.find(".username").val(), modalWindow.find(".password").val(), function() 
 				{ 
 					modalWindow.dialog('close');
-                                        $("#loggedInAs")[0].style.visibility = "visible";
-                                        callback();
+                    $("#loggedInAs").css({"visibility" : "visible"});
+                    callback();
 				});
 			}
 		}
