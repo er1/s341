@@ -1,0 +1,3 @@
+UML 2.0 Activity Diagram representing the process expressed by UC 11 (Generate Advanced Schedule). If an error occurs (user is not logged, user ask for a course for which it doesn't have pre-req or a full course) an error will be given at output and the front-end will deal with it accordingly.
+
+The main process of this diagram is checking that all courses requested as input are valid and not full. It then keep in an answer stack all available sections to the user and generate a set of all possible schedules for the greatest enjoyment of students.

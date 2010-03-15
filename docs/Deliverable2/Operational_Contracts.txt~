@@ -1,0 +1,258 @@
+***********************
+Note to people reading this: the first part of this document is a list of all the operational contracts. They are ordered by the sequence in which they appear in the SSDs. Below is the actual contracts themselves. They can be grouped in the same way (but are not at the moment)
+***********************
+
+--Browse Course list-- (SSD1)
+
+	## Requeest course list ##
+
+	DBgetStudentRecord()
+	DBgetCourses()
+	DBgetSequence()
+
+
+	## Select specific schedule ##
+
+	applyFilter()
+
+
+
+--Generate schedule--  (SSD2)
+
+	## student info ##
+
+	DBgetStudentRecord()
+	DBgetGPA()
+
+	## Return possible course list ##
+
+	genJSONSchedList()
+	renderSchedule()
+
+	## register for courses ##
+	DBcheckSpots()
+	ValidateRegRequest()
+	DBregisterStudent()
+
+--both--
+
+## authentication ##
+
+validateUsername()
+validatePwd()
+DBgetUsers()
+generateToken()
+giveCookie()
+validateCookie()
+displayError()
+
+
+## logout ##
+
+logEvent()
+
+
+
+
+
+
+
+###########################################################################
+
+Name
+	validateUsername()
+Related Use Case
+	Login
+PreConditions
+	-User attempts to log on to the system
+PostConditions	
+	-A valid user name was provided by the user
+	-An invalid name is provided
+
+Name
+	validatePwd()
+Related Use Case
+	Login
+PreConditions
+	-User attempts to log on to the system
+PostConditions	
+	-A valid password is provided
+	-An invalid password is provided
+	
+Name
+	Auth()
+Related Use Case
+	Login
+PreConditions
+	-Valid user name and passwords were provided by the user
+PostConditions	
+	-User is authenticated to the system
+	-User has entered incorrect logon information and is not authenticated
+	
+Name
+	DBgetUsers()
+Related Use Case
+	Login
+PreConditions
+	-Database table of users account data exists
+PostConditions	
+	-User account data is read from the database
+	
+Name
+	generateToken()
+Related Use Case
+	Login
+PreConditions
+	-User has logged on to the system and has been authenticated
+PostConditions	
+	-A token is generated for the unique identification of a user
+
+Name
+	giveCookie()
+Related Use Case
+	Login
+PreConditions
+	-Authenticated user is logged on to the system
+	-User's browser supports cookies
+	-a token has been generated for the user
+PostConditions	
+	-The user's browser is given the cookie to identify them.
+	-No cookie is given
+	
+Name
+	validateCookie()
+Related Use Case
+	Login
+PreConditions
+	-User logs on to system
+	-User has a token from a past log on
+	-User's browser provides cookie info to the system
+PostConditions	
+	-User with a valid token is authenticated
+	-User with an invalid token is still required to authenticate.
+
+Name
+	displayError()
+Related Use Case
+	*ALL*
+PreConditions
+	-An error is thrown
+PostConditions	
+	-Error is displayed to the user
+
+
+Name
+	DBgetStudentRecord()
+Related Use Case
+	View accademic record
+PreConditions
+	-User is a valid student logged in to the system
+PostConditions	
+	-Student record of user is retrieved from the database
+
+Name
+	DBgetGPA()
+Related Use Case
+	View accademic record
+PreConditions
+	-User is a valid student logged in to the system
+PostConditions	
+	-GPA of the user is retrieved from the database
+
+Name
+	logEvent()
+Related Use Case
+	*ALL*
+PreConditions
+	-A meaningful state change has occured in the system
+PostConditions	
+	-The state changes is logged and stored
+
+Name
+	DBgetCourses()
+Related Use Case
+	View Courses, View Sequence, View Schedule, Generate Schedule
+PreConditions
+	-A table of courses exists in the database
+PostConditions	
+	-List of courses is retrieved from database
+
+Name
+	DBgetSequence()
+Related Use Case
+	View Sequence, Generate schedule
+PreConditions
+	-A table of course sequences is in the database
+PostConditions	
+	-Course sequence data is retrieved from database
+
+Name
+	genJSONSchedList()
+Related Use Case
+	View Courses, View Sequence, View Schedule, Generate Schedule
+PreConditions
+	-User is logged in to the system
+	-Student Record is available for the user
+	-User has requested a schedule to be generated
+	-Course sequence data is available
+	-Course data is available
+PostConditions	
+	-List of schedules and courses is generated in Javascript Object Notation
+
+Name
+	renderSchedule()
+Related Use Case
+	View Courses, View Sequence, View Schedule, Generate Schedule
+PreConditions
+	-A list of schedules was generated was provided
+PostConditions	
+	-Markup is presented to the user displaying possible schedules
+
+Name
+	applyFilter()
+Related Use Case
+	Generate Schedule
+PreConditions
+	-User is logged in to the system
+	-User has selected some conditions to filter possible schedules
+PostConditions	
+	-the number of possible schedules to with applied constaints is returned
+
+Name
+	DBcheckSpots()
+Related Use Case
+	Generate Schedule
+PreConditions
+	-User is logged in to the system
+	-User is a valid student
+	-User selects a valid course to check free spots
+	-There exists a table in the database containing the number of spots to register
+PostConditions	
+	-The number of free spots for the selected is returned
+
+Name
+	ValidateRegRequest()
+Related Use Case
+	Generate Schedule
+PreConditions
+	-User is logged in to the system
+	-User is a valid student
+	-User attempts to register for a course
+PostConditions	
+	-Allows student to register for course if allowed
+	-Throws an error if student cannot register due to restrictions
+
+
+Name
+	DBregisterStudent()
+Related Use Case
+	Generate Schedule
+PreConditions
+	-User is logged in to the system
+	-User is a valid student
+	-User attempts to register for a course
+	-Database table exists for students registered in courses
+	-Registration request was valid
+PostConditions	
+	-Student is registered in selected course
+
