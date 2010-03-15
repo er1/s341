@@ -2,6 +2,10 @@
 Note to people reading this: the first part of this document is a list of all the operational contracts. They are ordered by the sequence in which they appear in the SSDs. Below is the actual contracts themselves. They can be grouped in the same way (but are not at the moment)
 ***********************
 
+##############################################
+list of functions
+##############################################
+
 --Browse Course list-- (SSD1)
 
 	## Requeest course list ##
@@ -14,7 +18,6 @@ Note to people reading this: the first part of this document is a list of all th
 	## Select specific schedule ##
 
 	applyFilter()
-
 
 
 --Generate schedule--  (SSD2)
@@ -34,29 +37,25 @@ Note to people reading this: the first part of this document is a list of all th
 	ValidateRegRequest()
 	DBregisterStudent()
 
---both--
+--Misc--
 
-## authentication ##
+	## authentication ##
 
-validateUsername()
-validatePwd()
-DBgetUsers()
-generateToken()
-giveCookie()
-validateCookie()
-displayError()
-
-
-## logout ##
-
-logEvent()
+	validateUsername()
+	validatePwd()
+	DBgetUsers()
+	generateToken()
+	giveCookie()
+	validateCookie()
+	displayError()
 
 
+	## logout ##
 
+	logEvent()
 
-
-
-
+###########################################################################
+Operational contracts (they correspond to the functions above)
 ###########################################################################
 
 Name
