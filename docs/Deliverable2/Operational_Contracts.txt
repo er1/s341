@@ -1,3 +1,41 @@
+***********************
+Note to people reading this: the first part of this document is a list of all the operational contracts. They are ordered by the sequence in which they appear in the SSDs. Below is the actual contracts themselves. They can be grouped in the same way (but are not at the moment)
+***********************
+
+--Browse Course list-- (SSD1)
+
+	## Requeest course list ##
+
+	DBgetStudentRecord()
+	DBgetCourses()
+	DBgetSequence()
+
+
+	## Select specific schedule ##
+
+	applyFilter()
+
+
+
+--Generate schedule--  (SSD2)
+
+	## student info ##
+
+	DBgetStudentRecord()
+	DBgetGPA()
+
+	## Return possible course list ##
+
+	genJSONSchedList()
+	renderSchedule()
+
+	## register for courses ##
+	DBcheckSpots()
+	ValidateRegRequest()
+	DBregisterStudent()
+
+--both--
+
 ## authentication ##
 
 validateUsername()
@@ -8,34 +46,16 @@ giveCookie()
 validateCookie()
 displayError()
 
-## student info ##
-
-DBgetStudentRecord()
-DBgetGPA()
 
 ## logout ##
 
 logEvent()
 
-## Requeest course list ##
 
-DBtStudentRecord()
-DBgetCourses()
-DBgetSequence()
 
-## Return possible course list ##
 
-genJSONSchedList()
-renderSchedule()
 
-## Select specific schedule ##
 
-applyFilter()
-
-## register for courses ##
-DBcheckSpots()
-ValidateRegRequest()
-DBregisterStudent()
 
 ###########################################################################
 
@@ -235,3 +255,4 @@ PreConditions
 	-Registration request was valid
 PostConditions	
 	-Student is registered in selected course
+
