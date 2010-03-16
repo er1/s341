@@ -4,4 +4,6 @@ page request: navigate through the site - browser functionality
 user interacts with the broswer
 user markup: json, html, js
 core markup: pieces of html ex single table
-everything within the back-end relays to the core and 
+everything within the back-end relays to the core and the core talks to everything else.  this is a modification that was made.  before it was messier.
+
+
