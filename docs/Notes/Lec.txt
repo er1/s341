@@ -483,3 +483,19 @@ Design Patterns
 
 ----------------------
 
+Wed Mar 17, 2010
+
+Design Patterns
+
+- classifications: creational, structural, behavioral
+- Adapter 
+- Observer (good explanation in textbook)
+- Proxy
+- delegation - mining functions out of another class
+
+Estimation
+
+- function points
+- COCOMO - function point estimator program
+
+
