@@ -276,3 +276,13 @@ Final versions of diagrams due Friday midnight.
 
 -----------------
 
+Wednesday Mar 17th, 2010
+
+Assigned stuff:
+Eri+Corey: Modules that generate schedule and suggest courses. Course Browser + Sequence Viewer... 
+Seb + Mathieu: Working DB Schema by tonight.
+Corey: Populate DB.
+Mathieu (+Julia): Front-end & tabs
+JB+Andreas: Write stuff about testing. bout a page for each tab. (10 artifacts)
+Andreas: Auth/user/create users PHP… View Schedule PHP. View academic record PHP. CORE PHP (with Seb).
+Marc-André: find upper bound of simultaneous connection & test for security .. (+ Andreas)
