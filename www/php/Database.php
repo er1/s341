@@ -2,7 +2,7 @@
 
 /**
  * @class Database
- * @brief Module for abstracting the database and controlling access.
+ * @brief Module for abstracting the database and controlling access to it.
  */
 class Database
 {

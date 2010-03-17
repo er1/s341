@@ -3,7 +3,7 @@
 /**
  * @class Course
  * @brief Module for obtaining course information, verifying dependencies,
- * and generating possible schedules in function of given constraints.
+ * and generating possible schedules given constraints.
  */
 class Course
 {
