@@ -1,5 +1,7 @@
 <?php
 
+require_once("Database.php");
+
 /**
  * @class Authentication
  * @brief Authentication module for authenticating, creating or modifying users.
@@ -15,6 +17,8 @@ class Authentication
 	 * @arg 2  = Student.
 	 */
 	public $AuthenticationLevel;
+        
+        private $Username;
 
 	/**
 	 *
@@ -69,17 +73,18 @@ class Authentication
 	 */
 	public function Login($Username, $Password)
 	{
-		session_start();
-		mysql_real_escape_string($Username);		
+                global $db;
+                
+		mysql_real_escape_string($Username);
 		mysql_real_escape_string($Password);
-	
-		$result = $mysql_query("select PasswordHash, PasswordSalt, RoleID from User where UserID=".$Username)
-		or die("Error querying the database");
-	
+
+                $query = "select PasswordHash, PasswordSalt, RoleID from User where UserID=" . $Username;
+
+		$result = $db->Query($query);
 
 		$generatedHash = hash('sha512', $PasswordSalt.hash('sha256', $Password));
 
-		if($generatedHash == $dbHash)
+		if ($generatedHash == $dbHash)
 		{
 
 			$AuthenticationLevel = $RoleID;
@@ -88,9 +93,13 @@ class Authentication
 		}
 		else
 		{
-			echo '{"loginError":"true","reason":"invalid username/password"}';
-			session_destroy();
+			echo '{"loginError":"true","reason":"invalid username or password"}';
 		}
+
+                $this->Username = $Username;
+
+                /* XXX: check user type */
+                $this->AuthenticationLevel = 1;
 	}
 
 	/**
@@ -98,10 +107,9 @@ class Authentication
 	 * @param string $Username
 	 * @return boolean
 	 */
-	public function Logout($Username)
+	public function Logout()
 	{
-		mysql_real_escape_string($Username);		
-		session_destroy();
+		$this->AuthenticationLevel = -1;
 	}
 
 	/**
@@ -127,12 +135,22 @@ class Authentication
                     mysql_real_escape_string($Type);
 
                     $random = (rand() % 9999999);
+
+                    $query = "select UserID from User where UserID=" . $random;
+                    $result = $db->Query($query);
 		}
-                while (mysql_query('select UserID from User where UserID='.$random.';') == 0);
+                while ($db->NumRows($result) < 1);
 
 		$salt = (rand() % 9999999999999999);
 
-		//mysql_query("insert into User(UserID, Username, Firstname, LastName, PasswordHash, PasswordSalt, RoleID) VALUES(\'"$random."\', \'".$Username."\', \'".$FirstName."\', \'".$LastName."\', \'".hash('sha512', $salt.$Password)."\', \'".$salt."\', \'".$Type."\');";
+                $query = "insert into User(UserID, Username, Firstname, " .
+                    "LastName, PasswordHash, PasswordSalt, RoleID) " .
+                    "VALUES(\'" . $random . "\', \'" .$Username. "\', \'" .
+                    $FirstName . "\', \'" . $LastName . "\', \'" .
+                    hash('sha512', $salt . $Password) . "\', \'" . $salt .
+                    "\', \'" . $Type . "\';
+
+		$db->Query($query);
 	}
 
 	/**

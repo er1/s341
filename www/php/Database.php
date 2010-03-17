@@ -44,6 +44,26 @@ class Database
 	{
 		mysql_query($query, $db);
 	}
+
+	/**
+	 * @brief Fetch array from result.
+	 *
+	 * @return array result array.
+	 */
+	public function FetchArray($result)
+	{
+		return mysql_fetch_array($result);
+	}
+
+	/**
+	 * @brief Count number of rows from result.
+	 *
+	 * @return int number of rows in result.
+	 */
+	public function NumRows($result)
+	{
+		return mysql_num_rows($result);
+	}
 }
 
 ?>
