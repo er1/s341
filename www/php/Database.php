@@ -1,6 +1,5 @@
-<?php
 
-require_once 'Config.php';
+<?php
 
 /**
  * @class Database
@@ -8,8 +7,6 @@ require_once 'Config.php';
  */
 class Database
 {
-	$db;
-
 	/**
 	 * @brief Connect to database using credentials from configuration file.
 	 *
@@ -17,8 +14,15 @@ class Database
 	 */
 	public function Connect()
 	{
+                require_once("Config.php");
+
 		$db = mysql_connect(constant("db_host"), constant("db_user"), constant("db_password"));
 		mysql_select_db(constant("db_name"));
+
+                if ($db == False)
+                    return False;
+                else
+                    return True;
 	}
 
 	/**
