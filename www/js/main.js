@@ -16,7 +16,7 @@ function getData(endpoint, params, callback)
 	$.ajax({"cache":"false", "data":params, "dataType":"json", "url":endpoint, "success": function(response) {
 		if (!response)
 			showNetworkError(endpoint, params, callback);
-		if (responseshowNetworkError.error && response.error=="true")
+		if (response.error && response.error=="true")
 		{	if (response.reason == "notLoggedIn")
 				showLogin(function() { getData(endpoint, params, callback); });
 			else

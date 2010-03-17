@@ -51,14 +51,12 @@
 
 
 	<div id="modalLogin" title="Login to Planzilla" style="display:none">
-		<p>
-			<span class="ui-icon ui-icon-locked" style="float:left; margin:0 7px 50px 0;"></span>
-			You have to be logged in to continue<br>
-			<form>
-				<label for="username">Username</label><input type="text" class="username" name="username" value="test"><br>
-				<label for="password">Password</label><input type="password" class="password" name="password" value="test">
-			</form>
-		</p>
+		<form>
+			<span class="ui-icon ui-icon-locked" style="float:left; margin-right:5px;"></span>
+			<div class="modalInstruction"><p>You have to be logged in to continue...</p></div>
+			<label for="username">Username</label><input type="text" class="username" name="username" value="test"><br>
+			<label for="password">Password</label><input type="password" class="password" name="password" value="test">
+		</form>
 	</div>
 
 	<div id="modalTimeout" title="Connection Error" style="display:none">
