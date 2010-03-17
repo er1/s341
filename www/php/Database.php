@@ -1,11 +1,15 @@
 <?php
 
+require_once 'Config.php';
+
 /**
  * @class Database
  * @brief Module for abstracting the database and controlling access to it.
  */
 class Database
 {
+	$db;
+
 	/**
 	 * @brief Connect to database using credentials from configuration file.
 	 *
@@ -13,7 +17,8 @@ class Database
 	 */
 	public function Connect()
 	{
-
+		$db = mysql_connect(constant("db_host"), constant("db_user"), constant("db_password"));
+		mysql_select_db(constant("db_name"));
 	}
 
 	/**
@@ -23,7 +28,7 @@ class Database
 	 */
 	public function Close()
 	{
-
+		mysql_close($db);
 	}
 
 	/**
@@ -31,9 +36,9 @@ class Database
 	 *
 	 * @return boolean True if successful, False otherwise.
 	 */
-	public function Query()
+	public function Query($query)
 	{
-
+		mysql_query($query, $db);
 	}
 }
 
