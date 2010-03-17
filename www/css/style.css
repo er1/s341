@@ -39,3 +39,7 @@ h1 {
 	text-shadow: 0.1em 0.1em 0.2em black
 }
 
+
+.modalInstruction {	/*Block of p() appearing usually at the top of a modal dialog window.. */
+	margin-bottom:10px;
+}
