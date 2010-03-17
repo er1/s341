@@ -1,3 +1,4 @@
+
 <?php
 
 /**
@@ -13,7 +14,15 @@ class Database
 	 */
 	public function Connect()
 	{
+                require_once("Config.php");
 
+		$db = mysql_connect(constant("db_host"), constant("db_user"), constant("db_password"));
+		mysql_select_db(constant("db_name"));
+
+                if ($db == False)
+                    return False;
+                else
+                    return True;
 	}
 
 	/**
@@ -23,7 +32,7 @@ class Database
 	 */
 	public function Close()
 	{
-
+		mysql_close($db);
 	}
 
 	/**
@@ -31,9 +40,29 @@ class Database
 	 *
 	 * @return boolean True if successful, False otherwise.
 	 */
-	public function Query()
+	public function Query($query)
 	{
+		mysql_query($query, $db);
+	}
 
+	/**
+	 * @brief Fetch array from result.
+	 *
+	 * @return array result array.
+	 */
+	public function FetchArray($result)
+	{
+		return mysql_fetch_array($result);
+	}
+
+	/**
+	 * @brief Count number of rows from result.
+	 *
+	 * @return int number of rows in result.
+	 */
+	public function NumRows($result)
+	{
+		return mysql_num_rows($result);
 	}
 }
 
