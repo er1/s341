@@ -276,6 +276,9 @@ Final versions of diagrams due Friday midnight.
 
 -----------------
 
+Wednesday Mar 17th, 2010
+
+Assigned stuff:
 Eri+Corey: Modules that generate schedule and suggest courses. Course Browser + Sequence Viewer... 
 Seb + Mathieu: Working DB Schema by tonight.
 Corey: Populate DB.
