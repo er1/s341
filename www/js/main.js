@@ -68,7 +68,7 @@ function showLogin(callback)
 
 function authenticateLogin(username, password, callback)
 {	//Pre-conditions, Login Window is opened!
-	getData("php/login.php", {"username":username, "password":password}, function(response) {
+	getData("php/Main.php?action=login", {"username":username, "password":password}, function(response) {
 		if (response.loginError == "false")
 			callback();
 		else
