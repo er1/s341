@@ -16,10 +16,11 @@ class Database
 	{
                 require_once("Config.php");
 
-		$db = mysql_connect(constant("db_host"), constant("db_user"), constant("db_password"));
-		mysql_select_db(constant("db_name"));
+		global $database_handler;
+		$database_handler = mysql_connect(constant("db_host"), constant("db_user"), constant("db_password"));
+		$database_select = mysql_select_db(constant("db_name"));
 
-                if ($db == False)
+                if ($database_handler == False || $database_select == False)
                     return False;
                 else
                     return True;
@@ -32,7 +33,8 @@ class Database
 	 */
 	public function Close()
 	{
-		mysql_close($db);
+		global $database_handler;
+		mysql_close($database_handler);
 	}
 
 	/**
@@ -42,7 +44,8 @@ class Database
 	 */
 	public function Query($query)
 	{
-		mysql_query($query, $db);
+		global $database_handler;
+		return mysql_query($query, $database_handler);
 	}
 
 	/**
@@ -52,7 +55,8 @@ class Database
 	 */
 	public function FetchArray($result)
 	{
-		return mysql_fetch_array($result);
+		global $database_handler;
+		return mysql_fetch_array($result, $database_handler);
 	}
 
 	/**
@@ -62,7 +66,24 @@ class Database
 	 */
 	public function NumRows($result)
 	{
-		return mysql_num_rows($result);
+		global $database_handler;
+		$num_rows = mysql_num_rows($result, $database_handler);
+
+		if ($num_rows == False || $num_rows < 0)
+			$num_rows = 0;
+
+		return $num_rows;
+	}
+
+	/**
+	 * @brief Escape string.
+	 *
+         * @return string escaped string.
+	 */
+	public function EscapeString($str)
+	{
+		global $database_handler;
+		return mysql_real_escape_string($str, $database_handler);
 	}
 }
 

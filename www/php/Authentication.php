@@ -28,9 +28,7 @@ class Authentication
 	 */
 	public function ValidateCredentials($Username, $Password)
 	{
-		mysql_real_escape_string($Username);		
-		mysql_real_escape_string($Password);		
-		
+			
 	}
 
 	/**
@@ -40,7 +38,7 @@ class Authentication
 	 */
 	public function ValidateUsername($Username)
 	{
-		return mysql_real_escape_string($Username);
+
 	}
 
 	/**
@@ -49,9 +47,8 @@ class Authentication
 	 * @return boolean
 	 */
 	public function ValidatePassword($Password)
-	{
-		return mysql_real_escape_string($Password);		
-
+	{		
+            
 	}
 
 	/**
@@ -61,8 +58,16 @@ class Authentication
 	 */
 	public function CheckUserExistence($Username)
 	{
-		mysql_real_escape_string($Username);		
-		$result = $mysql_query('select UserID from User where UserID='.$Username.'\';');
+		global $db;
+		
+		$safe_username = $db->EscapeString($Username);
+		$query = 'select UserID from User where UserID=' . $safe_username;
+		$result = $db->Query($query);
+
+		if ($db->NumRows($result) < 1)
+			return False;
+		else
+			return True;
 	}
 
 	/**
@@ -75,31 +80,31 @@ class Authentication
 	{
                 global $db;
                 
-		mysql_real_escape_string($Username);
-		mysql_real_escape_string($Password);
+		$safe_username = $db->EscapeString($Username);
+		$safe_password = $db->EscapeString($Password);
 
-                $query = "select PasswordHash, PasswordSalt, RoleID from User where UserID=" . $Username;
+                $query = "SELECT PasswordHash, PasswordSalt, RoleID FROM User " .
+			"WHERE Username='" . $safe_username . "'";
 
 		$result = $db->Query($query);
+		$pwInfo = $db->FetchArray($result);
 
-		$generatedHash = hash('sha512', $PasswordSalt.hash('sha256', $Password));
+		$PasswordHash = $pwInfo["PasswordHash"];
+		$PasswordSalt = $pwInfo["PasswordSalt"];
+		$RoleID = $pwInfo["RoleID"];
 
-		if ($generatedHash == $dbHash)
+		$UnknownHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
+
+		if ($UnknownHash == $PasswordHash)
 		{
-
-			$AuthenticationLevel = $RoleID;
+			$this->AuthenticationLevel = $RoleID;
+			$this->Username = $Username;
 			echo '{"status":"ok", "loginError":"false"}';
-			$_SESSION['loggedIn'] = true;
 		}
 		else
 		{
 			echo '{"loginError":"true","reason":"invalid username or password"}';
 		}
-
-                $this->Username = $Username;
-
-                /* XXX: check user type */
-                $this->AuthenticationLevel = 1;
 	}
 
 	/**
@@ -110,6 +115,7 @@ class Authentication
 	public function Logout()
 	{
 		$this->AuthenticationLevel = -1;
+		$this->Username = "";
 	}
 
 	/**
@@ -123,34 +129,55 @@ class Authentication
 	 */
 	public function CreateUser($Username, $Password, $FirstName, $LastName, $Type)
 	{
-		srand(time());		
+		global $db;
+
+		$safe_username = $db->EscapeString($Username);
+		$safe_password = $db->EscapeString($Password);
+		$safe_firstname = $db->EscapeString($FirstName);
+		$safe_lastname = $db->EscapeString($LastName);
+
+		if (!is_numeric($Type) || $Type < 0 || $Type > 2)
+			exit();
+		else
+			$safe_type = $Type;
+
+		$UserID;
 
 		do
                 {
-                    mysql_real_escape_string($Username);
-                    mysql_real_escape_string($Password);
-                    mysql_real_escape_string($FirstName);
-                    mysql_real_escape_string($Username);
-                    mysql_real_escape_string($LastName);
-                    mysql_real_escape_string($Type);
-
-                    $random = (rand() % 9999999);
-
-                    $query = "select UserID from User where UserID=" . $random;
-                    $result = $db->Query($query);
+			$UserID = (rand() % 9999999);
+			$query = "SELECT UserID FROM User WHERE UserID=" . $UserID;
+			$result = $db->Query($query);
 		}
-                while ($db->NumRows($result) < 1);
+                while ($db->NumRows($result) > 0);
 
-		$salt = (rand() % 9999999999999999);
+		$PasswordSalt = (rand() % 9999999999999999);
+		$PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
 
-                $query = "insert into User(UserID, Username, Firstname, " .
-                    "LastName, PasswordHash, PasswordSalt, RoleID) " .
-                    "VALUES(\'" . $random . "\', \'" .$Username. "\', \'" .
-                    $FirstName . "\', \'" . $LastName . "\', \'" .
-                    hash('sha512', $salt . $Password) . "\', \'" . $salt .
-                    "\', \'" . $Type . "\';
+		$query = "INSERT INTO User " .
+			"VALUES(" .
+				"'" . $UserID . "', " .
+				"'" . $safe_username . "', " .
+				"'" . $safe_firstname . "', " .
+				"'" . $safe_lastname . "', " .
+				"'" . $PasswordHash . "', " .
+				"'" . $PasswordSalt . "', " .
+				"'" . $safe_type . "');";
 
-		$db->Query($query);
+		echo $query;
+
+		$result = $db->Query($query);
+
+		if ($result != False)
+		{
+			echo '{"userCreation":"success"}';
+			return True;
+		}
+		else
+		{
+			echo '{"userCreation":"failure"}';
+			return False;
+		}
 	}
 
 	/**
@@ -160,8 +187,11 @@ class Authentication
 	 */
 	public function DeleteUser($Username)
 	{
-		mysql_real_escape_string($Username);
-		$mysql_query('delete from User where Username=\''.$Username.'\';');
+		global $db;
+		
+		$safe_username = $db->EscapeString($Username);
+		$query = "DELETE FROM User WHERE Username=" . $safe_username;
+		$db->Query($query);
 	}
 
 	/**
@@ -172,9 +202,17 @@ class Authentication
 	 */
 	public function ChangePassword($Username, $NewPassword)
 	{
-		mysql_real_escape_string($Username);
-		mysql_real_escape_string($Password);
-		$mysql_query('alter table User into (..) VALUES(\''.$Password.'\') where Username='.$username.';');
+		global $db;
+
+		$safe_username = $db->EscapeString($Username);
+		$safe_password = $db->EscapeString($NewPassword);
+
+		//$query = "ALTER TABLE User WHERE Username=" . $safe_username;
+		//$db->Query($query);
+		
+		//mysql_real_escape_string($Username);
+		//mysql_real_escape_string($Password);
+		//$mysql_query('alter table User into (..) VALUES(\''.$Password.'\') where Username='.$username.';');
 	}
 }
 

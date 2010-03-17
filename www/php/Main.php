@@ -14,6 +14,7 @@ $db = new Database();
 if ($db->Connect() == False)
 {
     echo "<h3>Error: Can't connect to database</h3>";
+    exit();
 }
 
 $auth = new Authentication();
@@ -23,7 +24,7 @@ if (isset($_GET["action"]))
 	switch ($_GET["action"])
 	{
 		case("login"):
-                        $auth->Login("bob", "lolz");
+                        $auth->Login("dummy", "test");
                         break;
 		case("logout"):
                         $auth->Logout();
