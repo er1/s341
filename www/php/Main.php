@@ -1,12 +1,16 @@
-
 <?php
-require_once("Database.php");
-require_once("Authentication.php");
 
+require_once("Authentication.php");
+$auth = new Authentication();
+
+
+require_once("Database.php");
 global $db;
 $db = new Database();
 
-$auth = new Authentication();
+
+
+
 
 if (isset($_REQUEST["action"]))
 {
@@ -38,6 +42,10 @@ function dieNicely($msg, $arr = array()) {
 	$arr["error"] = "true";
 	$arr["msg"] = $msg;
 	print json_encode($arr);
+        session_unset();
+        session_destroy();
+        $_SESSION = array();
+        $db->Close();
 	exit();
 }
 ?>

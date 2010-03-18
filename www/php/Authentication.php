@@ -1,7 +1,8 @@
 <?php
 
-require_once("Database.php");
 session_start();
+require_once("Database.php");
+
 /**
  * @class Authentication
  * @brief Authentication module for authenticating, creating or modifying users.
@@ -16,7 +17,9 @@ class Authentication
 	 * @arg 1  = Teacher.
 	 * @arg 2  = Student.
 	 */
-	public $AuthenticationLevel;
+    public $AuthenticationLevel;
+
+
     private $Username;
 
 
@@ -33,37 +36,6 @@ class Authentication
 
 	}
 
-	/**
-	 *
-	 * @param string $Username
-	 * @param string $Password
-	 * @return boolean
-	 */
-	public function ValidateCredentials($Username, $Password)
-	{
-			
-	}
-
-	/**
-	 *
-	 * @param string $Username
-	 * @return boolean
-	 */
-	public function ValidateUsername($Username)
-	{
-
-	}
-
-	/**
-	 *
-	 * @param string $Password
-	 * @return boolean
-	 */
-	public function ValidatePassword($Password)
-	{		
-            
-	}
-
 
 	/**
 	 * @brief This function is called whenever a module needs to be sure someone is logged before doing something.
@@ -71,7 +43,7 @@ class Authentication
 	 * @return void
 	 */
 	public function EnforceCurrentLevel($targetLevel, $message = "")
-	{	
+	{
 		if ($this->AuthenticationLevel <= -1 || !isset($this->AuthenticationLevel) || is_null($this->AuthenticationLevel))
 			dieNicely("You are just not logged in", array("reason"=>"notLoggedIn", "role"=> $this->AuthenticationLevel));  
 		if ($this->AuthenticationLevel > $targetLevel)
@@ -85,8 +57,8 @@ class Authentication
 	 */
 	public function CheckUserExistence($Username)
 	{
+                EnforceCurrentLevel(2);
 		global $db;
-		
 		$safe_username = $db->EscapeString($Username);
 		$query = 'select UserID from User where UserID=' . $safe_username;
 		$result = $db->Query($query);
@@ -112,10 +84,9 @@ class Authentication
 		$safe_password = $db->EscapeString($Password);
 
         $query = "SELECT PasswordHash, PasswordSalt, RoleID FROM User WHERE Username='%s'";
-
 		$result = $db->Query($query, $safe_username);
 		$pwInfo = $db->FetchFirstRow($result);
-
+                
 		$PasswordHash = $pwInfo["PasswordHash"];
 		$PasswordSalt = $pwInfo["PasswordSalt"];
 		$RoleID = $pwInfo["RoleID"];
@@ -143,9 +114,14 @@ class Authentication
 	 */
 	public function Logout()
 	{
+                EnforceCurrentLevel(2);
 		$_SESSION['AuthenticationLevel'] = $this->AuthenticationLevel = -1;
-		$_SESSION['Username'] = $this->Username = "";
-		session_destroy();
+		session_start();
+                session_unset();
+                session_destroy();
+                $_SESSION = array();
+                $db->Close();
+                dieNicely("You have successfully logged out.", array("reason"=>"UserLogout"));
 	}
 
 	/**
@@ -159,6 +135,7 @@ class Authentication
 	 */
 	public function CreateUser($Username, $Password, $FirstName, $LastName, $Type)
 	{
+                EnforceCurrentLevel(0);
 		global $db;
 
 		$safe_username = $db->EscapeString($Username);
@@ -173,15 +150,22 @@ class Authentication
 
 		$UserID;
 
+                
+                //check whether the username is unique
+                $query = "SELECT Username FROM User WHERE Username=" . $safe_username;
+                $result_username = $db->Query($query);
+                if($db->NumRows($result_username) > 0)
+                        dieNicely("The username you have chose already exists. Try again.");
+                //make sure that UserID is unique
 		do
                 {
-			$UserID = (rand() % 9999999);
+			$UserID = rand(1000001,9999999);
 			$query = "SELECT UserID FROM User WHERE UserID=" . $UserID;
-			$result = $db->Query($query);
+			$result_userid = $db->Query($query);
 		}
-                while ($db->NumRows($result) > 0);
+                while ($db->NumRows($result_userid) > 0);
 
-		$PasswordSalt = (rand() % 9999999999999999);
+		$PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
 		$PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
 
 		$query = "INSERT INTO User " .
@@ -217,6 +201,7 @@ class Authentication
 	 */
 	public function DeleteUser($Username)
 	{
+                EnforceCurrentLevel(0);
 		global $db;
 		
 		$safe_username = $db->EscapeString($Username);
@@ -232,19 +217,22 @@ class Authentication
 	 */
 	public function ChangePassword($Username, $NewPassword)
 	{
+                EnforceCurrentLevel(2);
+                if($this->Username == $Username)
 		global $db;
 
 		$safe_username = $db->EscapeString($Username);
 		$safe_password = $db->EscapeString($NewPassword);
 
-		//$query = "ALTER TABLE User WHERE Username=" . $safe_username;
-		//$db->Query($query);
-		
-		//mysql_real_escape_string($Username);
-		//mysql_real_escape_string($Password);
-		//$mysql_query('alter table User into (..) VALUES(\''.$Password.'\') where Username='.$username.';');
+		$query = "SELECT " . $safe_username;
+
+     		$PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
+		$PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
+
+		Query("UPDATE TABLE User SET (PasswordHash='" . $PasswordHash . "', PasswordSalt='" . $PasswordSalt . "') WHERE Username='".$safe_username."';");
 	}
 }
+
 
 ?>
 
