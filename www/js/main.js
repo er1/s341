@@ -28,7 +28,7 @@ function getData(params, callback, options)
 		{	if (response.reason == "notLoggedIn")
 				showLogin(function() { getData(params, callback); });
 			else
-				alert('Unknown error occured.. Please try again');
+				BSOD('Unknown error occured.. Please try again');
 		}
 		else
 			callback(response);
@@ -76,6 +76,8 @@ function showLogin(callback)
 
 function authenticateLogin(username, password, callback)
 {	//Pre-conditions, Login Window is opened!
+	if (username=="robot")
+		return BSOD('Does not commmpppuuuuttte!!<br><br><object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/kBSOhODoch0&hl=en_US&fs=1&color1=0x3a3a3a&color2=0x999999&autoplay=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/kBSOhODoch0&hl=en_US&fs=1&color1=0x3a3a3a&color2=0x999999&autoplay=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed></object>');
 	getData({"action":"login","username":username, "password":password}, function(response) {
 		if (response.loginError == "false")
 			callback();
