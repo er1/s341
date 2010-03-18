@@ -114,6 +114,7 @@ class Authentication
 	 */
 	public function Logout()
 	{
+		session_start(); // resume session before destroying it. This is the right way to destroy a session.
 		session_unset();
 		session_destroy();
 		print json_encode(array("status" => "loggedOut", "message" => "You have successfully logged out"));
