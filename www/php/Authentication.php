@@ -114,14 +114,10 @@ class Authentication
 	 */
 	public function Logout()
 	{
-                EnforceCurrentLevel(2);
-		$_SESSION['AuthenticationLevel'] = $this->AuthenticationLevel = -1;
-		session_start();
-                session_unset();
-                session_destroy();
-                $_SESSION = array();
-                $db->Close();
-                dieNicely("You have successfully logged out.", array("reason"=>"UserLogout"));
+		session_unset();
+		session_destroy();
+		print json_encode(array("status" => "loggedOut", "message" => "You have successfully logged out"));
+		exit();
 	}
 
 	/**

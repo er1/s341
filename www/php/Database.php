@@ -102,6 +102,11 @@ class Database
 			return mysql_real_escape_string($input, $this->database_handler);
 	}
 
+	//Destructor, this take care of cleaning the DB connection without never being explicitely called.. This is called when object is deallocated or exit() is called or at the end of the script execution.
+   function __destruct() {
+		$this->Close();
+   }
+   
 }
 
 ?>
