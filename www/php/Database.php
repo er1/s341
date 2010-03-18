@@ -1,5 +1,5 @@
-
 <?php
+
 
 /**
  * @class Database
@@ -43,7 +43,11 @@ class Database
 	 * @return boolean True if successful, False otherwise.
 	 */
 	public function Query($query, $param)
-	{	if (!is_array($param))	//make $param an array in case it's not..
+	{
+                //require_once("Authentication.php");
+                //$auth->EnforceCurrentLevel(2);
+
+                if (!is_array($param))	//make $param an array in case it's not..
 			$parram = array($param);
 		$this->Connect(); //connect if that's not already the case..
 		$param = $this->EscapeString($param);	//escape all parameters!

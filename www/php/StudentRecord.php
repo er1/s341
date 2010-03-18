@@ -1,5 +1,8 @@
 <?php
 
+require_once("Authentication.php");
+$auth->EnforceCurrentLevel(2);
+
 /**
  * @class StudentRecord
  * @brief Module for obtaining or modifying student record information.
