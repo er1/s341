@@ -7,6 +7,8 @@
  */
 class Database
 {
+	private $database_handler = false;
+	
 	/**
 	 * @brief Connect to database using credentials from configuration file.
 	 *
@@ -14,16 +16,15 @@ class Database
 	 */
 	public function Connect()
 	{
-                require_once("Config.php");
+		if ($this->database_handler)
+			return;	//no need to open another connection if we are already connected.
+        require_once("Config.php");
+		
+		$this->database_handler = mysql_connect(constant("db_host"), constant("db_user"), constant("db_password")) or dieNicely("Cannot connect to DB:" . mysql_error());
+		mysql_select_db(constant("db_name")) or dieNicely("Cannot select database");
 
-		global $database_handler;
-		$database_handler = mysql_connect(constant("db_host"), constant("db_user"), constant("db_password"));
-		$database_select = mysql_select_db(constant("db_name"));
-
-                if ($database_handler == False || $database_select == False)
-                    return False;
-                else
-                    return True;
+		//At this point we either dies gracefully or we are not connected.. no need for a return value;
+		return true;
 	}
 
 	/**
@@ -33,19 +34,21 @@ class Database
 	 */
 	public function Close()
 	{
-		global $database_handler;
-		mysql_close($database_handler);
+		mysql_close($this->database_handler);
 	}
 
 	/**
-	 * @brief Send a query to the database.
+	 * @brief Send a query to the database.. %s denote a field.. All fields are passed to the escape functions for sanity reason.
 	 *
 	 * @return boolean True if successful, False otherwise.
 	 */
-	public function Query($query)
-	{
-		global $database_handler;
-		return mysql_query($query, $database_handler);
+	public function Query($query, $param)
+	{	if (!is_array($param))	//make $param an array in case it's not..
+			$parram = array($param);
+		$this->Connect(); //connect if that's not already the case..
+		$param = $this->EscapeString($param);	//escape all parameters!
+		$result =  mysql_query(sprintf($query,$param), $this->database_handler) or dieNicely("Error in querying the DB:" . mysql_error());
+		return $result;
 	}
 
 	/**
@@ -55,24 +58,27 @@ class Database
 	 */
 	public function FetchArray($result)
 	{
-		global $database_handler;
-		return mysql_fetch_array($result, $database_handler);
+		return mysql_fetch_array($result);
 	}
 
+	/**
+	 * @brief A lot of the time our recordset only has 0 or one row.. In the case of one row we might often want get straight to the point and access it.
+	 *
+	 * @return associative array (key,value)
+	 */
+	public function FetchFirstRow($result)
+	{	//if ($this->NumRows($result) != 1)
+		//	dieNicely("Database.php: I can't throw useful data off. I wanted one row and I got " . $this->NumRows($result) . " row(s) instead.");
+		return mysql_fetch_assoc($result);
+	}
 	/**
 	 * @brief Count number of rows from result.
 	 *
 	 * @return int number of rows in result.
 	 */
 	public function NumRows($result)
-	{
-		global $database_handler;
-		$num_rows = mysql_num_rows($result, $database_handler);
-
-		if ($num_rows == False || $num_rows < 0)
-			$num_rows = 0;
-
-		return $num_rows;
+	{		
+		return mysql_num_rows($result);
 	}
 
 	/**
@@ -80,11 +86,18 @@ class Database
 	 *
          * @return string escaped string.
 	 */
-	public function EscapeString($str)
-	{
-		global $database_handler;
-		return mysql_real_escape_string($str, $database_handler);
+	public function EscapeString($input)
+	{	$this->Connect(); //connect if that's not already the case..
+		if (is_array($input))
+		{
+			foreach ($arr as $i => $value)
+				$input[$i] = EscapeString($value);
+			return $input;
+		}
+		else
+			return mysql_real_escape_string($input, $this->database_handler);
 	}
+
 }
 
 ?>

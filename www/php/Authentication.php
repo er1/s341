@@ -1,7 +1,7 @@
 <?php
 
 require_once("Database.php");
-
+session_start();
 /**
  * @class Authentication
  * @brief Authentication module for authenticating, creating or modifying users.
@@ -9,7 +9,7 @@ require_once("Database.php");
 class Authentication
 {
 	/**
-	 * @brief User authentication level.
+	 * @brief User authentication level. The lower the more powerful.
 	 *
 	 * @arg -1 = Not authenticated.
 	 * @arg 0  = Administrator.
@@ -17,8 +17,21 @@ class Authentication
 	 * @arg 2  = Student.
 	 */
 	public $AuthenticationLevel;
-        
-        private $Username;
+    private $Username;
+
+
+	/**
+	 * @brief Class constructor..
+	 * @param none
+	 * @return void
+	 */
+
+	function __construct() 
+	{	
+		if (isset($_SESSION['AuthenticationLevel']))
+				$this->AuthenticationLevel = $_SESSION['AuthenticationLevel'];
+
+	}
 
 	/**
 	 *
@@ -51,6 +64,20 @@ class Authentication
             
 	}
 
+
+	/**
+	 * @brief This function is called whenever a module needs to be sure someone is logged before doing something.
+	 * @param none
+	 * @return void
+	 */
+	public function EnforceCurrentLevel($targetLevel, $message = "")
+	{	
+		if ($this->AuthenticationLevel <= -1 || !isset($this->AuthenticationLevel) || is_null($this->AuthenticationLevel))
+			dieNicely("You are just not logged in", array("reason"=>"notLoggedIn", "role"=> $this->AuthenticationLevel));  
+		if ($this->AuthenticationLevel > $targetLevel)
+			dieNicely("You do not have enough privilege to perform this action", array("reason"=>"notEnoughLevel"));            
+	}
+	
 	/**
 	 *
 	 * @param string $Username
@@ -74,20 +101,20 @@ class Authentication
 	 *
 	 * @param string $Username
 	 * @param string $Password
-	 * @return boolean
+	 * @return boolean, true=success, false=error
 	 */
 	public function Login($Username, $Password)
-	{
-                global $db;
-                
+	{	
+	
+        global $db;
+        
 		$safe_username = $db->EscapeString($Username);
 		$safe_password = $db->EscapeString($Password);
 
-                $query = "SELECT PasswordHash, PasswordSalt, RoleID FROM User " .
-			"WHERE Username='" . $safe_username . "'";
+        $query = "SELECT PasswordHash, PasswordSalt, RoleID FROM User WHERE Username='%s'";
 
-		$result = $db->Query($query);
-		$pwInfo = $db->FetchArray($result);
+		$result = $db->Query($query, $safe_username);
+		$pwInfo = $db->FetchFirstRow($result);
 
 		$PasswordHash = $pwInfo["PasswordHash"];
 		$PasswordSalt = $pwInfo["PasswordSalt"];
@@ -97,13 +124,15 @@ class Authentication
 
 		if ($UnknownHash == $PasswordHash)
 		{
-			$this->AuthenticationLevel = $RoleID;
-			$this->Username = $Username;
-			echo '{"status":"ok", "loginError":"false"}';
+			$_SESSION['AuthenticationLevel'] = $this->AuthenticationLevel = $RoleID;
+			$_SESSION['Username'] = $this->Username = $Username;
+			print(json_encode(array("status"=>"ok","loginError"=>"false","role"=>$RoleID)));
+			return true;
 		}
 		else
 		{
 			echo '{"loginError":"true","reason":"invalid username or password"}';
+			return false;
 		}
 	}
 
@@ -114,8 +143,9 @@ class Authentication
 	 */
 	public function Logout()
 	{
-		$this->AuthenticationLevel = -1;
-		$this->Username = "";
+		$_SESSION['AuthenticationLevel'] = $this->AuthenticationLevel = -1;
+		$_SESSION['Username'] = $this->Username = "";
+		session_destroy();
 	}
 
 	/**

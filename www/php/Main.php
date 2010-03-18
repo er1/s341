@@ -1,42 +1,43 @@
-<html>
-<head><title></title></head>
-<body>
 
 <?php
-
 require_once("Database.php");
 require_once("Authentication.php");
-session_start();
 
 global $db;
 $db = new Database();
 
-if ($db->Connect() == False)
-{
-    echo "<h3>Error: Can't connect to database</h3>";
-    exit();
-}
-
 $auth = new Authentication();
 
-if (isset($_GET["action"]))
+if (isset($_REQUEST["action"]))
 {
-	switch ($_GET["action"])
+	switch ($_REQUEST["action"])
 	{
 		case("login"):
-                        $auth->Login("dummy", "test");
+                        $auth->Login($_POST['username'], $_POST["password"]);
                         break;
 		case("logout"):
                         $auth->Logout();
                         break;
+		case("viewSchedule"):
+						$auth->EnforceCurrentLevel(2);
+						require("viewSchedule.php");
+						break;
 		default:
-			exit();
+			dieNicely("Invalid action");
 	}
 }
-
+else
+{
+	dieNicely("No action specified");
+}
 $db->Close();
 
+function dieNicely($msg, $arr = array()) {
+	//@@TODO: log error? Send e-mail??
+	ob_end_clean();	//flush whatever was in buffer b4 so front-end can catch error..
+	$arr["error"] = "true";
+	$arr["msg"] = $msg;
+	print json_encode($arr);
+	exit();
+}
 ?>
-
-</body>
-</html>

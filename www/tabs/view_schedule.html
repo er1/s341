@@ -9,7 +9,7 @@ $(document).ready(function() {
 
 function showSchedule(callback)
 {
-		getData("php/viewSchedule.php", {}, function(response) {
+		getData({action:"viewSchedule"}, function(response) {
 			$('#calViewSchedule').weekCalendar({
 				readonly:false
 				,date:new Date(2010, 00,5)

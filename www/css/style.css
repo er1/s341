@@ -43,3 +43,28 @@ h1 {
 .modalInstruction {	/*Block of p() appearing usually at the top of a modal dialog window.. */
 	margin-bottom:10px;
 }
+
+/***** BSOD ******/
+body.bsod {
+    background:#0000aa;
+    color:#ffffff;
+    font-family:courier;
+    font-size:12pt;
+    text-align:center;
+}
+
+blink.bsod {
+    color:yellow;
+}
+
+.bsod.neg {
+    background:#fff;
+    color:#0000aa;
+    padding:2px 8px;
+    font-weight:bold;
+}
+
+p.bsod {
+    margin:30px 100px;
+    text-align:left;
+}

@@ -1,13 +1,3 @@
-<?php
-	session_start();
-	if (!isset($_SESSION['loggedIn']))
-	{
-?>
-{"error":"true","reason":"notLoggedIn"}
-	<?php	
-		 exit();
-	} else { 
-	?>
 	{
     "events": [
         {
@@ -75,6 +65,3 @@
         }
     ]
 }
-<?php 
-}
-?>
