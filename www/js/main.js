@@ -21,7 +21,9 @@ function getData(params, callback, options)
 	if (!params.action)
 		return BSOD("Well, someone called getData without an action parameter.. How do you want me to deal with php/Main.php??? We do try very hard not this to happen but still, it would be nice to let us know.. I would also like to say it's been logged and a Ninja is on its way to fix it but it's false..");
 
-	$.ajax({"cache":"false", "type":options.type, "data":params, "dataType":"json", "url":"php/Main.php", "success": function(response) {
+	$.ajax({"cache":"false", "type":options.type, "data":params, "dataType":"json", "url":"php/Main.php"
+	, "success": function(response) 
+	{
 		if (!response)
 			showNetworkError(params, callback);
 		if (response.error && response.error=="true")
@@ -32,7 +34,15 @@ function getData(params, callback, options)
 		}
 		else
 			callback(response);
-	}, "error":function(){ showNetworkError(params, callback); }
+	}
+	, "error":function(XMLHttpRequest, textStatus, errorThrown)
+	{ 
+		if (textStatus == "parsererror")	//Not a valid JSON object
+			BSOD("Not a valid JSON object. " + XMLHttpRequest.responseText);
+		else 
+			showNetworkError(params, callback); 
+	}
+	
 	});
 
 }
@@ -89,6 +99,6 @@ function authenticateLogin(username, password, callback)
 }
 
 function BSOD(message)
-{	message = message || "Unknown Error";
+{	message = message || "Does Not Compute!";
 	$("body").empty().addClass("bsod").append("<br><br><span class='bsod neg'>FATAL ERROR</span><br><br><p class='bsod'>" + message +"</p>");
 }

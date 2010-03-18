@@ -33,8 +33,8 @@ class Database
 	 * @return boolean True if successful, False otherwise.
 	 */
 	public function Close()
-	{
-		mysql_close($this->database_handler);
+	{	if ($this->database_handler)	//close the handler only if it's opened..
+			mysql_close($this->database_handler);
 	}
 
 	/**

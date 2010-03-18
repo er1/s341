@@ -30,6 +30,8 @@ else
 {
 	dieNicely("No action specified");
 }
+
+
 $db->Close();
 
 function dieNicely($msg, $arr = array()) {
