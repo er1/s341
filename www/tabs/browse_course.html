@@ -1,14 +1,42 @@
-<div>
-Browse Courses
+<div id="browseCourse"></div>
+
+<div id="CourseFilter">
+    <h3><a href="#">Browse Course List</a></h3>
+        <div>
+            <p>Select which course to view.</p>
+            <div id="DepartmentCombobox">
+                <label for="department">Department: </label><input type="text" class="department" name="department" value="SOEN" style="width: 65px"><br>
+            </div>
+            <div id="CourseCodeTextBox">
+                <label for="courseCode">Course Code: </label><input type="text" class="courseCode" name="courseCode" value="341" style="width: 40px"><br>
+            </div>
+        </div>
+    <h3><a href="#">Browse Course List</a></h3>
+    <div>DFGHGFDHGHGHGF</div>
 </div>
+
 
 <script>
 $(document).ready(function() {	//Runs when tab is loaded
-
+    CourseAccordion();
+    DepartmentFiler();
 })
 
+function CourseAccordion()
+{
+    $("#CourseFilter").accordion({
+        //collapasible: true
+    });
+}
+
+function DepartmentFilter()
+{
+    $("#DepartmentCombobox").combobox({autocomplete: true, buttonText: 'Show'});
+
+}
 
 function tabCallBack() { //Runs when tab is shown
 
 }
 </script>
+

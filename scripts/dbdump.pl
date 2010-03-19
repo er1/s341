@@ -7,9 +7,9 @@ use warnings;
 use IO::Handle;
 use WWW::Curl::Easy;
 
-my $tmp;
-my $page;
-my $status;
+my $tmp; #for cURL to write to
+my $page; #handle for accessing cURL's stuff
+my $status; 
 my $curl = new WWW::Curl::Easy;
 
 my @courses;
@@ -21,17 +21,23 @@ my $baseURL = "http://regsis.concordia.ca/class_schedule/";
 open($tmp, ">", \$page);
 $curl->setopt(CURLOPT_WRITEDATA, $tmp);
 
+#populates the @departments array
 &getFacultyDepartments("04", "2009", "4", "U");
 #&printDepartments();
+
 
 foreach my $dept (@departments) {
 	&getDepartmentCourses($dept, "2010", "1", "04", "U");
 }
 
 #&getDepartmentCourses("MECH", "2009", "4", "04", "U");
-&printCourses();
+#&printCourses();
 
 
+#first param is Faculty ID
+# " " 		Year
+# " " 		Session
+# " " 		Type
 sub getFacultyDepartments
 {
 	my ($faculty, $year, $session, $type) = @_;
@@ -57,6 +63,7 @@ sub getFacultyDepartments
 	}  
 }
 
+#here is the beef
 sub getDepartmentCourses
 {
 	my ($department, $year, $session, $faculty, $type) = @_;
@@ -78,6 +85,12 @@ sub getDepartmentCourses
 
 	foreach my $line (@lines)
 	{
+		#print $line;
+		#if ($line =~ /Prerequisite:/)
+		#{
+		#	print $line;
+		#}
+		
 		# Remove some trash that makes parsing harder
                 $line =~ s/\&nbsp\;//g;
 		$line =~ s/<b>//g;
@@ -158,12 +171,4 @@ sub printCourses
 		print "\n";
 	}
 }
-
-
-
-
-
-
-
-
 
