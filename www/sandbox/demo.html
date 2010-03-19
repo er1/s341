@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+	    <title>Planzilla</title>
+
+		<!--seciton for meta information -->
+	    <meta name="Charset" content="UTF-8">
+	    <meta name="Distribution" content="Global">
+	    <meta name="Rating" content="General">
+	    <meta name="Robots" content="INDEX,FOLLOW">
+	    <meta name="Revisit-after" content="31 Days">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+
+		<!-- section where we include references to stylesheets -->
+		<link media="screen" type="text/css" href="../css/custom-theme/jquery-ui-1.8rc1.custom.css" rel="stylesheet">
+		<link media="screen" type="text/css" href="../css/jquery.weekcalendar.css" rel="stylesheet">
+		<link media="screen" type="text/css" href="../css/style.css" rel="stylesheet">
+        <link media="screen" type="text/css" href="css/combobox.css" rel="stylesheet"/>
+
+
+		<!-- Section for including various scripts/plugin -->
+		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+		    google.load("jquery", "1.4");
+		    google.load("jqueryui", "1.7");
+		</script>
+	</head>
+	
+	<body>
+	
+
+<div>
+
+<div id="browseCourse"></div>
+
+<div id="CourseFilter">
+    <h3><a href="#">Browse Course List</a></h3>
+        <div>
+            <p>Select which course to view.</p>
+            <div id="DepartmentCombobox">
+                <label for="department">Department: </label><input type="text" class="department" name="department" value="SOEN" style="width: 65px"><br>
+            </div>
+            <div id="CourseCodeTextBox">
+                <label for="courseCode">Course Code: </label><input type="text" class="courseCode" name="courseCode" value="341" style="width: 40px"><br>
+            </div>
+        </div>
+    <h3><a href="#">Browse Course List</a></h3>
+    <div>DFGHGFDHGHGHGF</div>
+</div>
+
+
+</div>
+<script>
+$(document).ready(function() {	//Runs when tab is loaded
+    CourseAccordion();
+    DepartmentFilter();
+})
+
+function CourseAccordion()
+{
+    $("#CourseFilter").accordion({
+        //collapasible: true
+		autoHeight: true
+    });
+}
+
+function DepartmentFilter()
+{
+//    $("#DepartmentCombobox").combobox({autocomplete: true, buttonText: 'Show'});
+
+}
+
+function tabCallBack() { //Runs when tab is shown
+
+}
+</script>
+
+
+
+	
+	
+	</body>
+	
+	</html>
