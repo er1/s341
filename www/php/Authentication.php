@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+require_once("Main.php");
 require_once("Database.php");
 
 /**
