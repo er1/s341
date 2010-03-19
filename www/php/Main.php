@@ -19,15 +19,15 @@ if (isset($_REQUEST["action"]))
                         break;
 		case("viewSchedule"):
 						$auth->EnforceCurrentLevel(2);
-						require("viewSchedule.php");
+						require ("viewSchedule.php");
 						break;
 		default:
 			dieNicely("Invalid action");
 	}
 }
 else
-{
-	dieNicely("No action specified");
+{	//Keep people out of the back-end..
+	header ('Location: ../');
 }
 
 
@@ -42,4 +42,5 @@ function dieNicely($msg, $arr = array()) {
 	exit();
 	//Note, this is just handling of an error.. There is no need to kill the sessino for such a thing.
 }
+
 ?>

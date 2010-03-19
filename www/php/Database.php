@@ -1,5 +1,6 @@
 <?php
 
+require_once("Main.php");
 
 /**
  * @class Database
@@ -44,10 +45,9 @@ class Database
 	 */
 	public function Query($query, $param)
 	{
-                //require_once("Authentication.php");
-                //$auth->EnforceCurrentLevel(2);
-
-                if (!is_array($param))	//make $param an array in case it's not..
+		//require_once("Authentication.php");
+		//$auth->EnforceCurrentLevel(2);
+		if (!is_array($param))	//make $param an array in case it's not..
 			$parram = array($param);
 		$this->Connect(); //connect if that's not already the case..
 		$param = $this->EscapeString($param);	//escape all parameters!
