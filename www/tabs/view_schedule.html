@@ -12,6 +12,7 @@ function showSchedule(callback)
 		getData({action:"viewSchedule"}, function(response) {
 			$('#calViewSchedule').weekCalendar({
 				readonly:false
+				,buttons:false
 				,date:new Date(2010, 00,5)
 				,businessHours: {start:8, end:22, limitDisplay:true}
 				,timeslotsPerHour: 4

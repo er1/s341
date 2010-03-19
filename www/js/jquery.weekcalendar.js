@@ -500,7 +500,7 @@
 
             var dayName = options.useShortDayNames ? options.shortDays[currentDay.getDay()] : options.longDays[currentDay.getDay()];
 
-            $(this).html(dayName + "<br/>" + self._formatDate(currentDay, options.dateFormat));
+            $(this).html(dayName);
             if (self._isToday(currentDay)) {
                $(this).addClass("wc-today");
             } else {
