@@ -1,37 +1,42 @@
-<div id="browseCourse"></div>
-
 <div id="CourseFilter">
     <h3><a href="#">Browse Course List</a></h3>
         <div>
             <p>Select which course to view.</p>
-            <div id="DepartmentCombobox">
-                <label for="department">Department: </label><input type="text" class="department" name="department" value="SOEN" style="width: 65px"><br>
+            <div class="combobox_container" id="combobox_container_department">
+                <input class="combobox_input" type="text" tabindex="2"/>
+		<input class="combobox_hidden" name="department" value="a" type ="hidden" />
+		<a href="#" class="combobox_button"><span>&gt;</span></a>
+		<ul class="combobox_summary">
+			<li class="class_of_option"><a href =" a">Hi</a></li>
+			<li><a href="b">Yo</a></li>
+		</ul>
             </div>
             <div id="CourseCodeTextBox">
                 <label for="courseCode">Course Code: </label><input type="text" class="courseCode" name="courseCode" value="341" style="width: 40px"><br>
             </div>
-        </div>
-    <h3><a href="#">Browse Course List</a></h3>
-    <div>DFGHGFDHGHGHGF</div>
+	</div>
 </div>
 
 
 <script>
-$(document).ready(function() {	//Runs when tab is loaded
+$(function() {	//Runs when tab is loaded
     CourseAccordion();
-    DepartmentFiler();
+    DepartmentFilter();
 })
 
 function CourseAccordion()
 {
-    $("#CourseFilter").accordion({
-        //collapasible: true
-    });
+	$("#CourseFilter").accordion({
+		collapasible: true
+	});
 }
 
 function DepartmentFilter()
 {
-    $("#DepartmentCombobox").combobox({autocomplete: true, buttonText: 'Show'});
+	$("#DepartmentCombobox").combobox({
+		autocomplete: true,
+		buttonText: 'Show'
+	});
 
 }
 
