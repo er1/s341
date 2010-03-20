@@ -1,4 +1,13 @@
 www/nbproject/  # ignore netbeans config
 www/nbproject/*
 www/php/Config.php
-Thumb.db		# ignore annoying windows explorer thumb file.
+www/php/*~
+www/*~
+docs/*~
+docs/Notes/*~
+docs/diagrams/*~
+docs/Deliverable1/*~
+docs/Deliverable2/*~
+scripts/*~
+*~
+

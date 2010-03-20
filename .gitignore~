@@ -1,3 +1,0 @@
-www/nbproject/  # ignore netbeans config
-www/nbproject/*
-Thumb.db		# ignore annoying windows explorer thumb file.
