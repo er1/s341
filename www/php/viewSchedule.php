@@ -1,6 +1,5 @@
 <?php
 	require_once("Main.php");
-	$auth->EnforceCurrentLevel(2);
 ?>
 	{
     "events": [

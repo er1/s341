@@ -60,8 +60,9 @@ class Authentication
 	 */
 	public function ValidateUsername($Username)
 	{
-            if ( (strlen($Password) > 4) && (strlen($Password) < 21) )
-		dieNicely("Your password has to have a length between 5 and 20. Please try again."); 
+
+		if (preg_match ("/^.*(?=.{5,25})(?=.*[a-z]).*$/i", $Username) === 0 )
+			dieNicely ("Your username must be at least 5 characters and must contain at least one letter (no special characters are allowed). Please try again.");
 
 	}
 
@@ -72,9 +73,9 @@ class Authentication
 	 */
 	public function ValidatePassword($Password)
 	{
-            if ( (strlen($Password) > 5) && (strlen($Password) < 31) )
-		dieNicely("Your password has to have a length between 6 and 30. Please try again."); 
 
+		if (preg_match ("/^.*(?=.{6,64})(?=.*[0-9])(?=.*[a-z]).*$/i", $Password) === 0 )
+			dieNicely ("Your password must be at least 6 characters and must contain at least one letter and one digit (no special characters are allowed). Please try again.");
 	}
 
 
