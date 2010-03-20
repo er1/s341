@@ -17,10 +17,18 @@ if (isset($_REQUEST["action"]))
 		case("logout"):
                         $auth->Logout();
                         break;
+		case("CreateUser"):
+                        $auth->CreateUser($_POST['username'], $_POST["password"], $_POST['FirstName'], $_POST['LastName'], $_POST['type']);
+                        break;
+		case("DeleteUser"):
+                        $auth->DeleteUser($_POST['username']);
+                        break;
+		case("ChangePassword"):
+                        $auth->ChangePassword($_POST['username'], $_POST["password"]);
+                        break;
 		case("viewSchedule"):
-						$auth->EnforceCurrentLevel(2);
-						require ("viewSchedule.php");
-						break;
+                        require ("viewSchedule.php");
+                        break;
 		default:
 			dieNicely("Invalid action");
 	}

@@ -1,0 +1,143 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+
+
+
+<h1>PlanZilla - Admin Page</h1>
+      <form name="login" id="login" method="post" action="php/Main.php">
+  <fieldset>
+  <legend>Step 1 --> Please login:</legend>
+  <dl>
+    <dt>
+      <label title="Username">Username:
+      <input tabindex="1"  name="username" type="text" maxlength="12" id="username" />
+      </label>
+    </dt>
+  </dl>
+  <dl>
+    <dt>
+      <label title="Password">Password:
+      <input tabindex="2" name="password" type="password" maxlength="40" id="password" />
+      </label>
+    </dt>
+  </dl>
+  <dl>
+    <dt>
+      <label title="Login">
+      <input tabindex="3"  type="submit" name="action" value="login" />
+      </label>
+    </dt>
+  </dl>
+  </fieldset>
+</form> <p><p><p><p><p>
+
+
+         <form name="login" id="login" method="post" action="php/Main.php">
+  <fieldset>
+  <legend>Change password:</legend>
+  <dl>
+    <dt>
+      <label title="Username">Username:
+      <input tabindex="4" name="username" type="text" maxlength="12" id="username" />
+      </label>
+    </dt>
+  </dl>
+  <dl>
+    <dt>
+      <label title="Password">New Password:
+      <input tabindex="5"  name="password" type="password" maxlength="40" id="password" />
+      </label>
+    </dt>
+  </dl>
+  <dl>
+    <dt>
+      <label title="ChangePassword">
+      <input tabindex="6"  type="submit" name="action" value="ChangePassword" />
+      </label>
+    </dt>
+  </dl>
+  </fieldset>
+</form>
+
+
+            <form name="CreateUser" id="CreateUser" method="post" action="php/Main.php">
+  <fieldset>
+  <legend>Create Account:</legend>
+  <dl>
+    <dt>
+      <label title="Username">Username:
+      <input tabindex="7"  name="username" type="text" maxlength="12" id="username" />
+      </label>
+    </dt>
+  </dl>
+  <dl>
+    <dt>
+      <label title="Password">Password:
+      <input tabindex="8" name="password" type="password" maxlength="40" id="password" />
+      </label>
+    </dt>
+  </dl>
+    <dl>
+    <dt>
+      <label title="FirstName">Firstname:
+      <input tabindex="9" accesskey="u" name="FirstName" type="text" maxlength="30" id="FirstName" />
+      </label>
+    </dt>
+  </dl>
+  <dl>
+    <dt>
+      <label title="LastName">Lastname:
+      <input tabindex="10" accesskey="p" name="LastName" type="text" maxlength="30" id="LastName" />
+      </label>
+    </dt>
+  </dl>
+    <dl>
+    <dt>
+      <label title="type">Type:
+      <input tabindex="11" accesskey="u" name="type" type="int" maxlength="1" id="type" />
+      </label>
+    </dt>
+  </dl>
+  <dl>
+    <dt>
+      <label title="Submit">
+      <input tabindex="12" accesskey="l" type="submit" name="action" value="CreateUser" />
+      </label>
+    </dt>
+  </dl>
+  </fieldset>
+</form>
+
+
+          <form name="DeleteUser" id="DeleteUser" method="post" action="php/Main.php">
+  <fieldset>
+  <legend>Delete User:</legend>
+  <dl>
+    <dt>
+      <label title="Username">Username:
+      <input tabindex="13"  name="username" type="text" maxlength="12" id="username" />
+      </label>
+    </dt>
+  </dl>
+  <dl>
+    <dt>
+      <label title="DeleteUser">
+      <input tabindex="14"  type="submit" name="action" value="DeleteUser" />
+      </label>
+    </dt>
+  </dl>
+  </fieldset>
+</form>
+
+
+  </body>
+</html>
