@@ -46,35 +46,41 @@ class Authentication
 	 */
 	public function ValidateCredentials($Username, $Password)
 	{
+		$this->ValidateUsername($Username);
+		$this->ValidatePassword($Password);
 
+		
 	}
+
 
 	/**
 	 *
 	 * @param string $Username
-	 * @return boolean
+	 * @return void
 	 */
 	public function ValidateUsername($Username)
 	{
-            if ( (strlen($Username) > 5) && (strlen($Username) < 13) );
+            if ( (strlen($Password) > 4) && (strlen($Password) < 21) )
+		dieNicely("Your password has to have a length between 5 and 20. Please try again."); 
 
 	}
 
 	/**
 	 *
 	 * @param string $Password
-	 * @return boolean
+	 * @return void
 	 */
 	public function ValidatePassword($Password)
 	{
-            if ( (strlen($Password) > 5) && (strlen($Password) < 40) );
+            if ( (strlen($Password) > 5) && (strlen($Password) < 31) )
+		dieNicely("Your password has to have a length between 6 and 30. Please try again."); 
 
 	}
 
 
 	/**
 	 * @brief This function is called whenever a module needs to be sure someone is logged before doing something.
-	 * @param none
+	 * @param string $TargetLevel, string $message
 	 * @return void
 	 */
 	public function EnforceCurrentLevel($targetLevel, $message = "")
@@ -93,7 +99,10 @@ class Authentication
 	public function CheckUserExistence($Username)
 	{
                 $this->EnforceCurrentLevel(2);
+		$this->ValidateUsername($Username);
+
 		global $db;
+
 		$safe_username = $db->EscapeString($Username);
 		$query = 'select UserID from User where UserID=' . $safe_username;
 		$result = $db->Query($query);
@@ -112,8 +121,10 @@ class Authentication
 	 */
 	public function Login($Username, $Password)
 	{	
-	
-        global $db;
+		$this->ValidateUsername($Username);
+		$this->ValidatePassword($Password);
+
+       		global $db;
         
 		$safe_username = $db->EscapeString($Username);
 		$safe_password = $db->EscapeString($Password);
@@ -145,11 +156,10 @@ class Authentication
 	/**
 	 *
 	 * @param string $Username
-	 * @return boolean
+	 * @return void
 	 */
 	public function Logout()
 	{
-		session_start(); // resume session before destroying it. This is the right way to destroy a session.
 		session_unset();
 		session_destroy();
 		print json_encode(array("status" => "loggedOut", "message" => "You have successfully logged out"));
@@ -168,6 +178,10 @@ class Authentication
 	public function CreateUser($Username, $Password, $FirstName, $LastName, $Type)
 	{
                 $this->EnforceCurrentLevel(0);
+
+		$this->ValidateUsername($Username);
+		$this->ValidatePassword($Password);
+
 		global $db;
 
 		$safe_username = $db->EscapeString($Username);
@@ -229,10 +243,13 @@ class Authentication
 	/**
 	 *
 	 * @param string $Username
-	 * @return boolean
+	 * @return void
 	 */
 	public function DeleteUser($Username)
 	{
+
+		$this->ValidateUsername($Username);
+
                 //  an account can be deleted: either by a supervisor or by the user who owns the account
                 if($this->Username != $Username)
                         $this->EnforceCurrentLevel(0);
@@ -250,11 +267,13 @@ class Authentication
 	 *
 	 * @param string $Username
 	 * @param string $NewPassword
-	 * @return boolean
+	 * @return void
 	 */
 	public function ChangePassword($Username, $NewPassword)
 	{
-                
+      		$this->ValidateUsername($Username);
+		$this->ValidatePassword($Password);
+       
                 if($this->Username != $Username)
                         $this->EnforceCurrentLevel(2);
 
