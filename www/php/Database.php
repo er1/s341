@@ -56,7 +56,7 @@ class Database
                 if (!is_array($param))	//make $param an array in case it's not..
 			$param = array($param);
 		
-//		$param = $this->EscapeString($param);	//escape all parameters!
+		$param = $this->EscapeString($param);	//escape all parameters!
 
                 //dieNicely($query .'||'. $param . '||' . sprintf_array($query,$param)); // to debug
                 $result =  mysql_query(sprintf_array($query,$param), $this->database_handler) or dieNicely("Error in querying the DB:" . mysql_error());
