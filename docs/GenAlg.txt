@@ -1,0 +1,57 @@
+Suggested Courses:
+
+A = AllCoursesInSequence()
+C = StudentCompleteCourses()
+D = List of Dependancy Pairs	(Course, Requires) where Course in A
+S = List of all the Classes offered in the semester the student is registering for
+
+R = A - C
+
+for (c, r) in R:
+	if r not in C:
+		remove c from R
+	
+R = R intersection S
+
+Sort R on semester where Semester 1 is on top
+
+Truncate R to the number of courses the student should register in.
+
+R contains a list of Courses to register for
+
+------
+
+Set of possible Schedules:
+
+R = List of courses to register for (either user entered or from the alg. above)
+
+S = Get all sections for courses in R
+
+i.e. R = [ SOEN 341, COMP 346, COMP 345 ]
+and S = [ [Q, H], [W, X, Y], [D, R, P] ]
+if SOEN 341 has sections Q and H
+   COMP 346  "   "       W, X, Y
+   COMP 345  "   "       D, R, P
+
+for all the sections in the sub arrays of S, remove the ones that do no meet the requirements such as no weekend classes, no friday classes, etc...
+
+C = get the cartesian product of all the elements of S
+i.e. C = [ [Q,W,D], [Q,W,R], [Q,W,P], [Q,X,D], [Q,X,R], etc... ]
+this will get big fast
+
+now C will have classes that overlap so we make a schedule in the system to work off of
+
+T = the temporary schedule
+P = a possible schedule with no overlaps
+
+p = the empty set
+
+foreach s in C:
+	T = [] (empty schedule)
+	for c in s:
+		attempt to add c to T
+		if it failed, break, try another s
+	if we are here we added all the courses successfully so:
+	P.add(T or s) // it depends
+
+P will now contain all potential schedules
