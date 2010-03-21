@@ -2,6 +2,7 @@
 
 require_once("Main.php");
 
+
 /**
  * @class Database
  * @brief Module for abstracting the database and controlling access to it.
@@ -47,11 +48,18 @@ class Database
 	{
 		//require_once("Authentication.php");
 		//$auth->EnforceCurrentLevel(2);
-		if (!is_array($param))	//make $param an array in case it's not..
-			$parram = array($param);
-		$this->Connect(); //connect if that's not already the case..
-		$param = $this->EscapeString($param);	//escape all parameters!
-		$result =  mysql_query(sprintf($query,$param), $this->database_handler) or dieNicely("Error in querying the DB:" . mysql_error());
+
+                $this->Connect(); //connect if that's not already the case..
+
+                preg_replace('/\'/', '/\"/', $query); // we do this to avoid getting: \u2019 instead of (')
+
+                if (!is_array($param))	//make $param an array in case it's not..
+			$param = array($param);
+		
+//		$param = $this->EscapeString($param);	//escape all parameters!
+
+                //dieNicely($query .'||'. $param . '||' . sprintf_array($query,$param)); // to debug
+                $result =  mysql_query(sprintf_array($query,$param), $this->database_handler) or dieNicely("Error in querying the DB:" . mysql_error());
 		return $result;
 	}
 
@@ -94,19 +102,27 @@ class Database
 	{	$this->Connect(); //connect if that's not already the case..
 		if (is_array($input))
 		{
-			foreach ($arr as $i => $value)
-				$input[$i] = EscapeString($value);
+			foreach ($input as $i => $value)
+				$input[$i] = $this->EscapeString($value);
 			return $input;
 		}
 		else
 			return mysql_real_escape_string($input, $this->database_handler);
 	}
 
+
 	//Destructor, this take care of cleaning the DB connection without never being explicitely called.. This is called when object is deallocated or exit() is called or at the end of the script execution.
    function __destruct() {
 		$this->Close();
    }
    
+}
+
+// I put this here so it more easily accessible by our function but feel free to move it elsewhere.
+//sprintf can't handle arrays when they are given as parameter. This function can handle arrays
+function sprintf_array($format, $arr)
+{
+        return call_user_func_array('sprintf', array_merge((array)$format, $arr));
 }
 
 ?>

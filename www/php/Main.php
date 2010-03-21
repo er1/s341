@@ -52,4 +52,6 @@ function dieNicely($msg, $arr = array()) {
 	//Note, this is just handling of an error.. There is no need to kill the sessino for such a thing.
 }
 
+
+
 ?>

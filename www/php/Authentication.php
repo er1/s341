@@ -61,7 +61,7 @@ class Authentication
 	public function ValidateUsername($Username)
 	{
 
-		if (preg_match ("/^.*(?=.{5,25})(?=.*[a-z]).*$/i", $Username) === 0 )
+		if (preg_match ("/^.*(?=.{5,25})(?=.*[a-zA-Z]).*$/", $Username) === 0 )
 			dieNicely ("Your username must be at least 5 characters and must contain at least one letter (no special characters are allowed). Please try again.");
 
 	}
@@ -74,7 +74,7 @@ class Authentication
 	public function ValidatePassword($Password)
 	{
 
-		if (preg_match ("/^.*(?=.{6,64})(?=.*[0-9])(?=.*[a-z]).*$/i", $Password) === 0 )
+		if (preg_match ("/^.*(?=.{6,64})(?=.*[0-9])(?=.*[a-zA-Z]).*$/", $Password) === 0 )
 			dieNicely ("Your password must be at least 6 characters and must contain at least one letter and one digit (no special characters are allowed). Please try again.");
 	}
 
@@ -104,9 +104,8 @@ class Authentication
 
 		global $db;
 
-		$safe_username = $db->EscapeString($Username);
-		$query = 'select UserID from User where UserID=' . $safe_username;
-		$result = $db->Query($query);
+		$query = 'select UserID from User where UserID=%s';
+		$result = $db->Query($query, array($Username));
 
 		if ($db->NumRows($result) < 1)
 			return False;
@@ -127,11 +126,10 @@ class Authentication
 
        		global $db;
         
-		$safe_username = $db->EscapeString($Username);
 		$safe_password = $db->EscapeString($Password);
 
         $query = "SELECT PasswordHash, PasswordSalt, UserRoleID FROM User WHERE Username='%s'";
-		$result = $db->Query($query, $safe_username);
+		$result = $db->Query($query, $Username);
 		$pwInfo = $db->FetchFirstRow($result);
                 
 		$PasswordHash = $pwInfo["PasswordHash"];
@@ -185,49 +183,35 @@ class Authentication
 
 		global $db;
 
-		$safe_username = $db->EscapeString($Username);
-		$safe_password = $db->EscapeString($Password);
-		$safe_firstname = $db->EscapeString($FirstName);
-		$safe_lastname = $db->EscapeString($LastName);
+                $safe_password = $db->EscapeString($Password);
 
 		if (!is_numeric($Type) || $Type < 0 || $Type > 2)
-			exit();
-		else
-			$safe_type = $Type;
+			dieNicely("The Role type you have provided is invalid. Please try again.");
+
 
 		$UserID;
 
                 
                 //check whether the username is unique
-                $query = "SELECT Username FROM User WHERE Username='" . $safe_username . "';";
-                $result_username = $db->Query($query);
+                $query = "SELECT Username FROM User WHERE Username='%s';";
+                $result_username = $db->Query($query, array($Username));
                 if($db->NumRows($result_username) > 0)
                         dieNicely("The username you have chose already exists. Try again.");
                 //make sure that UserID is unique
 		do
                 {
 			$UserID = rand(1000001,9999999);
-			$query = "SELECT UserID FROM User WHERE UserID=" . $UserID;
-			$result_userid = $db->Query($query);
+			$query = "SELECT UserID FROM User WHERE UserID='%s';";
+			$result_userid = $db->Query($query, array($UserID));
 		}
                 while ($db->NumRows($result_userid) > 0);
 
 		$PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
 		$PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
 
-		$query = "INSERT INTO User " .
-			"VALUES(" .
-				"'" . $UserID . "', " .
-				"'" . $safe_username . "', " .
-				"'" . $safe_firstname . "', " .
-				"'" . $safe_lastname . "', " .
-				"'" . $PasswordHash . "', " .
-				"'" . $PasswordSalt . "', " .
-				"'" . $safe_type . "');";
+		$query = 'INSERT INTO User VALUES("%s","%s","%s","%s","%s","%s","%s");';
 
-		echo $query;
-
-		$result = $db->Query($query);
+ 		$result = $db->Query($query, array($UserID, $Username, $FirstName, $LastName, $PasswordHash, $PasswordSalt, $Type));
 
 		if ($result != False)
 		{
@@ -248,17 +232,14 @@ class Authentication
 	 */
 	public function DeleteUser($Username)
 	{
-
+                $this->EnforceCurrentLevel(0);
 		$this->ValidateUsername($Username);
 
-                //  an account can be deleted: either by a supervisor or by the user who owns the account
-                if($this->Username != $Username)
-                        $this->EnforceCurrentLevel(0);
+                 
 		global $db;
 		
-		$safe_username = $db->EscapeString($Username);
-		$query = "DELETE FROM User WHERE Username='" . $safe_username . "';";
-		$db->Query($query);
+		$query = "DELETE FROM User WHERE Username='%s';";
+		$db->Query($query, array($Username));
                 if($this->Username == $Username) // logout if a user deletes his own account
                         $this->Logout();
 	}
@@ -273,23 +254,20 @@ class Authentication
 	public function ChangePassword($Username, $NewPassword)
 	{
       		$this->ValidateUsername($Username);
-		$this->ValidatePassword($Password);
-       
+		$this->ValidatePassword($NewPassword);
+                //  a password can be changed either by a supervisor or by the user who owns the account
                 if($this->Username != $Username)
                         $this->EnforceCurrentLevel(2);
 
                 global $db;
 
-                $safe_username = $db->EscapeString($Username);
                 $safe_password = $db->EscapeString($NewPassword);
-
-                $query = "SELECT " . $safe_username;
 
                 $PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
                 $PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
 
-                $query = 'UPDATE User SET PasswordHash = "' . $PasswordHash . '", PasswordSalt = "' . $PasswordSalt . '" WHERE Username="'.$safe_username.'";';
-                $db->Query($query);
+                $query = 'UPDATE User SET PasswordHash = "%s", PasswordSalt = "%s" WHERE Username = "%s";';
+                $db->Query($query, array($PasswordHash, $PasswordSalt, $Username));
 	}
 }
 
