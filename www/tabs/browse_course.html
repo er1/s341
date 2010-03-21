@@ -2,23 +2,23 @@
 <script type="text/javascript" src="js/browse_course.js"></script>
 
 <div id="CourseFilter">
-    <h3><a href="#">Browse Course List</a></h3>
-        <div>
-            <p>Select which course to view.</p>
-            <div class="combobox_container" id="combobox_container_department">
-                <input class="combobox_input" type="text" tabindex="2"/>
-		<input class="combobox_hidden" name="department" type ="hidden" />
-		<a href="#" class="combobox_button"><span>Show</span></a>
-		<ul class="combobox_summary">
-			<li class="class_of_option">Hi</li>
-			<li><a href="b">Yo</a></li>
-		</ul>
-            </div>
-            <div id="CourseCodeTextBox">
-                <label for="courseCode">Course Code: </label><input type="text" class="courseCode" name="courseCode" value="341" style="width: 40px"><br>
-            </div>
+	<h3><a href="#">Browse Course List</a></h3>
+	<div>
+		<p>Select which course to view.</p>
+		<div>
+			<select name="department_combobox" id="department_combobox">
+				<option value="d">ALL</option>
+				<option value="a">SOEN</option>
+				<option value="b">COEN</option>
+				<option value="c">COMP</option>
+			</select>
+		</div>
+		<br/>
+		<div id="CourseCodeTextBox">
+			<label for="courseCode">Course Code: </label>
+			<input type="text" class="courseCode" name="courseCode" value="341" style="width: 40px">
+			<br>
+		</div>
 	</div>
-    <h3><a href="#">Browse Course List</a></h3>
-    <div>DFGHGFDHGHGHGF</div>
 </div>
 
