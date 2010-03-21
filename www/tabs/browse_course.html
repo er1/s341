@@ -1,50 +1,24 @@
+
+<script type="text/javascript" src="js/browse_course.js"></script>
+
 <div id="CourseFilter">
-    <h3><a href="#">Browse Course List</a></h3>
-        <div>
-            <p>Select which course to view.</p>
-            <div>
-		    <select name="department" id="department">
-			    <option value="a">Hi</option>
-			    <option value="b">Hey</option>
-			    <option value="c">Ho</option>
-		    </select>
-            </div>
-            <div id="CourseCodeTextBox">
-                <label for="courseCode">Course Code: </label><input type="text" class="courseCode" name="courseCode" value="341" style="width: 40px"><br>
-            </div>
+	<h3><a href="#">Browse Course List</a></h3>
+	<div>
+		<p>Select which course to view.</p>
+		<div>
+			<select name="department_combobox" id="department_combobox">
+				<option value="d">ALL</option>
+				<option value="a">SOEN</option>
+				<option value="b">COEN</option>
+				<option value="c">COMP</option>
+			</select>
+		</div>
+		<br/>
+		<div id="CourseCodeTextBox">
+			<label for="courseCode">Course Code: </label>
+			<input type="text" class="courseCode" name="courseCode" value="341" style="width: 40px">
+			<br>
+		</div>
 	</div>
 </div>
-
-
-<script>
-$(document).ready(function() {	//Runs when tab is loaded
-	CourseAccordion();
-	DepartmentFilter();
-})
-
-function CourseAccordion()
-{
-	$("#CourseFilter").accordion({
-		autoHeight: true
-		//,		collapsible: true
-	});
-}
-
-function DepartmentFilter()
-{
-	$("#department").combobox({
-		autocomplete: true,
-		buttonText: 'Show',
-		showOnMouseOver: true,
-		callbackSelectOption: function(val) {
-			alert("Selected value: "+val);
-		}
-	});
-
-}
-
-function tabCallBack() { //Runs when tab is shown
-
-}
-</script>
 
