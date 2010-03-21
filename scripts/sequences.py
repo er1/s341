@@ -1,7 +1,7 @@
 import pycurl
 import re
 
-#this is because LISP has corrupted me
+#this is because common LISP has corrupted me
 def cdr(somelist):
     newList = somelist
     newList.reverse()
