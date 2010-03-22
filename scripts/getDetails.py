@@ -23,7 +23,13 @@ d = Derp()
 c = pycurl.Curl()
 c.setopt(c.URL, "http://regsis.concordia.ca/details/details.exe")
 c.setopt(c.WRITEFUNCTION, d.callback)
-c.setopt(c.POSTFIELDS, "course=SOEN&courno=341+&yrsess=20102&campus=++&type=U")
+c.setopt(c.POSTFIELDS, "course=SOEN&courno=341+&yrsess=20094&campus=++&type=U")
 print "performing...",
 c.perform()
 print "done!"
+
+r1 = re.search('Prerequisite:.*</table><br>', d.data, re.DOTALL).group()
+r2 = re.sub('</*\w+>', '', r1)
+r3 = re.sub('Prerequisite:', '', r2)
+rx = re.split(';|\.', r3)
+#now we can do the requires and satisfies relations...

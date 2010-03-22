@@ -23,12 +23,12 @@ $curl->setopt(CURLOPT_WRITEDATA, $tmp);
 
 #populates the @departments array
 &getFacultyDepartments("04", "2009", "4", "U");
-#&printDepartments();
+&printDepartments();
 
 
-foreach my $dept (@departments) {
-	&getDepartmentCourses($dept, "2010", "1", "04", "U");
-}
+#foreach my $dept (@departments) {
+#	&getDepartmentCourses($dept, "2010", "1", "04", "U");
+#}
 
 #&getDepartmentCourses("MECH", "2009", "4", "04", "U");
 #&printCourses();
