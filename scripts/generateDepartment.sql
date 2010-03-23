@@ -1,0 +1,14 @@
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('BCEE', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('BLDG', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('CIVI', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('COEN', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('COMP', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('CWTC', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('CWTE', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('ELEC', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('ENCS', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('ENGR', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('IADI', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('INDU', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('MECH', '', 'ENCS');
+insert into Department(DepartmentID, DepartmentName, FacultyID) values('SOEN', '', 'ENCS');
