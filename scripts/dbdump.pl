@@ -23,12 +23,16 @@ $curl->setopt(CURLOPT_WRITEDATA, $tmp);
 
 #populates the @departments array
 &getFacultyDepartments("04", "2009", "4", "U");
-&printDepartments_SQL();
+#&printDepartments_SQL();
 
 
-#foreach my $dept (@departments) {
-#	&getDepartmentCourses($dept, "2010", "1", "04", "U");
-#}
+foreach my $dept (@departments) 
+{
+	&getDepartmentCourses($dept, "2010", "1", "04", "U");
+}
+
+&printCourse_SQL();
+
 
 #&getDepartmentCourses("MECH", "2009", "4", "04", "U");
 #&printCourses();
@@ -180,3 +184,10 @@ sub printCourses
 	}
 }
 
+sub printCourse_SQL
+{
+	foreach my $course (@courses)
+	{
+		print "insert into Course(DepartmentId, Number, Name, Credits) values('$course->{'department'}', '$course->{'number'}', '$course->{'name'}', '$course->{'credits'}');\n";
+	}
+}
