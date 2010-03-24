@@ -12,12 +12,22 @@ function CourseAccordion()
 
 function DepartmentFilter()
 {
-	$("#department_combobox").combobox({
-		autocomplete: true,
-		callbackSelectOption: function(val) {
-			alert("Selected value: "+val);
-		}
-	});
+	$("#department_combobox").flexbox({
+		"results": [
+			{"id": "1", "name": "COEN"},
+			{"id": "2", "name": "SOEN"},
+			{"id": "3", "name": "COMP"},
+			{"id": "4", "name": "ELEC"},
+			{"id": "5", "name": "DERP"}
+		],
+		"total": 5
+	}, {
+		paging: false,
+		maxVisibleRows: 8,
+		autoCompleteFirstMatch: false
+	}
+		
+	);
 
 }
 
