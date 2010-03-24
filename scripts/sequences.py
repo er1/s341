@@ -1,5 +1,5 @@
 """
-This script pulls sequence information from the (few) pages that contain the html versions of them for various programs.
+This script pulls sequence information from the (few) pages that contain the html versions of them for various programs..
 """
 import pycurl
 import re
