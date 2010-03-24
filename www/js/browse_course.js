@@ -31,7 +31,7 @@ function DepartmentFilter()
 
 function CourseCodeHandler()
 {
-	//$("#CourseCodeTextBox")
+	//`$("#CourseCodeTextBox")
 
 }
 
