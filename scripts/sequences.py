@@ -1,3 +1,6 @@
+"""
+This script pulls sequence information from the (few) pages that contain the html versions of them for various programs.
+"""
 import pycurl
 import re
 
@@ -38,18 +41,19 @@ class Derp:
 d = Derp()
 c = pycurl.Curl() #arnold aproves of curls
 for seq in sequences:
-    print seq
+    #print seq
+    print "insert into Sequence(DepartmentID) values('" + seq + "');"
     d.clear()
     
     c.setopt(c.URL, sequences[seq])
     c.setopt(c.WRITEFUNCTION, d.callback)
-    print "performing..."
+    #print "performing..."
     c.perform() #go get it!
-    print "done!"
+    #print "done!\n\n"
 
     #check if they are providing a pdf or html version
     if re.search('Download the course sequences for the', d.data) != None:
-        print "IM NOT PARSING PDFS!!!!"
+        #print "IM NOT PARSING PDFS!!!!"
         continue #fuck adobe!
 
     #now grab the sequence part
@@ -65,9 +69,10 @@ for seq in sequences:
     semNum = 0
     for item in r3:
         semNum += 1
-        print "\tSemester #" + str(semNum)
+        #print "\tSemester #" + str(semNum)
         for course in re.findall('\w{4}\s\d{3}', item):
-            print "\t-->" + course 
+            #print "\t-->" + course
+            print "insert into Sequencedetails(Semester, SequenceID, CourseID) values('" + str(semNum) + "', (select SequenceID from Sequence where DepartmentID='" + seq + "'), (select CourseID from Course where DepartmentID='" + course[0:4] + "' and Number='" + course[5:] + "');"; 
     
 
 #when we are all done....
