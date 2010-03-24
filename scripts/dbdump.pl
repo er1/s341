@@ -31,7 +31,8 @@ foreach my $dept (@departments)
 	&getDepartmentCourses($dept, "2010", "1", "04", "U");
 }
 
-&printCourse_SQL();
+&printClass_SQL();
+#&printCourse_SQL();
 
 
 #&getDepartmentCourses("MECH", "2009", "4", "04", "U");
@@ -130,7 +131,7 @@ sub getDepartmentCourses
 		if($line =~ m/.*<td\ width=3%>\/(\d)<\/td> # Semester, such as "4" for Fall
 			<td\ witdh=15%>.*(Lec|Lab|Tut)\s+(\w+)\s*<\/td> # Type (Lec, Tut, Lab) and group
 			<td\ width=8%>([\-A-Z]+)<\/td> # Day
-			<td\ width=20%>([\d\-\:]+)\s*(\w+)[^<]*<\/td> 
+			<td\ width=20%>(\d+\:\d+)\-(\d+\:\d+)\s*(\w+)[^<]*<\/td> #Start, End times and campus
 			<td\ width=9%>([\w\d\-\s]*)<\/td> # Room
 			<td\ width=16%>([^<]+)<\/td>.*/x) # Teacher's name
 		{
@@ -140,10 +141,11 @@ sub getDepartmentCourses
 			$class{'type'} = $2;
 			$class{'group'} = $3;
 			$class{'days'} = $4;
-			$class{'time'} = $5;
-			$class{'campus'} = $6;
-			$class{'room'} = $7;
-			$class{'teacher'} = $8;
+			$class{'time1'} = $5;
+			$class{'time2'} = $6;
+			$class{'campus'} = $7;
+			$class{'room'} = $8;
+			$class{'teacher'} = $9;
 
 			$class{'room'} =~ s/\s//; # Trim whitespaces
 
@@ -191,3 +193,19 @@ sub printCourse_SQL
 		print "insert into Course(DepartmentId, Number, Name, Credits) values('$course->{'department'}', '$course->{'number'}', '$course->{'name'}', '$course->{'credits'}');\n";
 	}
 }
+
+sub printClass_SQL
+{
+	
+	foreach my $course (@courses)
+	{
+		my @classes = @{$course->{'classes'}};
+
+		foreach my $class (@classes)
+		{		
+			print "insert into Class(Year, Semester, StartTime, EndTime, Days, Room, Section, CourseID ) ";
+			print "values('2009', '04', '$class->{'time1'}', '$class->{'time2'}', '$class->{'days'}', '$class->{'room'}', '$class->{'group'}', '(select CourseID from Course where DepartmentId='$course->{'department'}' and Number='$course->{'number'}')');\n";
+		}
+	}
+}
+
