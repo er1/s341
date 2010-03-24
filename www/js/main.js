@@ -2,11 +2,9 @@ var a;
 
 $(function() {	//To be run when DOM is constructed
 	$("#tabs").tabs({
-						fx: { opacity: 'toggle' } 
-						, show: function(event, ui) {
-							{ tabCallBack(); }
-						}
-					});
+		fx: { opacity: 'toggle' },
+		show: function(event, ui){{ tabCallBack(); }}
+	});
 		
 });
 
@@ -33,7 +31,10 @@ function getData(params, callback, options)
 				BSOD('Unknown error occured.. Please try again');
 		}
 		else
+		{
+			$("#loggedInAs").css({"visibility" : "visible"});
 			callback(response);
+		}
 	}
 	, "error":function(XMLHttpRequest, textStatus, errorThrown)
 	{ 
@@ -75,8 +76,8 @@ function showLogin(callback)
 				authenticateLogin(modalWindow.find(".username").val(), modalWindow.find(".password").val(), function() 
 				{ 
 					modalWindow.dialog('close');
-                    $("#loggedInAs").css({"visibility" : "visible"});
-                    callback();
+					$("#loggedInAs").css({"visibility" : "visible"});
+					callback();
 				});
 			}
 		}

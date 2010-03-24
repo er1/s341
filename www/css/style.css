@@ -69,3 +69,13 @@ p.bsod {
     text-align:left;
 }
 
+.browseHeading {
+	color: #1D5987;
+	font-weight: bold;
+	font-size: 14pt;
+}
+
+.comboboxHeading{
+	font-size: 12pt;
+	font-weight: normal;
+}
