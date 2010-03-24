@@ -25,9 +25,7 @@ function DepartmentFilter()
 		paging: false,
 		maxVisibleRows: 8,
 		autoCompleteFirstMatch: false
-	}
-		
-	);
+	});
 
 }
 
