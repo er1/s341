@@ -43,6 +43,7 @@ else
 function dieNicely($msg, $arr = array()) {
 	//This should be used ONLY for reporting error!
 	//@@TODO: log error? Send e-mail??
+
 	global $db;
 	ob_end_clean();	//flush whatever was in buffer b4 so front-end can catch error..
 	$arr["error"] = "true";
