@@ -13,12 +13,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="keywords" content="">
 		<meta name="description" content="">
-
-		<!-- section where we include references to stylesheets -->
 		<link media="screen" type="text/css" href="../css/custom-theme/jquery-ui-1.8rc1.custom.css" rel="stylesheet">
-		<link media="screen" type="text/css" href="../css/jquery.weekcalendar.css" rel="stylesheet">
-		<link media="screen" type="text/css" href="../css/style.css" rel="stylesheet">
-		<link media="screen" type="text/css" href="css/combobox.css" rel="stylesheet"/>
 
 
 		<!-- Section for including various scripts/plugin -->
@@ -32,31 +27,66 @@
 	<body>
 	
 
-<div>
+<div id="wrapper">
 
-<div id="browseCourse"></div>
 
-<div id="CourseFilter">
-    <h3><a href="#">Browse Course List</a></h3>
-        <div>
-            <p>Select which course to view.</p>
-            <div id="DepartmentCombobox">
-                <label for="department">Department: </label><input type="text" class="department" name="department" value="SOEN" style="width: 65px"><br>
-            </div>
-            <div id="CourseCodeTextBox">
-                <label for="courseCode">Course Code: </label><input type="text" class="courseCode" name="courseCode" value="341" style="width: 40px"><br>
-            </div>
-        </div>
-    <h3><a href="#">Browse Course List</a></h3>
-    <div>DFGHGFDHGHGHGF</div>
+
+<input type="button" id="reveal" value="reveal"/>
+<input type="button" id="accordeon" value="accordeon"/>
+
+<div id="demo" style="display:none">
+	<div id="CourseFilter">
+	    <h3><a href="#">Browse Course List</a></h3>
+	        <div id="firstPane">
+	            <p>Select which course to view.</p>
+	            <div id="DepartmentCombobox">
+	                <label for="department">Department: </label><input type="text" class="department" name="department" value="SOEN" style="width: 65px"><br>
+	            </div>
+	            <div id="CourseCodeTextBox">
+	                <label for="courseCode">Course Code: </label><input type="text" class="courseCode" name="courseCode" value="341" style="width: 40px"><br>
+	            </div>
+	        </div>
+	    <h3><a href="#">Browse Course List</a></h3>
+	    <div id="SecondPane">DFGHGFDHGHGHGF</div>
+	</div>
 </div>
 
 
+
+<fieldset id="heightContainer" style="margin-top:50px">
+	<legend>Height of elements in the page</legend>
+
+</fieldset>
+
+<fieldset>
+	<legend>Instructions</legend>
+	<ol>
+		<li>Look at the Height of elements above.. See that all the inner tabs have height==0</li>
+		<li>Run the Accordeon plugin and see what happens..</li>
+		<li>Refresh the page, click REVEAL and run the accordeon plugin once more.. Now the result is as expected</li>
+	</ol>
+	Conclusion: height() cannot be determined if elements are in hidden container which affect the accordeon plug-in
+
+</fieldset>
 </div>
 <script>
 $(document).ready(function() {	//Runs when tab is loaded
-    CourseAccordion();
-    DepartmentFilter();
+
+	updateHeight();
+	$("#reveal").click(function() { 
+		$("#demo").show(); 
+		updateHeight();
+	});
+
+	$("#accordeon").click(function() { 
+	    CourseAccordion();
+	    DepartmentFilter();
+
+		$("#demo").show(); 
+		updateHeight();
+	});
+
+
 })
 
 function CourseAccordion()
@@ -74,6 +104,14 @@ function DepartmentFilter()
 }
 
 function tabCallBack() { //Runs when tab is shown
+
+}
+
+function updateHeight() 
+{	$("#heightContainer").children().not("legend").remove();
+	$("div").each(function() {
+		$("#heightContainer").append("<p>" + $(this).attr("id") + ":" + $(this).outerHeight() + "</p>");
+	});
 
 }
 </script>

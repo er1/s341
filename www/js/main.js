@@ -8,6 +8,7 @@ $(function() {	//To be run when DOM is constructed
 		
 });
 
+function tabCallBack() {};
 
 function getData(params, callback, options)
 {	options = options || {};
