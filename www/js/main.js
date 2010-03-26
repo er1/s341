@@ -1,4 +1,4 @@
-var a;
+function tabCallBack() {};
 
 $(function() {	//To be run when DOM is constructed
 	$("#tabs").tabs({
@@ -23,9 +23,9 @@ $(function() {	//To be run when DOM is constructed
 		function() { $(this).removeClass('ui-state-hover'); }
 	); 
 
+	$(".course_symbol").live("click", function() { displayPopupCourse($(this).text()) });
 });
 
-function tabCallBack() {};
 
 
 function getData(params, callback, options)
@@ -146,11 +146,54 @@ function getSessionInfo()
  * @param jQuery object fieldContainer or selector expression
  * @return void
  */
-function parseResponseToFields(data, fieldContainer)
-{	fieldContainer = $(fieldContainer);
-	$.each(data, function(name, value)
-	{
-		fieldContainer.find("." + name).text(value);
+function parseResponseToFields(data, fieldContainer, wrapAround)
+{	
+	wrapAround = wrapAround || {};
+	if (data == null)
+		return;
+	fieldContainer = $(fieldContainer);
+	$.each(data, function(fieldName, fieldValue)
+	{	
+		var cell = fieldContainer.find("." + fieldName).empty();
+
+		if (fieldValue.constructor != Array)
+			fieldValue = [fieldValue];
+			
+		$.each(fieldValue, function(index, value)
+		{
+			if (wrapAround[fieldName])	//a WrapAround was provided! We expect HTML 
+			{
+					cell.append($(wrapAround[fieldName]).text(value));
+			}
+			else //Simple text only
+			{
+				cell.text(value);	
+			}		
+		})
 	})
+
+}
+
+
+function displayCourse(ui)
+{	var course = {"code":"COMP 238", "prerequisites": ["COMP 242","COMP 243"], "name":"Math for Computer Sciences I", "description":"Computer Science is the foundation of all computer technologies concerned with receiving, storing, processing, sharing and delivering information. At Concordia we have put together a curriculum leading to the BCompSc degree to satisfy two major objectives for sound, relevant and dynamic computer science education: understanding the theoretical developments that have made it possible for computers to transform the way we work and live, and acquiring the necessary skills to intelligently use this technology in the real world."};
+
+	var wrapAround = {"prerequisites": "<span class='course_symbol fakeLink'/>"}
+
+	parseResponseToFields(course, $("#courseDisplay"), wrapAround);
+}
+
+function displayPopupCourse(course)
+{
+	var course = {"code":"COMP 238", "prerequisites": ["COMP 242","COMP 243"], "name":"Math for Computer Sciences I", "description":"Computer Science is the foundation of all computer technologies concerned with receiving, storing, processing, sharing and delivering information. At Concordia we have put together a curriculum leading to the BCompSc degree to satisfy two major objectives for sound, relevant and dynamic computer science education: understanding the theoretical developments that have made it possible for computers to transform the way we work and live, and acquiring the necessary skills to intelligently use this technology in the real world."};
+	var wrapAround = {"prerequisites": "<span class='course_symbol fakeLink'/>"}
+
+	var modalWindow = $("#modalCourseDescription").attr("title",course.code);
+
+	parseResponseToFields(course, modalWindow, wrapAround);
+	modalWindow.dialog(
+	{	//Options for .dialog()
+		modal: true
+	});
 
 }

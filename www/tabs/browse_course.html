@@ -1,20 +1,57 @@
 
-<script type="text/javascript" src="js/browse_course.js"></script>
-
 <div id="CourseFilter">
-	<div class="browseHeading">Browse Course List</div>
-	<br>
-	<table border="0">
-		<tr>
-			<td class="comboboxHeading" width="270">Semester</td>
-			<td class="comboboxHeading" width="100">Department</td>
-			<td class="comboboxHeading" width="150">Course Code</td>
-		</tr>
-		<tr>
-			<td width="270"><div id="semester_combobox"></div></td>
-			<td width="100"><div id="department_combobox"></div></td>
-			<td width="150"><div id="course_code_combobox"></div></td>
-		</tr>
-	</table>
+	<h2>Browse Course List</h2>
+
+	<fieldset>
+		<legend>Search for a course</legend>
+
+		<select name="term">
+			<option value="W2009">Winter 2009</option>
+			<option value="F2010" selected>Fall 2010</option>
+			<option value="S2010">Summer 2010</option>
+			<option value="W2010">Winter 2010</option>
+		</select>
+	
+		<select name="department">
+			<option value="*" selected>All Department</option>
+			<option value="comp">COMP - Computer Sciences</option>
+			<option value="soen">SOEN - Software Engineering</option>
+			<option value="engr">ENGR - Engineering</option>
+		</select>
+	
+	
+		<div class="ui-widget">
+			<label>Course: </label>
+			<select id="comboBoxCourse">
+				<option value="COMP428">COMP 428 Introduction to Loosing time</option>
+		        <option value="COMP340">COMP 340 Introduction to sticking things in your nose</option>
+		        <option value="COMP567">COMP 567 Advanced ultra cool stuff</option>
+		        <option value="COMP485">COMP 485 Operating Systems</option>
+		        <option value="COMP382">COMP 382 Applied Advanced Calculus 3</option>
+		        <option value="COMP549">COMP 549 Diagrams</option>
+			</select>
+		</div>
+	
+	</fieldset>
+
 </div>
 
+<div id="courseDisplay" style="display:none;margin-top:15px;">
+	<div class="ui-widget-header ui-corner-all ui-helper-clearfix code" style="padding:5px"></div>
+	<div>
+		<strong>Course Name:</strong> <span class="name"></span><br>
+		<strong>Description:</strong> <div class="description"></div><br>
+		<strong>Pre-requisites:</strong> <div class="prerequisites"></div>
+	</div>
+</div>
+
+<script>
+$(function() {
+	var course = $("#comboBoxCourse").combobox({
+		onSelect:function(e, ui) 
+		{	$("#courseDisplay").slideDown("slow");
+			 displayCourse(ui.id)
+		} 
+	});
+});
+</script>

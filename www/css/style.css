@@ -13,6 +13,11 @@ html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pr
 html, body {
 	height: 100%;
 }
+
+body {
+	font-size:12px;
+	font-family:Helvetica;
+}
 .logo {
 	font-size:2em;
 	float:left;
@@ -20,7 +25,7 @@ html, body {
 }
 
 #logout {
-	margin:7px;
+	margin:3px;
 	padding:4px;
 	float:right;
 }
@@ -37,7 +42,6 @@ html, body {
 }
 .footer {
 	border-top:1px black solid;
-	font-size:0.7em;
 }
 
 a, .fakeLink {
@@ -80,13 +84,31 @@ p.bsod {
     text-align:left;
 }
 
-.browseHeading {
+h2 {
 	color: #1D5987;
 	font-weight: bold;
 	font-size: 14pt;
 }
 
+fieldset {
+	margin:5px;
+	padding:5px;
+	border:1px solid #1D5987;
+}
+
+strong {
+	font-weight:bold;
+}
 .comboboxHeading{
 	font-size: 12pt;
 	font-weight: normal;
 }
+
+.course_symbol {
+	text-decoration:underline;
+	color:#1D5987;
+	padding-right:5px;
+}
+/* TODO shouldn't be necessary */
+.ui-button-icon-only .ui-button-text { padding: 0.35em; } 
+.ui-autocomplete-input { padding: 0.48em 0 0.47em 0.45em; width:500px; }

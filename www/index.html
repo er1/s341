@@ -15,11 +15,9 @@
 		<meta name="description" content="">
 
 		<!-- section where we include references to stylesheets -->
-		<link media="screen" type="text/css" href="css/custom-theme/jquery-ui-1.8rc1.custom.css" rel="stylesheet">
+		<link media="screen" type="text/css" href="css/custom-theme/jquery-ui-1.8.custom.css" rel="stylesheet">
 		<link media="screen" type="text/css" href="css/jquery.weekcalendar.css" rel="stylesheet">
 		<link media="screen" type="text/css" href="css/style.css" rel="stylesheet">
-		<link media="screen" type="text/css" href="css/jquery.flexbox.css" rel="stylesheet"/>
-
 
 		<!-- Section for including various scripts/plugin -->
 		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
@@ -29,7 +27,7 @@
 		</script>
 		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript" src="js/jquery.weekcalendar.js"></script>
-		<script type="text/javascript" src="js/jquery.flexbox.js"></script>
+		<script type="text/javascript" src="js/jquery.ui.combobox.js"></script>
 		
 	</head>
 	<body>
@@ -69,6 +67,12 @@
 			<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 50px 0;"></span>
 				Network Error, check your network and try again
 		</p>
+	</div>
+
+	<div id="modalCourseDescription" title="" style="display:none">
+		<strong>Course Name:</strong> <span class="name"></span><br>
+		<strong>Description:</strong> <div class="description"></div><br>
+		<strong>Pre-requisites:</strong> <div class="prerequisites"></div>
 	</div>
 
 

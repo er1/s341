@@ -51,8 +51,6 @@ class Database
 
 		$this->Connect(); //connect if that's not already the case..
 		
-		preg_replace('/\'/', '/\"/', $query); // we do this to avoid getting: \u2019 instead of (')
-		
 		if (!is_array($param))	//make $param an array in case it's not..
 			$param = array($param);
 
