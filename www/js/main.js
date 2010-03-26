@@ -1,6 +1,9 @@
 function tabCallBack() {};
+	if (!isSecure())
+		document.location = document.location.href.replace("http://","https://").replace(":8080","");
 
 $(function() {	//To be run when DOM is constructed
+
 	$("#tabs").tabs({
 		fx: { opacity: 'toggle' },
 		show: function(event, ui){{ tabCallBack(); }}
@@ -197,3 +200,7 @@ function displayPopupCourse(course)
 	});
 
 }
+
+
+//One liner section, no function below this mark can take more than one line..
+function isSecure() { return location.protocol == 'https:';}

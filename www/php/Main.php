@@ -1,5 +1,8 @@
 <?php
 
+//Making sure we are dealing secure to avoid any problem..
+if(!$_SERVER['HTTPS']) dieNicely("Sorry, for security reasons only HTTPS is supported.");
+
 require_once("Authentication.php");
 $auth = new Authentication();
 
