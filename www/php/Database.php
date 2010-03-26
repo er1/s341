@@ -49,17 +49,19 @@ class Database
 		//require_once("Authentication.php");
 		//$auth->EnforceCurrentLevel(2);
 
-                $this->Connect(); //connect if that's not already the case..
-
-                preg_replace('/\'/', '/\"/', $query); // we do this to avoid getting: \u2019 instead of (')
-
-                if (!is_array($param))	//make $param an array in case it's not..
-			$param = array($param);
+		$this->Connect(); //connect if that's not already the case..
 		
+		preg_replace('/\'/', '/\"/', $query); // we do this to avoid getting: \u2019 instead of (')
+		
+		if (!is_array($param))	//make $param an array in case it's not..
+			$param = array($param);
+
 		$param = $this->EscapeString($param);	//escape all parameters!
 
-                //dieNicely($query .'||'. $param . '||' . sprintf_array($query,$param)); // to debug
-                $result =  mysql_query(sprintf_array($query,$param), $this->database_handler) or dieNicely("Error in querying the DB:" . mysql_error());
+		$query = str_replace("%s", "'%s'", $query);
+
+		$query = sprintf_array($query,$param); //parsing the query and replace all parameters by their value
+		$result =  mysql_query($query, $this->database_handler) or dieNicely("Error in querying the DB:" . mysql_error() . (constant("debug")) ? ". Query:" . $query : "");
 		return $result;
 	}
 
@@ -98,7 +100,7 @@ class Database
 	 *
          * @return string escaped string.
 	 */
-	public function EscapeString($input)
+	private function EscapeString($input)
 	{	$this->Connect(); //connect if that's not already the case..
 		if (is_array($input))
 		{

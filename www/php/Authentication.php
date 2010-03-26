@@ -126,9 +126,8 @@ class Authentication
 
        		global $db;
         
-		$safe_password = $db->EscapeString($Password);
 
-        $query = "SELECT PasswordHash, PasswordSalt, UserRoleID FROM User WHERE Username='%s'";
+        $query = "SELECT PasswordHash, PasswordSalt, UserRoleID FROM User WHERE Username=%s";
 		$result = $db->Query($query, $Username);
 		$pwInfo = $db->FetchFirstRow($result);
                 
@@ -136,7 +135,7 @@ class Authentication
 		$PasswordSalt = $pwInfo["PasswordSalt"];
 		$UserRoleID = $pwInfo["UserRoleID"];
 
-		$UnknownHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
+		$UnknownHash = hash('sha256', hash('sha256', $PasswordSalt . $Password));
 
 		if ($UnknownHash == $PasswordHash)
 		{
@@ -183,7 +182,6 @@ class Authentication
 
 		global $db;
 
-                $safe_password = $db->EscapeString($Password);
 
 		if (!is_numeric($Type) || $Type < 0 || $Type > 2)
 			dieNicely("The Role type you have provided is invalid. Please try again.");
@@ -193,7 +191,7 @@ class Authentication
 
                 
                 //check whether the username is unique
-                $query = "SELECT Username FROM User WHERE Username='%s';";
+                $query = "SELECT Username FROM User WHERE Username=%s;";
                 $result_username = $db->Query($query, array($Username));
                 if($db->NumRows($result_username) > 0)
                         dieNicely("The username you have chose already exists. Try again.");
@@ -201,7 +199,7 @@ class Authentication
 		do
                 {
 			$UserID = rand(1000001,9999999);
-			$query = "SELECT UserID FROM User WHERE UserID='%s';";
+			$query = "SELECT UserID FROM User WHERE UserID=%s;";
 			$result_userid = $db->Query($query, array($UserID));
 		}
                 while ($db->NumRows($result_userid) > 0);
@@ -209,7 +207,7 @@ class Authentication
 		$PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
 		$PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
 
-		$query = 'INSERT INTO User VALUES("%s","%s","%s","%s","%s","%s","%s");';
+		$query = 'INSERT INTO User VALUES(%s,%s,%s,%s,%s,%s,%s);';
 
  		$result = $db->Query($query, array($UserID, $Username, $FirstName, $LastName, $PasswordHash, $PasswordSalt, $Type));
 
@@ -238,7 +236,7 @@ class Authentication
                  
 		global $db;
 		
-		$query = "DELETE FROM User WHERE Username='%s';";
+		$query = "DELETE FROM User WHERE Username=%s;";
 		$db->Query($query, array($Username));
                 if($this->Username == $Username) // logout if a user deletes his own account
                         $this->Logout();
@@ -261,12 +259,11 @@ class Authentication
 
                 global $db;
 
-                $safe_password = $db->EscapeString($NewPassword);
 
                 $PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
                 $PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
 
-                $query = 'UPDATE User SET PasswordHash = "%s", PasswordSalt = "%s" WHERE Username = "%s";';
+                $query = 'UPDATE User SET PasswordHash = %s, PasswordSalt = %s WHERE Username = %s;';
                 $db->Query($query, array($PasswordHash, $PasswordSalt, $Username));
 	}
 }
