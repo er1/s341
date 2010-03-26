@@ -5,10 +5,28 @@ $(function() {	//To be run when DOM is constructed
 		fx: { opacity: 'toggle' },
 		show: function(event, ui){{ tabCallBack(); }}
 	});
-		
+	getSessionInfo();
+
+	//Binding
+	$("#logout").click(function() {
+		getData({"action":"logout"}, function(response)
+		{
+			$(".sessionData").text("");
+			$("#notLoggedIn").show();
+			$("#loggedIn").hide();
+			$("#tabs").tabs("load",$("#tabs").tabs('option', 'selected'));
+		});
+	})
+
+	$('.ui-hover').hover(
+		function() { $(this).addClass('ui-state-hover'); },
+		function() { $(this).removeClass('ui-state-hover'); }
+	); 
+
 });
 
 function tabCallBack() {};
+
 
 function getData(params, callback, options)
 {	options = options || {};
@@ -49,6 +67,7 @@ function getData(params, callback, options)
 
 }
 
+
 function showNetworkError(params, callback)
 {
 		var modalNetworkError = $("#modalTimeout");	
@@ -75,10 +94,12 @@ function showLogin(callback)
 		buttons: {
 			Ok: function() {
 				authenticateLogin(modalWindow.find(".username").val(), modalWindow.find(".password").val(), function() 
-				{ 
+				{
 					modalWindow.dialog('close');
 					$("#loggedInAs").css({"visibility" : "visible"});
 					callback();
+					getSessionInfo();
+					modalWindow.find(".password").val("");
 				});
 			}
 		}
@@ -103,4 +124,33 @@ function authenticateLogin(username, password, callback)
 function BSOD(message)
 {	message = message || "Does Not Compute!";
 	$("body").empty().addClass("bsod").append("<br><br><span class='bsod neg'>FATAL ERROR</span><br><br><p class='bsod'>" + message +"</p>");
+}
+
+
+function getSessionInfo()
+{
+	getData({"action":"getSessionInfo"}, function(response) {
+		if (response.username)
+		{	//Case when user is logged in
+			$("#notLoggedIn").hide();
+			$("#loggedIn").show();
+			parseResponseToFields(response, $("#loggedIn"));
+		}
+	});		
+
+}
+/**
+ * parseResponseToField
+ * This function takes all the data in data and tries to find an HTML container in fieldContainer to write this data to the screen. 
+ * @param object data
+ * @param jQuery object fieldContainer or selector expression
+ * @return void
+ */
+function parseResponseToFields(data, fieldContainer)
+{	fieldContainer = $(fieldContainer);
+	$.each(data, function(name, value)
+	{
+		fieldContainer.find("." + name).text(value);
+	})
+
 }

@@ -30,6 +30,9 @@ if (isset($_REQUEST["action"]))
                         $auth->EnforceCurrentLevel(2);
                         require ("viewSchedule.php");
                         break;
+		case("getSessionInfo"):
+                        $auth->GetSessionInfo();
+                        break;
 		default:
 			dieNicely("Invalid action");
 	}

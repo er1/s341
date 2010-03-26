@@ -33,8 +33,10 @@ class Authentication
 	function __construct() 
 	{	
 		if (isset($_SESSION['AuthenticationLevel']))
+		{
 				$this->AuthenticationLevel = $_SESSION['AuthenticationLevel'];
-
+				$this->Username = $_SESSION['Username'];
+		}
 	}
 
 
@@ -265,6 +267,24 @@ class Authentication
 
                 $query = 'UPDATE User SET PasswordHash = %s, PasswordSalt = %s WHERE Username = %s;';
                 $db->Query($query, array($PasswordHash, $PasswordSalt, $Username));
+	}
+
+
+	/**
+	 * Get the current session information and return a JSON object to the front-end representing the state of the session.
+	 * @TODO: connect the database for real to return real information
+	 * @return void
+	 */
+
+	public function GetSessionInfo()
+	{
+		$response = array();
+		$response["name"] = "Joe Blo";
+		$response["role"] = $this->AuthenticationLevel;
+		$response["username"] = $this->Username;
+		$response["program"] = "Software Engineering";
+		print json_encode($response);
+	
 	}
 }
 
