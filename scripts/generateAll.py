@@ -8,13 +8,26 @@ the concordia pages that they scrape to be up and running
 this)
 
 """
+import os
 
-#stub lol
+
+print "Creating entire database in INITIAL_DB.sql"
+
 
 #First generate Faculty
 
+os.system("echo \"insert into Faculty(FacultyName) values('ENCS');\" > INITIAL_DB.sql")
+
 #Generate Department
+
+
 
 #Genereate Course
 
-#Generate ...
+#Generate Requires & Satisfies
+
+#Generate Generate Program & SequenceDetails
+
+#Update descriptions
+
+#MISSION COMPLETE!
