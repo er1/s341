@@ -162,6 +162,7 @@ sub printDepartments
 	}
 }
 
+#ok as of 28.03.10
 sub printDepartments_SQL
 {
 	foreach my $department (@departments)
@@ -186,6 +187,7 @@ sub printCourses
 	}
 }
 
+#ok as of 28.03.10
 sub printCourse_SQL
 {
 	foreach my $course (@courses)
