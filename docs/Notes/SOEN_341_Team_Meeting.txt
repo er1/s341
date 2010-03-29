@@ -285,4 +285,12 @@ Corey: Populate DB.
 Mathieu (+Julia): Front-end & tabs
 JB+Andreas: Write stuff about testing. bout a page for each tab. (10 artifacts)
 Andreas: Auth/user/create users PHP… View Schedule PHP. View academic record PHP. CORE PHP (with Seb).
-Marc-André: find upper bound of simultaneous connection & test for security .. (+ Andreas)
+Marc-Andre: find upper bound of simultaneous connection & test for security .. (+ Andreas)
+
+-----------------
+
+Mon Mar 29, 2010
+
+- everyone has to do their own module testing
+- eri - installation manual
+- 
