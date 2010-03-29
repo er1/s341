@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 # Perl routines to dump Concordia database information
 
+# This will generate the Departments table and Course table
+
 use strict;
 use warnings;
 
@@ -23,6 +25,7 @@ $curl->setopt(CURLOPT_WRITEDATA, $tmp);
 
 #populates the @departments array
 &getFacultyDepartments("04", "2009", "4", "U");
+
 #&printDepartments_SQL();
 
 
@@ -31,9 +34,8 @@ foreach my $dept (@departments)
 	&getDepartmentCourses($dept, "2010", "1", "04", "U");
 }
 
-&printClass_SQL();
 #&printCourse_SQL();
-
+&printClass_SQL();
 
 #&getDepartmentCourses("MECH", "2009", "4", "04", "U");
 #&printCourses();
@@ -171,6 +173,7 @@ sub printDepartments_SQL
 	}
 }
 
+
 sub printCourses
 {
 	foreach my $course (@courses)
@@ -205,8 +208,24 @@ sub printClass_SQL
 
 		foreach my $class (@classes)
 		{		
-			print "insert into Class(Year, Semester, StartTime, EndTime, Days, Room, Section, CourseID ) ";
-			print "values('2009', '04', '$class->{'time1'}', '$class->{'time2'}', '$class->{'days'}', '$class->{'room'}', '$class->{'group'}', '(select CourseID from Course where DepartmentId='$course->{'department'}' and Number='$course->{'number'}')');\n";
+			#print "insert into Class(Year, Semester, StartTime, EndTime, Days, Room, Section, CourseID ) ";
+		        print "start transaction;\n"; 
+		        print "insert into Class(Year, Semester, Section, CourseID) ";
+			print "values('2009', '04', '$class->{'group'}', (select Cou\
+rseID from Course where DepartmentId='$course->{'department'}' and Number='$course->{'number'}'));\n";
+
+			#We now need to create a ClassBlock for every day that the class is scheduled for
+			my $days = $class->{'days'};
+			$days =~ s/\-//g;
+			my @day_array = split(//, $days);
+			
+			foreach my $block (@day_array)
+			{
+			        print "insert into ClassBlock(ClassID, StartTime, EndTime, Day) ";
+				print "values((select max(ClassID) from Class), '$class->{'time1'}', '$class->{'time2'}', '$block');\n";
+			}
+			#print "values('2009', '04', '$class->{'time1'}', '$class->{'time2'}', '$class->{'days'}', '$class->{'room'}', '$class->{'group'}', '(select CourseID from Course where DepartmentId='$course->{'department'}' and Number='$course->{'number'}')');\n";
+			print "commit;\n";
 		}
 	}
 }
