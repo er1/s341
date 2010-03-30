@@ -2,13 +2,18 @@
 		$.widget("ui.combobox", {
 		   // default options
 		   options: {
-		     onSelect: function() {},
+				onSelect: function() {},
+				defaultText: ""
 		   },
 			_create: function() {
 				var self = this;
 				var options = this.options;
+				options.defaultText = this.element.find("[selected]").text() || options.defaultText;
 				var select = this.element.hide();
 				var input = $("<input>")
+					.attr("id",this.element.attr("id") + "Combo")
+					.val(options.defaultText)
+					.click(function() { if ($(this).val() == options.defaultText) $(this).val(""); } )
 					.insertAfter(select)
 					.autocomplete({
 						source: function(request, response) {

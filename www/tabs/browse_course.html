@@ -1,18 +1,17 @@
-
 <div id="CourseFilter">
 	<h2>Browse Course List</h2>
 
 	<fieldset>
 		<legend>Search for a course</legend>
 
-		<select name="term">
+		<select name="term" id="term">
 			<option value="W2009">Winter 2009</option>
 			<option value="F2010" selected>Fall 2010</option>
 			<option value="S2010">Summer 2010</option>
 			<option value="W2010">Winter 2010</option>
 		</select>
 	
-		<select name="department">
+		<select name="department" id="department">
 			<option value="*" selected>All Department</option>
 			<option value="comp">COMP - Computer Sciences</option>
 			<option value="soen">SOEN - Software Engineering</option>
@@ -20,18 +19,15 @@
 		</select>
 	
 	
-		<div class="ui-widget">
-			<label>Course: </label>
-			<select id="comboBoxCourse">
-				<option value="COMP428">COMP 428 Introduction to Loosing time</option>
-				<option value="COMP340">COMP 340 Introduction to sticking things in your nose</option>
-				<option value="COMP567">COMP 567 Advanced ultra cool stuff</option>
-				<option value="COMP485">COMP 485 Operating Systems</option>
-				<option value="COMP382">COMP 382 Applied Advanced Calculus 3</option>
-				<option value="COMP549">COMP 549 Diagrams</option>
-			</select>
-		</div>
-	
+		<select id="comboBoxCourse">
+			<option value="COMP428">COMP 428 Introduction to Loosing time</option>
+	        <option value="COMP340">COMP 340 Introduction to sticking things in your nose</option>
+	        <option value="COMP567">COMP 567 Advanced ultra cool stuff</option>
+	        <option value="COMP485">COMP 485 Operating Systems</option>
+	        <option value="COMP382">COMP 382 Applied Advanced Calculus 3</option>
+	        <option value="COMP549">COMP 549 Diagrams</option>
+		</select>
+
 	</fieldset>
 
 </div>
@@ -52,6 +48,9 @@ $(function() {
 		{	$("#courseDisplay").slideDown("slow");
 			 displayCourse(ui.id)
 		} 
+		, defaultText:"SOEN 341 - Software Process"
 	});
+
+	$("#term").add("#department").combobox();
 });
 </script>
