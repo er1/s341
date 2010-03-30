@@ -28,12 +28,16 @@ $curl->setopt(CURLOPT_WRITEDATA, $tmp);
 
 &printDepartments_SQL();
 
-
+#&getDepartmentCourses("SOEN", "2009", "4", "04", "U");
+#&getDepartmentCourses("SOEN", "2009", "2", "04", "U");
+#&printCourses();
 foreach my $dept (@departments) 
 {
-	&getDepartmentCourses($dept, "2010", "1", "04", "U");
+	#&getDepartmentCourses($dept, "2009", "2", "04", "U");
+	&getDepartmentCourses($dept, "2009", "4", "04", "U");
 }
 
+#&debugCourses();
 &printCourse_SQL();
 &printClass_SQL();
 
@@ -192,12 +196,14 @@ sub printCourses
 	}
 }
 
-#ok as of 28.03.10
 sub printCourse_SQL
 {
+        #modified to avoid dupes
 	foreach my $course (@courses)
 	{
-		print "insert into Course(DepartmentId, Number, Name, Credits) values('$course->{'department'}', '$course->{'number'}', '$course->{'name'}', '$course->{'credits'}');\n";
+	        print "insert into Course(DepartmentId, Number, Name, Credits)\n";
+		print "\t" . "select '$course->{'department'}', '$course->{'number'}', '$course->{'name'}', '$course->{'credits'}' from dual\n";
+		print "\t\t" . "where not exists (select * from Course where DepartmentId='$course->{'department'}' and Number='$course->{'number'}');\n";
 	}
 }
 
@@ -207,6 +213,14 @@ sub printDetails_SQL
 	{
 	        system("python getDetails.py $course->{'department'} $course->{'number'}");
 	}
+}
+
+sub debugCourses
+{
+    foreach my $course (@courses)
+    {
+	print "$course->{'department'} $course->{'number'}\n";
+    }
 }
 
 sub printClass_SQL

@@ -12,10 +12,10 @@ import sys
 
 #get the course from command line args
 
-myCourse = "COMP"
-myCourseNum = "249"
-#myCourse = sys.argv[1] #example "SOEN"
-#myCourseNum = sys.argv[2] #example "341"
+#myCourse = "COMP"
+#myCourseNum = "249"
+myCourse = sys.argv[1] #example "SOEN"
+myCourseNum = sys.argv[2] #example "341"
 
 # Defining the sessions
 SUMMER = 1
