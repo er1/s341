@@ -192,12 +192,12 @@ class Authentication
 		$UserID;
 
                 
-                //check whether the username is unique
+                // check whether the username is unique
                 $query = "SELECT Username FROM User WHERE Username=%s;";
                 $result_username = $db->Query($query, array($Username));
                 if($db->NumRows($result_username) > 0)
                         dieNicely("The username you have chose already exists. Try again.");
-                //make sure that UserID is unique
+                // make sure that UserID is unique
 		do
                 {
 			$UserID = rand(1000001,9999999);
@@ -255,7 +255,7 @@ class Authentication
 	{
       		$this->ValidateUsername($Username);
 		$this->ValidatePassword($NewPassword);
-                //  a password can be changed either by a supervisor or by the user who owns the account
+                // a password can be changed either by a supervisor or by the user who owns the account
                 if($this->Username != $Username)
                         $this->EnforceCurrentLevel(2);
 
