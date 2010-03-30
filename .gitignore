@@ -2,6 +2,7 @@ www/nbproject/  # ignore netbeans config
 www/nbproject/*
 www/php/Config.php
 www/php/*~
+www/scripts/*
 www/*~
 docs/*~
 docs/Notes/*~
