@@ -26,7 +26,7 @@ $curl->setopt(CURLOPT_WRITEDATA, $tmp);
 #populates the @departments array
 &getFacultyDepartments("04", "2009", "4", "U");
 
-#&printDepartments_SQL();
+&printDepartments_SQL();
 
 
 foreach my $dept (@departments) 
@@ -34,8 +34,8 @@ foreach my $dept (@departments)
 	&getDepartmentCourses($dept, "2010", "1", "04", "U");
 }
 
-#&printCourse_SQL();
-#&printClass_SQL();
+&printCourse_SQL();
+&printClass_SQL();
 
 &printDetails_SQL();
 
@@ -206,7 +206,6 @@ sub printDetails_SQL
 	foreach my $course (@courses)
 	{
 	        system("python getDetails.py $course->{'department'} $course->{'number'}");
-		#last;
 	}
 }
 

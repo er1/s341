@@ -19,15 +19,20 @@ print "Creating entire database in INITIAL_DB.sql"
 os.system("echo \"insert into Faculty(FacultyName) values('ENCS');\" > INITIAL_DB.sql")
 
 #Generate Department
-
-
-
-#Genereate Course
-
+#Generate Course
+#Generate Class & ClassBlock
 #Generate Requires & Satisfies
 
-#Generate Generate Program & SequenceDetails
+os.system("perl dbdump.pl >> INITIAL_DB.sql")
+
+#Generate Program & SequenceDetails
+
+os.system("python sequences.py >> INITIAL_DB.sql")
 
 #Update descriptions
+
+"""
+TODO -- turns out this will require another script after all.
+"""
 
 #MISSION COMPLETE!
