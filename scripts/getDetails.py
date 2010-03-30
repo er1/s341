@@ -12,8 +12,10 @@ import sys
 
 #get the course from command line args
 
-myCourse = sys.argv[1] #example "SOEN"
-myCourseNum = sys.argv[2] #example "341"
+myCourse = "COMP"
+myCourseNum = "249"
+#myCourse = sys.argv[1] #example "SOEN"
+#myCourseNum = sys.argv[2] #example "341"
 
 # Defining the sessions
 SUMMER = 1
@@ -40,6 +42,11 @@ c.setopt(c.POSTFIELDS, "course=" + myCourse + "&courno=" + myCourseNum + "+&yrse
 c.perform()
 #print "done!\n\n"
 
+match = re.search('Prerequisite:.*</table><br>', d.data, re.DOTALL)
+
+if match == None:
+    sys.exit() #course is not offered or something
+
 r1 = re.search('Prerequisite:.*</table><br>', d.data, re.DOTALL).group()
 r2 = re.sub('</*\w+>', '', r1)
 r3 = re.sub('Prerequisite:', '', r2)
@@ -64,8 +71,19 @@ for elem in rx:
         print "insert into Requires(CourseID) values((select CourseID from Course where DepartmentID='" + myCourse +"' and Number='" + myCourseNum +"'));"
         #populate Satisfies table for the corresponding RID
         for item in re.split('or', elem):
+
+            matchDepID = re.search('\w{4}', item)
+            matchCNum = re.search('\d{3}', item)
+            if matchDepID == None or matchCNum == None:
+                if re.search('previously|concurrently', elem, re.IGNORECASE) != None:
+                    continue #this is where we can handle co-requisites
+                else:
+                    print >> sys.stderr, "Something screwed up with parsing " + myCourse + myCourseNum + " [getDetails.py]"
+                    print >> sys.stderr, elem
+                    continue
+
             print "insert into Satisfies(RequirementID, CourseID) values((select max(RequirementID) from Requires), "
-            print "\t" + "(select CourseID from Course where DepartmentID = '" + re.search('\w{4}', item).group() + "' and Number = '" + re.search('\d{3}', item).group() + "')"
+            print "\t" + "(select CourseID from Course where DepartmentID = '" + matchDepID.group() + "' and Number = '" + matchCNum.group() + "')"
             print "\t" + ");"
 """        
         #This RID should now satisfy our Course

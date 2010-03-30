@@ -35,7 +35,9 @@ foreach my $dept (@departments)
 }
 
 #&printCourse_SQL();
-&printClass_SQL();
+#&printClass_SQL();
+
+&printDetails_SQL();
 
 #&getDepartmentCourses("MECH", "2009", "4", "04", "U");
 #&printCourses();
@@ -196,6 +198,15 @@ sub printCourse_SQL
 	foreach my $course (@courses)
 	{
 		print "insert into Course(DepartmentId, Number, Name, Credits) values('$course->{'department'}', '$course->{'number'}', '$course->{'name'}', '$course->{'credits'}');\n";
+	}
+}
+
+sub printDetails_SQL
+{
+	foreach my $course (@courses)
+	{
+	        system("python getDetails.py $course->{'department'} $course->{'number'}");
+		#last;
 	}
 }
 
