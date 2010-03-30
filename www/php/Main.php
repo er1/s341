@@ -1,13 +1,13 @@
 <?php
 
-//Making sure we are dealing secure to avoid any problem..
+// Making sure we are dealing secure to avoid any problem..
 if(!$_SERVER['HTTPS']) dieNicely("Sorry, for security reasons only HTTPS is supported.");
 
 require_once("Authentication.php");
 $auth = new Authentication();
 
 require_once("Database.php");
-global $db;	//global so it can be re-used to avoid opening multiple handle while only one is enough.
+global $db;	// global so it can be re-used to avoid opening multiple handle while only one is enough.
 $db = new Database();
 
 if (isset($_REQUEST["action"]))
@@ -41,22 +41,22 @@ if (isset($_REQUEST["action"]))
 	}
 }
 else
-{	//Keep people out of the back-end..
+{	// Keep people out of the back-end..
 	header ('Location: ../');
 }
 
 
 function dieNicely($msg, $arr = array()) {
-	//This should be used ONLY for reporting error!
-	//@@TODO: log error? Send e-mail??
+	// This should be used ONLY for reporting error!
+	// @@TODO: log error? Send e-mail??
 
 	global $db;
-	ob_end_clean();	//flush whatever was in buffer b4 so front-end can catch error..
+	ob_end_clean();	// flush whatever was in buffer before so front-end can catch error...
 	$arr["error"] = "true";
 	$arr["msg"] = $msg;
 	print json_encode($arr);
 	exit();
-	//Note, this is just handling of an error.. There is no need to kill the sessino for such a thing.
+	// Note, this is just handling of an error... There is no need to kill the session for such a thing.
 }
 
 
