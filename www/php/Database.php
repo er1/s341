@@ -2,7 +2,6 @@
 
 require_once("Main.php");
 
-
 /**
  * @class Database
  * @brief Module for abstracting the database and controlling access to it.
