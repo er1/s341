@@ -2,7 +2,6 @@
 
 require_once("Main.php");
 
-
 /**
  * @class Database
  * @brief Module for abstracting the database and controlling access to it.
@@ -19,13 +18,13 @@ class Database
 	public function Connect()
 	{
 		if ($this->database_handler)
-			return;	//no need to open another connection if we are already connected.
+			return;	// no need to open another connection if we are already connected.
         require_once("Config.php");
 		
 		$this->database_handler = mysql_connect(constant("db_host"), constant("db_user"), constant("db_password")) or dieNicely("Cannot connect to DB:" . mysql_error());
 		mysql_select_db(constant("db_name")) or dieNicely("Cannot select database");
 
-		//At this point we either dies gracefully or we are not connected.. no need for a return value;
+		// At this point we either dies gracefully or we are not connected.. no need for a return value;
 		return true;
 	}
 
