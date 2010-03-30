@@ -68,7 +68,7 @@ for elem in rx:
         #
         #now for the new way, we have one requirement per course and n satisfy relations per requirement
         #so lets create that entry in the requres table
-        print "insert into Requires(CourseID) values((select CourseID from Course where DepartmentID='" + myCourse +"' and Number='" + myCourseNum +"'));"
+        print "insert into Requires(CourseID) values((select min(CourseID) from Course where DepartmentID='" + myCourse +"' and Number='" + myCourseNum +"'));"
         #populate Satisfies table for the corresponding RID
         for item in re.split('or', elem):
 
@@ -82,8 +82,23 @@ for elem in rx:
                     print >> sys.stderr, elem
                     continue
 
+            #this feels like a totally nasty hack
+            #I had to put this in because some things depend on courses that do not exist yet
+            #an example of this is COMP249 depends on COMP232 but its is not in the system for 2009
+            #thus we get a CONDITIONAL INSERT FFFFFFFFFFFFUUUUUUUUUUU-
+
+                #it turns out that i have to do the same trick again for departments
+
+            print "insert into Department(DepartmentID, DepartmentName, FacultyID)"
+            print "\t" + "select '" + matchDepID.group() + "', '', 'ENCS' from dual"
+            print "\t\t" + "where not exists (select * from Department where DepartmentID='" + matchDepID.group() + "');"
+
+            print "insert into Course(DepartmentID,Number)"
+            print "\t" + "select '" + matchDepID.group() + "', '" + matchCNum.group() + "' from dual"
+            print "\t\t" + "where not exists (select * from Course where DepartmentID='" + matchDepID.group() + "' and Number='" + matchCNum.group() + "');"
+
             print "insert into Satisfies(RequirementID, CourseID) values((select max(RequirementID) from Requires), "
-            print "\t" + "(select CourseID from Course where DepartmentID = '" + matchDepID.group() + "' and Number = '" + matchCNum.group() + "')"
+            print "\t" + "(select min(CourseID) from Course where DepartmentID = '" + matchDepID.group() + "' and Number = '" + matchCNum.group() + "')"
             print "\t" + ");"
 """        
         #This RID should now satisfy our Course

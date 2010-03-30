@@ -221,8 +221,7 @@ sub printClass_SQL
 			#print "insert into Class(Year, Semester, StartTime, EndTime, Days, Room, Section, CourseID ) ";
 		        print "start transaction;\n"; 
 		        print "insert into Class(Year, Semester, Section, CourseID) ";
-			print "values('2009', '04', '$class->{'group'}', (select Cou\
-rseID from Course where DepartmentId='$course->{'department'}' and Number='$course->{'number'}'));\n";
+			print "values('2009', '04', '$class->{'group'}', (select min(CourseID) from Course where DepartmentId='$course->{'department'}' and Number='$course->{'number'}'));\n";
 
 			#We now need to create a ClassBlock for every day that the class is scheduled for
 			my $days = $class->{'days'};

@@ -47,7 +47,9 @@ for seq in sequences:
     #seq contains a Department ID example "SOEN"
     #need to make an entry in the Program table...
     pName = re.search('/course-sequences/.*/(\w+)-.*/$', sequences[seq]).group(1) #this gives us something like "regular" or "hardware"
+
     print "insert into Program(Name, DepartmentID) values('" + pName + "', '" + seq +"');"
+    
     d.clear()
     
     c.setopt(c.URL, sequences[seq])
@@ -77,7 +79,14 @@ for seq in sequences:
         #print "\tSemester #" + str(semNum)
         for course in re.findall('\w{4}\s\d{3}', item):
             #print "\t-->" + course
-            print "insert into SequenceDetails(Semester, ProgramID, CourseID) values('" + str(semNum) + "', (select ProgramID from Program where DepartmentID='" + seq + "' and Name='" + pName + "'), (select CourseID from Course where DepartmentID='" + course[0:4] + "' and Number='" + course[5:] + "');"; 
+            
+            #this nasty piece of work again from getDetails.py
+
+            print "insert into Course(DepartmentID,Number)"
+            print "\t" + "select '" + course[0:4] + "', '" + course[5:] + "' from dual"
+            print "\t\t" + "where not exists (select * from Course where DepartmentID='" + course[0:4] + "' and Number='" + course[5:] + "');"
+
+            print "insert into SequenceDetails(Semester, ProgramID, CourseID) values('" + str(semNum) + "', (select ProgramID from Program where DepartmentID='" + seq + "' and Name='" + pName + "'), (select min(CourseID) from Course where DepartmentID='" + course[0:4] + "' and Number='" + course[5:] + "'));"; 
     
 
 #when we are all done....

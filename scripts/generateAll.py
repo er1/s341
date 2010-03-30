@@ -8,6 +8,7 @@ the concordia pages that they scrape to be up and running
 this)
 
 """
+
 import os
 
 
@@ -16,11 +17,8 @@ print "Creating entire database in INITIAL_DB.sql"
 
 #First generate Faculty
 
-os.system("echo \"insert into Faculty(FacultyName) values('ENCS');\" > INITIAL_DB.sql")
+os.system("echo \"insert into Faculty(FacultyID, FacultyName) values('ENCS', 'Engineering & Computer Science');\" > INITIAL_DB.sql")
 
-#Generate Department
-#Generate Course
-#Generate Class & ClassBlock
 #Generate Requires & Satisfies
 
 os.system("perl dbdump.pl >> INITIAL_DB.sql")
