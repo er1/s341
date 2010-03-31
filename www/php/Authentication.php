@@ -64,9 +64,11 @@ class Authentication
 	{
 
 		if (preg_match ("/^.*(?=.{5,25})(?=.*[a-zA-Z]).*$/", $Username) === 0 )
-			dieNicely ("Your username must be at least 5 characters and must contain at least one letter (no special characters are allowed). Please try again.");
+			$this->loginError ("Your username must be at least 5 characters and must contain at least one letter (no special characters are allowed). Please try again.");
 
 	}
+	
+
 
 	/**
 	 *
@@ -77,7 +79,7 @@ class Authentication
 	{
 
 		if (preg_match ("/^.*(?=.{6,64})(?=.*[0-9])(?=.*[a-zA-Z]).*$/", $Password) === 0 )
-			dieNicely ("Your password must be at least 6 characters and must contain at least one letter and one digit (no special characters are allowed). Please try again.");
+			$this->loginError ("Your password must be at least 6 characters and must contain at least one letter and one digit (no special characters are allowed). Please try again.");
 	}
 
 
@@ -148,7 +150,7 @@ class Authentication
 		}
 		else
 		{
-			echo '{"loginError":"true","reason":"invalid username or password"}';
+			echo '{"$this->loginError":"true","reason":"invalid username or password"}';
 			return false;
 		}
 	}
@@ -196,7 +198,7 @@ class Authentication
                 $query = "SELECT Username FROM User WHERE Username=%s;";
                 $result_username = $db->Query($query, array($Username));
                 if($db->NumRows($result_username) > 0)
-                        dieNicely("The username you have chose already exists. Try again.");
+                        $this->loginError("The username you have chose already exists. Try again.");
                 // make sure that UserID is unique
 		do
                 {
@@ -286,6 +288,13 @@ class Authentication
 		print json_encode($response);
 	
 	}
+
+	private function loginError($reason)
+	{
+		print json_encode(array("errorLogin"=>"true","reason"=>$reason));
+		exit();
+	}
+
 }
 
 

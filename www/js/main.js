@@ -92,6 +92,8 @@ function showLogin(callback)
 {	var modalWindow = $("#modalLogin");
 	modalWindow.dialog(
 	{	//Options for .dialog()
+		show:"puff",
+		hide:"puff",
 		modal: true,
 		resizable:false, 
 		buttons: {
@@ -107,6 +109,12 @@ function showLogin(callback)
 			}
 		}
 	
+	}).keyup(function(e) {
+		if (e.which == 13)
+		{	
+			e.preventDefault();
+			$(this).parent().find(".ui-button").click();
+		}
 	});
 }
 
@@ -196,7 +204,7 @@ function displayPopupCourse(course)
 	parseResponseToFields(course, modalWindow, wrapAround);
 	modalWindow.dialog(
 	{	//Options for .dialog()
-		modal: true
+		show:"drop", hide:"drop"
 	});
 
 }
