@@ -33,7 +33,7 @@ $curl->setopt(CURLOPT_WRITEDATA, $tmp);
 #&printCourses();
 foreach my $dept (@departments) 
 {
-	#&getDepartmentCourses($dept, "2009", "2", "04", "U");
+	&getDepartmentCourses($dept, "2009", "2", "04", "U");
 	&getDepartmentCourses($dept, "2009", "4", "04", "U");
 }
 
