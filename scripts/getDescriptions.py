@@ -1,3 +1,8 @@
+"""
+This script pulls in the course descriptions for ENCS courses from the course
+Calendar. It also gets distinct Course Name and Credits.
+"""
+
 import pycurl
 import re
 
@@ -22,9 +27,9 @@ for url in desc:
 
     c.setopt(c.URL, url)
     c.setopt(c.WRITEFUNCTION, d.callback)
-    print "performing..."
+    #print "performing..."
     c.perform() #go get it!
-    print "done!\n\n"
+    #print "done!\n\n"
 
     d.data = re.sub('<br />|</b>|<i>|</i>', '', d.data)
 
@@ -32,5 +37,6 @@ for url in desc:
 
     for course in rx:
         match = re.search('b>(\w{4}) (\d{3}) *([a-zA-Z0-9 ]+) *\((\d) credits\)([^<]+)', course, re.DOTALL)
-        print match.group(1) + match.group(2) + " -- " + match.group(3) + "[" + match.group(4) + " credits]"
-        print match.group(5)
+        #print match.group(1) + match.group(2) + " -- " + match.group(3) + "[" + match.group(4) + " credits]"
+        #print match.group(5)
+        print "update Course set Description='" + match.group(3) + "\n" + re.sub('\'', '', match.group(5)) + "', Credits='" + match.group(4) + "' where DepartmentId='" + match.group(1) + "' and Number='" + match.group(2) + "';"

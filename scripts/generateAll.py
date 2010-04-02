@@ -12,7 +12,9 @@ this)
 import os
 
 
-print "Creating entire database in INITIAL_DB.sql"
+print "Creating entire database in INITIAL_DB.sql..."
+
+print "This can take upwards of 45mins, so play some NES or something..."
 
 
 #First generate Faculty
@@ -29,8 +31,6 @@ os.system("python sequences.py >> INITIAL_DB.sql")
 
 #Update descriptions
 
-"""
-TODO -- turns out this will require another script after all.
-"""
+os.system("python getDescriptions.py >> INITIAL_DB.sql")
 
 #MISSION COMPLETE!
