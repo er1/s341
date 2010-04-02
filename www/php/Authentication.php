@@ -265,7 +265,7 @@ class Authentication
 
 
                 $PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
-                $PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
+                $PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $NewPassword));
 
                 $query = 'UPDATE User SET PasswordHash = %s, PasswordSalt = %s WHERE Username = %s;';
                 $db->Query($query, array($PasswordHash, $PasswordSalt, $Username));
@@ -280,11 +280,31 @@ class Authentication
 
 	public function GetSessionInfo()
 	{
+		global $db;
+
+		$query = 'SELECT FirstName, LastName FROM User WHERE Username=%s;';
+		$result = $db->Query($query, array($this->Username));
+		$name = $db->FetchFirstRow($result);
+		
+
 		$response = array();
-		$response["name"] = "Joe Blo";
+
+		$response["name"] = $name["FirstName"] . " " . $name["LastName"];
 		$response["role"] = $this->AuthenticationLevel;
 		$response["username"] = $this->Username;
-		$response["program"] = "Software Engineering";
+
+		if($this->AuthenticationLevel == 0)
+		{
+			$response["program"] = "Administration";
+		}
+		else
+		{
+			$query = 'select Name from Program where ProgramID=(select ProgramID from StudentProgram where UserID=(select UserID from User where Username=%s));';
+			$result = $db->Query($query, array($this->Username));
+			$program = $db->FetchFirstRow($result);
+			$response["program"] = $program["Name"];
+		}
+
 		print json_encode($response);
 	
 	}
