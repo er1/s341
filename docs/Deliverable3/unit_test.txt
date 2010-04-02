@@ -1,0 +1,8 @@
+
+2.2.1 Unit Testing
+
+We have chosen to test the database and authentication modules of our system, as they are both quite important. The testing is done on a black box basis: we send in queries, and we check if it returns what we are expecting. If the result is not what we expect, then the test fails. For the database, we need to test if it is able to handle the information we want to store, and for the authentication module, we want to know if it can manage user credentials in a secure manner.
+
+2.2.2 Requirements Testing
+
+The key features for the database are if it can store complete course information, if it can store complete student and teacher information, and if it can represent teachers teaching different classes and students being registered in different classes.
