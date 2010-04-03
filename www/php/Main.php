@@ -30,7 +30,6 @@ if (isset($_REQUEST["action"]))
                         $auth->ChangePassword($_POST['username'], $_POST["password"]);
                         break;
 		case("viewSchedule"):
-                        $auth->EnforceCurrentLevel(2);
                         require ("viewSchedule.php");
                         break;
 		case("getSessionInfo"):

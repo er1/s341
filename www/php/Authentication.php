@@ -309,6 +309,15 @@ class Authentication
 	
 	}
 
+	/**
+	 * Get the Username and return it.
+	 * @return Username
+	 */
+	public function getUsername()
+	{
+		return $this->Username;
+	}
+
 	private function loginError($reason)
 	{
 		print json_encode(array("errorLogin"=>"true","reason"=>$reason));

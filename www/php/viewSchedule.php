@@ -1,79 +1,61 @@
 <?php
 	require_once("Main.php");
-?>
+
+
+$auth->EnforceCurrentLevel(2);
+
+$query = 'SELECT * FROM ClassBlock JOIN Class JOIN Course ON ClassBlock.ClassID = Class.ClassID AND Course.CourseID = Class.CourseID WHERE Class.ClassID IN' .
+		'(SELECT ClassID FROM  RegisteredIn WHERE UserID IN'.
+		'(SELECT UserID FROM User WHERE Username = %s' .
+		'));';
+$result = $db->Query($query, array( $auth->getUsername() ));
+$jsonMessage = '';
+
+while( $info = $db->FetchFirstRow($result) )
+{
+	if($jsonMessage == '')
+		$jsonMessage = '	{' . "\n" . '    "events": ['; // HEADER
+	else
+		$jsonMessage .= ',';
+
+
+	$semester = array();
+	$nextYear = 0;
+
+	switch($info["Semester"])
 	{
-    "events": [
-        {
-            "id": 1 ,
-            "start": "2010-01-05T11:45:00.000+10:00" ,
-            "end": "2010-01-05T13:00:00.000+10:00" ,
-            "title": "COMP 428 / 4 LEC N",
-            "read_only": true,
-			"course": "COMP428"
-        },
-        {
-            "id": 2 ,
-            "start": "2010-01-05T13:15:00.000+10:00" ,
-            "end": "2010-01-05T14:05:00.000+10:00" ,
-            "title": "COMP 428 / 4 TUT NA",
-            "read_only": true,  
-			"course": "COMP428"
-        },
-        {
-            "id": 3 ,
-            "start": "2010-01-06T08:45:00.000+10:00" ,
-            "end": "2010-01-06T10:00:00.000+10:00" ,
-            "title": "SOEN 341 / 4 LEC S",
-            "read_only": true,  
-			"course": "COMP428"
-        },
-        {
-            "id": 4 ,
-            "start": "2010-01-07T11:45:00.000+10:00" ,
-            "end": "2010-01-07T13:00:00.000+10:00" ,
-            "title": "COMP 428 / 4 LEC N",
-            "read_only": true,  
-			"course": "COMP428"
-        },
-        {
-            "id": 5 ,
-            "start": "2010-01-07T14:45:00.000+10:00" ,
-            "end": "2010-01-07T17:30:00.000+10:00" ,
-            "title": "COMP 426 / 4 LEC M",
-            "read_only": true,  
-			"course": "COMP428"
-        },
-        {
-            "id": 6 ,
-            "start": "2010-01-07T17:45:00.000+10:00" ,
-            "end": "2010-01-07T20:15:00.000+10:00" ,
-            "title": "ENGR 391 / 4 TUT UU",
-            "read_only": true,  
-			"course": "COMP428"
-        },
-        {
-            "id": 7 ,
-            "start": "2010-01-07T20:30:15:00.000+10:00" ,
-            "end": "2010-01-07T21:20:00:00.000+10:00" ,
-            "title": "ENGR 391 / 4 TUT UA",
-            "read_only": true,  
-			"course": "COMP428"
-        },
-        {
-            "id": 8 ,
-            "start": "2010-01-08T08:45:00.000+10:00" ,
-            "end": "2010-01-08T10:00:00.000+10:00" ,
-            "title": "SOEN 341 / 4 LEC S",
-            "read_only": true,  
-			"course": "COMP428"
-        },
-        {
-            "id": 9 ,
-            "start": "2010-01-08T12:15:00.000+10:00" ,
-            "end": "2010-01-08T13:05:00.000+10:00" ,
-            "title": "SOEN 341 / 4 TUT SA",
-            "read_only": true,  
-			"course": "COMP428"
-        }
-    ]
+		case(1):
+			$semester["starts"] = '-01-05';
+			$semester["ends"]   = '-01-05';
+			break;
+		case(2):
+			$semester["starts"] = '-09-07';
+			$semester["ends"]   = '-12-06';
+			break;
+		case(3):
+			$semester["starts"] = '-09-07';
+			$semester["ends"]   = '-04-09';
+			$nextYear = 1;
+			break;
+		case(4):
+			$semester["starts"] = '-01-03';
+			$semester["ends"]   = '-04-09';
+			break;
+
+	}
+
+	$jsonMessage .= "\n        {" .
+	"\n" . '            "id": ' . $info["ClassID"] .' ,' .
+	"\n" . '            "start": "' . $info["Year"] . $semester["starts"] . $info["Day"] . $info["StartTime"] .'.000+10:00" ,' .
+	"\n" . '            "end": "'   . ($info["Year"]+$nextYear) . $semester["ends"]   . $info["Day"] . $info["EndTime"]   .'.000+10:00" ,' .
+	"\n" . '            "title": "' . $info["Name"] .'",' .
+	"\n" . '            "read_only": true,' .
+	"\n" . '			"course": "' . $info["DepartmentId"] . $info["Number"] . '"' .
+	"\n" . '        }';
 }
+
+$jsonMessage .= "\n    ]\n}"; // FOOTER
+
+echo $jsonMessage;
+
+?>
