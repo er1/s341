@@ -25,9 +25,9 @@ while( $info = $db->FetchFirstRow($result) )
 
 	switch($info["Semester"])
 	{
-		case(4):
-			$semester["starts"] = '-01-08';
-			$semester["ends"]   = '-01-08';
+		case(1):
+			$semester["starts"] = '-06-28';
+			$semester["ends"]   = '-08-09';
 			break;
 		case(2):
 			$semester["starts"] = '-09-07';
@@ -38,13 +38,13 @@ while( $info = $db->FetchFirstRow($result) )
 			$semester["ends"]   = '-04-09';
 			$nextYear = 1;
 			break;
-		case(1):
+		case(4):
 			$semester["starts"] = '-01-03';
 			$semester["ends"]   = '-04-09';
 			break;
 
 	}
-	$info["Year"] = 2010;
+
 	$jsonMessage .= "\n        {" .
 	"\n" . '            "id": ' . $id .' ,' .
 	"\n" . '            "start": "' . $info["Year"] . $semester["starts"] . $info["Day"] . $info["StartTime"] .'.000+10:00" ,' .
