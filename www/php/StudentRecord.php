@@ -86,10 +86,10 @@ class StudentRecord
 			"\n" . '            "Name": "' . $info["Name"] .'",' .
 			"\n" . '            "Course": "' . $info["DepartmentId"] . $info["Number"] .'",' .
 			"\n" . '            "Section": "' . $info["Section"] .'",' .
-			"\n" . '            "Credits": "' . $info["Credits"] .'",' .
+			"\n" . '            "Credits": ' . $info["Credits"] .',' .
 			"\n" . '            "Grade": "' . $info["Grade"] .'",' .
-			"\n" . '            "Semester": "' . $info["Semester"] .'",' .
-			"\n" . '            "Year": "' . $info["Year"] .'",' .
+			"\n" . '            "Semester": ' . $info["Semester"] .',' .
+			"\n" . '            "Year": ' . $info["Year"] .',' .
 			"\n" . '        }';
 		}
 
