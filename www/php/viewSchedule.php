@@ -1,11 +1,12 @@
 <?php
-	require_once("Main.php");
+require_once("Main.php");
 
-
+require_once("Authentication.php");
 $auth->EnforceCurrentLevel(2);
 
+
 $query = 'SELECT * FROM ClassBlock JOIN Class JOIN Course ON ClassBlock.ClassID = Class.ClassID AND Course.CourseID = Class.CourseID WHERE Class.ClassID IN' .
-		'(SELECT ClassID FROM  RegisteredIn WHERE UserID IN'.
+		'(SELECT ClassID FROM  RegisteredIn WHERE UserID ='.
 		'(SELECT UserID FROM User WHERE Username = %s' .
 		'));';
 $result = $db->Query($query, array( $auth->getUsername() ));
@@ -16,7 +17,7 @@ while( $info = $db->FetchFirstRow($result) )
 {
 	$id++;
 
-	if($jsonMessage != '	{' . "\n" . '    "events": [')
+	if($id > 1)
 		$jsonMessage .= ',';
 
 
