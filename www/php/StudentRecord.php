@@ -65,10 +65,10 @@ class StudentRecord
 		$jsonMessage = '	{' . "\n" . '    "events": ['. // HEADER
 						"\n        {" .
 						"\n" . '            "id": 0 ,' .
-						"\n" . '            "StudentID": '. $userInfo["UserID"]    .'",' .
+						"\n" . '            "StudentID": '. $userInfo["UserID"]    .',' .
 						"\n" . '            "Name": "'    . $userInfo["FirstName"] . ' ' . $userInfo["LastName"] .'",' .
 						"\n" . '            "Program": "' . $this->GetProgram($Student)   . '",' .
-						"\n" . '            "GPA": "' . $this->GetGPA($Student)       . '",' .
+						"\n" . '            "GPA": ' . $this->GetGPA($Student)       . ',' .
 						"\n" . '        }';
 
 
