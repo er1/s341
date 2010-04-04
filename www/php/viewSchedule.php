@@ -9,13 +9,14 @@ $query = 'SELECT * FROM ClassBlock JOIN Class JOIN Course ON ClassBlock.ClassID 
 		'(SELECT UserID FROM User WHERE Username = %s' .
 		'));';
 $result = $db->Query($query, array( $auth->getUsername() ));
-$jsonMessage = '';
+$jsonMessage = '	{' . "\n" . '    "events": ['; // HEADER
+$id = 0;
 
 while( $info = $db->FetchFirstRow($result) )
 {
-	if($jsonMessage == '')
-		$jsonMessage = '	{' . "\n" . '    "events": ['; // HEADER
-	else
+	$id++;
+
+	if($jsonMessage != '	{' . "\n" . '    "events": [')
 		$jsonMessage .= ',';
 
 
@@ -24,9 +25,9 @@ while( $info = $db->FetchFirstRow($result) )
 
 	switch($info["Semester"])
 	{
-		case(1):
-			$semester["starts"] = '-01-05';
-			$semester["ends"]   = '-01-05';
+		case(4):
+			$semester["starts"] = '-01-08';
+			$semester["ends"]   = '-01-08';
 			break;
 		case(2):
 			$semester["starts"] = '-09-07';
@@ -37,15 +38,15 @@ while( $info = $db->FetchFirstRow($result) )
 			$semester["ends"]   = '-04-09';
 			$nextYear = 1;
 			break;
-		case(4):
+		case(1):
 			$semester["starts"] = '-01-03';
 			$semester["ends"]   = '-04-09';
 			break;
 
 	}
-
+	$info["Year"] = 2010;
 	$jsonMessage .= "\n        {" .
-	"\n" . '            "id": ' . $info["ClassID"] .' ,' .
+	"\n" . '            "id": ' . $id .' ,' .
 	"\n" . '            "start": "' . $info["Year"] . $semester["starts"] . $info["Day"] . $info["StartTime"] .'.000+10:00" ,' .
 	"\n" . '            "end": "'   . ($info["Year"]+$nextYear) . $semester["ends"]   . $info["Day"] . $info["EndTime"]   .'.000+10:00" ,' .
 	"\n" . '            "title": "' . $info["Name"] .'",' .
