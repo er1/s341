@@ -1,0 +1,23 @@
+Scan statistics
+---------------
+
+       Scan time : 5:39:04.0427
+   HTTP requests : 3467867 sent (170.49/s), 1674943.00 kB in, 744782.44 kB out (118.94 kB/s)  
+     Compression : 0.00 kB in, 0.00 kB out (0.00% gain)    
+ HTTP exceptions : 3 net errors, 0 proto errors, 29 retried, 0 drops
+ TCP connections : 34361 total (101.09 req/conn)  
+  TCP exceptions : 0 failures, 0 timeouts, 6 purged
+  External links : 56 skipped
+    Reqs pending : 5717        
+
+Database statistics
+-------------------
+
+          Pivots : 172 total, 141 done (81.98%)    
+     In progress : 0 pending, 24 init, 2 attacks, 5 dict    
+   Missing nodes : 21 spotted
+      Node types : 1 serv, 35 dir, 86 file, 12 pinfo, 34 unkn, 4 par, 0 val
+    Issues found : 32 info, 3 warn, 6 low, 28 medium, 0 high impact
+       Dict size : 2085 words (85 new), 95 extensions, 256 candidates
+
+
