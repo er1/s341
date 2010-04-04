@@ -1,8 +1,19 @@
 
 2.2.1 Unit Testing
 
-We have chosen to test the database and authentication modules of our system, as they are both quite important. The testing is done on a black box basis: we send in queries, and we check if it returns what we are expecting. If the result is not what we expect, then the test fails. For the database, we need to test if it is able to handle the information we want to store, and for the authentication module, we want to know if it can manage user credentials in a secure manner.
+We have chosen to test the database and authentication modules of our system, as they are both quite important. The testing is done on a black box basis: we send in queries, and we check if it returns what we are expecting. If the result is not what we expect, then the test fails. For the database, we need to test if it is able to handle the information we want to store, and for the authentication module, we want to know if it can manage user credentials in a secure manner. More precisely, we need to be able to login, logout and manage user accounts without any issues. 
+
+At the same time, our authentication module is our security module since it has to make sure that unauthorized users are not able to access and use modules in ways that are not permitted to them. To accomplish this, we need to test security flaws potentially leading to system and data compromise. Instead of creating our own manual or automated tests cases, we have decided to use Google's web application security scanner, called skipfish (For more information, visit: http://code.google.com/p/skipfish/). This the product that Google has created to smoke test their web applications before deployment. This tool has been written by Google's best security engineers for Google, but in March 2010, Google decided to make this tool public. By using this tool, we don't have to reinvent the wheel, since all the security flaws that we know of, are being taken into account by this tool. Furthermore, we decided to use this tool instead of other publicly available tools, such as Nikto and Nessus, because skipfish has the following advantages over other tools: 
+-High performance (can achieve 500+ requests/seconds with a very modest CPU, network, and memory footprint)
+-Multiplexing single-thread, fully asynchronous network I/O and data processing model that eliminates memory management, scheduling, and IPC inefficiencies present in some multi-threaded clients.
+-Smart response caching and advanced server behavior heuristics are used to minimize unnecessary traffic.
+-Smart, up-to-date and active (but hopefully non-disruptive) security checks (Google engineers update this tool almost every day!) 
+
+A report was generated after we tested our website with skipfish. skipfish took 5 hours and 40 minutes to do a complete test of the server. 3,468,000 HTTP requests have been sent to the server (about 170.49 requests/second). Each request was a black box based attack and we are delighted to learn that no security vulnerabilities were found during the test. The report indicated 28 medium risk flaws (potentially leading to data compromise) and 6 potential low risk flaws. Although, after a thorough examination, we have determined that all these potential risk flaws are all false positives. Although we are happy with the results, we know that the security risk will rise with the complexity of our solution. In other words, our project still needs a lot of work before it is ready for a public release, but the maturity of our solution is directly correlated with its complexity, which in its turn will require our program to take more serious security measures to avoid potential security risk flaws.
+
 
 2.2.2 Requirements Testing
 
 The key features for the database are if it can store complete course information, if it can store complete student and teacher information, and if it can represent teachers teaching different classes and students being registered in different classes.
+
+
