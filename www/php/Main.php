@@ -32,6 +32,11 @@ if (isset($_REQUEST["action"]))
 		case("viewSchedule"):
                         require ("viewSchedule.php");
                         break;
+		case("viewTranscript"):
+                        require_once ("showTranscript.php");
+			$record = new StudentRecord();
+			$record->showTranscript( $auth->getUsername() );
+                        break;
 		case("getSessionInfo"):
                         $auth->GetSessionInfo();
                         break;

@@ -1,21 +1,23 @@
 <?php
-	require_once("Main.php");
+require_once("Main.php");
 
-
+require_once("Authentication.php");
 $auth->EnforceCurrentLevel(2);
 
+
 $query = 'SELECT * FROM ClassBlock JOIN Class JOIN Course ON ClassBlock.ClassID = Class.ClassID AND Course.CourseID = Class.CourseID WHERE Class.ClassID IN' .
-		'(SELECT ClassID FROM  RegisteredIn WHERE UserID IN'.
+		'(SELECT ClassID FROM  RegisteredIn WHERE UserID ='.
 		'(SELECT UserID FROM User WHERE Username = %s' .
 		'));';
 $result = $db->Query($query, array( $auth->getUsername() ));
-$jsonMessage = '';
+$jsonMessage = '	{' . "\n" . '    "events": ['; // HEADER
+$id = 0;
 
 while( $info = $db->FetchFirstRow($result) )
 {
-	if($jsonMessage == '')
-		$jsonMessage = '	{' . "\n" . '    "events": ['; // HEADER
-	else
+	$id++;
+
+	if($id > 1)
 		$jsonMessage .= ',';
 
 
@@ -25,8 +27,8 @@ while( $info = $db->FetchFirstRow($result) )
 	switch($info["Semester"])
 	{
 		case(1):
-			$semester["starts"] = '-01-05';
-			$semester["ends"]   = '-01-05';
+			$semester["starts"] = '-06-28';
+			$semester["ends"]   = '-08-09';
 			break;
 		case(2):
 			$semester["starts"] = '-09-07';
@@ -45,7 +47,7 @@ while( $info = $db->FetchFirstRow($result) )
 	}
 
 	$jsonMessage .= "\n        {" .
-	"\n" . '            "id": ' . $info["ClassID"] .' ,' .
+	"\n" . '            "id": ' . $id .' ,' .
 	"\n" . '            "start": "' . $info["Year"] . $semester["starts"] . $info["Day"] . $info["StartTime"] .'.000+10:00" ,' .
 	"\n" . '            "end": "'   . ($info["Year"]+$nextYear) . $semester["ends"]   . $info["Day"] . $info["EndTime"]   .'.000+10:00" ,' .
 	"\n" . '            "title": "' . $info["Name"] .'",' .
