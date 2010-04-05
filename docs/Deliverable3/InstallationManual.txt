@@ -1,0 +1,34 @@
+-- Installation Instructions
+
+Planzilla makes use of some server software and needs to be configured manually prior to deployment. Before attempting installation please be sure you have permission to perform all the required tasks and any pertinent information (such as database credentials) to avoid an in complete installation.
+
+1. SERVER VERIFICATION & INSTALLATION -- Planzilla requires the use of the Apache Web Server with support for SSL and PHP 5 as well as MySQL. If you are installing planzilla on its own machine, you may use a compatible AMP stack as XAMPP or install the software seperately. If you have an existing server for deployment, please make sure it is running at least PHP version 5 with support for MySQL or upgrade to the latest version of PHP.
+
+/Installation of these software packages is beyond the scope of this document, please refer to the software vendor's homepage for up to date versions of the software and installation instructions./
+
+2. PLANZILLA INSTALLATION -- All the files required for Planzilla are located in the www directory of the installation bundle, please unarchive its contents into the desired directory of the webserver and that the directory has permission to execute PHP scripts.
+
+3. PLANZILLA CONFIGURATION -- Configure Planzilla by filling in the required values in the Config.php file. An example file named Config.php.example is provided for your convinience and is located in that same directory.
+
+4. DATABASE PREPARATION -- Run against the database the setup script dbsetup.sql found in the scripts directory of the installation bundle.
+
+One way to go about doing this would be the command "mysql <db> -u <username> -p < scripts/dbsetup.sql"
+
+5. DATABASE POPULATION -- Populate the database with all the required information such as Courses, Course Sections, Program Sequences. An example script which will automatically pull data from the Concordia University course listing is availible under the scripts directory of the installation bundle.
+
+6. DEPLOYMENT -- To start adding students, the database has been set up with a default user __INSERTDEFAULTUSERNAMEHERE__ with the password __INSERTDEFAULTPASSWORDHERE__. Through the web interface, create users for all the administrative staff and remove the default user prior to bringing the server live. Finally, add students to the system as needed.
+
+Congradulations, you have successfully set up Planzilla!
+
+-- URIs to the software used
+
+Installation Instructions and Downloads of the required software can be found at their homepage.
+
+XAMPP
+	http://www.apachefriends.org/en/xampp.html
+Apache Web Server
+	http://httpd.apache.org/
+PHP
+	http://php.net/
+MySQL
+	http://www.mysql.com/
