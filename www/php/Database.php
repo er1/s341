@@ -115,6 +115,23 @@ class Database
 		$this->Close();
    }
    
+
+	private function groupBy($fields = array(), $array = array())
+	{
+		$ans = array();	
+		foreach($array as $line)
+		{	
+			$str = "";
+			foreach($fields as $field)
+				$str .= $line[$field];
+			
+			$ans[$str] = $ans[$str] || array();
+			$ans[$str][] = $line;
+		}
+
+		return $ans;
+	
+	}
 }
 
 // I put this here so it more easily accessible by our function but feel free to move it elsewhere.

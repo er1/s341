@@ -18,6 +18,7 @@ $(function() {	//To be run when DOM is constructed
 			$("#notLoggedIn").show();
 			$("#loggedIn").hide();
 			$("#tabs").tabs("load",$("#tabs").tabs('option', 'selected'));
+			$("#logout").text("Login");
 		});
 	})
 
@@ -109,7 +110,7 @@ function showLogin(callback)
 			}
 		}
 	
-	}).keyup(function(e) {
+	}).unbind("keyup").keyup(function(e) {
 		if (e.which == 13)
 		{	
 			e.preventDefault();
@@ -124,7 +125,10 @@ function authenticateLogin(username, password, callback)
 		return BSOD('Does not commmpppuuuuttte!!<br><br><object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/kBSOhODoch0&hl=en_US&fs=1&color1=0x3a3a3a&color2=0x999999&autoplay=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/kBSOhODoch0&hl=en_US&fs=1&color1=0x3a3a3a&color2=0x999999&autoplay=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed></object>');
 	getData({"action":"login","username":username, "password":password}, function(response) {
 		if (response.loginError == "false")
+		{
+			$("#logout").text("Logout");
 			callback();
+		}	
 		else
 			alert(response.reason);
 	}, {"type":"post"});
@@ -145,6 +149,7 @@ function getSessionInfo()
 		{	//Case when user is logged in
 			$("#notLoggedIn").hide();
 			$("#loggedIn").show();
+			$("#logout").text("Logout");
 			parseResponseToFields(response, $("#loggedIn"));
 		}
 	});		

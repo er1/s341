@@ -77,6 +77,21 @@ class Course
 	{
 
 	}
+
+	public function getCourseList($searchString)
+	{
+
+
+		$query = 'select UserID from User where UserID=%s';
+		$result = $db->Query($query, array($Username));
+
+		if ($db->NumRows($result) < 1)
+			return False;
+		else
+			return True;
+	
+	
+	}
 }
 
 ?>

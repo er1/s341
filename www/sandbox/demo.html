@@ -13,7 +13,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="keywords" content="">
 		<meta name="description" content="">
-		<link media="screen" type="text/css" href="../css/custom-theme/jquery-ui-1.8rc1.custom.css" rel="stylesheet">
+		<link media="screen" type="text/css" href="../css/custom-theme/jquery-ui-1.8.custom.css" rel="stylesheet">
 
 
 		<!-- Section for including various scripts/plugin -->
@@ -31,89 +31,36 @@
 
 
 
-<input type="button" id="reveal" value="reveal"/>
-<input type="button" id="accordeon" value="accordeon"/>
+<input id="datepicker">
+<input id="datepicker2">
 
-<div id="demo" style="display:none">
-	<div id="CourseFilter">
-	    <h3><a href="#">Browse Course List</a></h3>
-	        <div id="firstPane">
-	            <p>Select which course to view.</p>
-	            <div id="DepartmentCombobox">
-	                <label for="department">Department: </label><input type="text" class="department" name="department" value="SOEN" style="width: 65px"><br>
-	            </div>
-	            <div id="CourseCodeTextBox">
-	                <label for="courseCode">Course Code: </label><input type="text" class="courseCode" name="courseCode" value="341" style="width: 40px"><br>
-	            </div>
-	        </div>
-	    <h3><a href="#">Browse Course List</a></h3>
-	    <div id="SecondPane">DFGHGFDHGHGHGF</div>
-	</div>
 </div>
 
-
-
-<fieldset id="heightContainer" style="margin-top:50px">
-	<legend>Height of elements in the page</legend>
-
-</fieldset>
-
-<fieldset>
-	<legend>Instructions</legend>
-	<ol>
-		<li>Look at the Height of elements above.. See that all the inner tabs have height==0</li>
-		<li>Run the Accordeon plugin and see what happens..</li>
-		<li>Refresh the page, click REVEAL and run the accordeon plugin once more.. Now the result is as expected</li>
-	</ol>
-	Conclusion: height() cannot be determined if elements are in hidden container which affect the accordeon plug-in
-
-</fieldset>
-</div>
 <script>
 $(document).ready(function() {	//Runs when tab is loaded
 
-	updateHeight();
-	$("#reveal").click(function() { 
-		$("#demo").show(); 
-		updateHeight();
-	});
+var dateFormat = "yy-mm-dd";
 
-	$("#accordeon").click(function() { 
-	    CourseAccordion();
-	    DepartmentFilter();
+$("#datepicker").datepicker({
+ minDate: +5, 
+ dateFormat:dateFormat,
+ maxDate: '+1M +10D',  
+ onSelect: function(dateText, inst){
+           var the_date = $.datepicker.parseDate(dateFormat,dateText);
+           $("#datepicker2").datepicker('option', 'minDate', the_date)
+ }
+ });
+ $("#datepicker2").datepicker({
 
-		$("#demo").show(); 
-		updateHeight();
-	});
+    maxDate: '+1M +10D', 
+	dateFormat:dateFormat,
+    onSelect: function(dateText, inst){
+
+    }                       
+});
 
 
-})
-
-function CourseAccordion()
-{
-	$("#CourseFilter").accordion({
-		//collapasible: true
-		autoHeight: true
-	});
-}
-
-function DepartmentFilter()
-{
-//    $("#DepartmentCombobox").combobox({autocomplete: true, buttonText: 'Show'});
-
-}
-
-function tabCallBack() { //Runs when tab is shown
-
-}
-
-function updateHeight() 
-{	$("#heightContainer").children().not("legend").remove();
-	$("div").each(function() {
-		$("#heightContainer").append("<p>" + $(this).attr("id") + ":" + $(this).outerHeight() + "</p>");
-	});
-
-}
+});
 </script>
 
 

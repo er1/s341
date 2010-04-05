@@ -34,7 +34,7 @@
 		<div class=wrapper>
 			<div id="tabs">
 				<h1 class="logo">Planzilla</h1>
-				<span class="ui-state-default ui-corner-all ui-hover fakeLink" id="logout">Logout</span>
+				<span class="ui-state-default ui-corner-all ui-hover fakeLink" id="logout">Login</span>
 				<ul>
 					<li><a href="tabs/view_schedule.html" title="View Schedule" class="requireLogin">View Schedule</a></li>
 					<li><a href="tabs/browse_course.html" title="Browse Course">Browse Course</a></li>
@@ -54,7 +54,7 @@
 
 
 	<div id="modalLogin" title="Login to Planzilla" style="display:none">
-		<form>
+		<form action="" onSubmit="return false;">
 			<span class="ui-icon ui-icon-locked" style="float:left; margin-right:5px;"></span>
 			<div class="modalInstruction"><p>You have to be logged in to continue...</p></div>
 			<label for="username">Username</label><input type="text" class="username" name="username" value="gibson"><br>
