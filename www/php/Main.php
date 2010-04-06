@@ -63,4 +63,26 @@ function dieNicely($msg, $arr = array()) {
 	// Note, this is just handling of an error... There is no need to kill the session for such a thing.
 }
 
+///////////////////////////////
+// I code in Lisp, in Emacs //
+//////////////////////////////
+function car($list)
+{
+	return array($list[0]);
+}
+
+function cdr($list)
+{
+	$ret = array();
+        $count = 0;
+        foreach($list as &$elem)
+        {
+         	if($count > 0)
+                         $ret[] = $elem;
+                $count += 1;
+	}
+        return $ret;
+}
+
+
 ?>
