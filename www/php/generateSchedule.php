@@ -32,8 +32,8 @@ function perm($data, $head = array())
 {
 	if(empty($data))
 	{
-		$sID += 1;
-		append($head, $sID);
+		$GLOBALS['sID'] += 1;
+		append($head, $GLOBALS['sID']);
 	}
 	else
 	{
