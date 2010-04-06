@@ -16,7 +16,7 @@ while($row = mysql_fetch_row( $result ) )
 	$subResult = $db->Query( $q2 );
 	$subRow = mysql_fetch_row( $subResult ) or dieNicely("Expected Course info for ID#" . $row[1]);
 
-	echo("\t{\n\t\t .
+	echo("\t{\n\t\t" .
 		"\t\t Course: \"" . $subRow[0] . "\"\n" .
 		"\t\t Semester: " . $subRow[1] . "\n" .
 		"\t}" .
