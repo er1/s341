@@ -13,10 +13,8 @@ $result = $db->Query( $qCompleted );
 $courseArr = array();
 while($row = mysql_fetch_row( $result ) )
 {
-	if(!is_array($courseArr[$row[0]])//if the entry in courseArr is not an array, make one
-	{
+	if(!is_array($courseArr[$row[0]]))//if the entry in courseArr is not an array, make one
 		$courseArr[$row[0]] = array($row[1]);
-	}
 	$courseArr[$row[0]][] = $row[1];//append to the array of classes with the course as its key
 }
 
