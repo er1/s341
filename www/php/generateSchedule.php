@@ -36,7 +36,7 @@ function perm($data, $head = array())
 	}
 	else
 	{
-		foreach($data[0] as &$classElem)
+		foreach(car($data)[0] as &$classElem)
 		{
 			//append to head
 			$head[] = $classElem;

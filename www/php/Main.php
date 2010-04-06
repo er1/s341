@@ -68,7 +68,10 @@ function dieNicely($msg, $arr = array()) {
 //////////////////////////////
 function car($list)
 {
-	return array($list[0]);
+	foreach($list as &$elem)
+        {
+		return array($elem);
+        }
 }
 
 function cdr($list)
