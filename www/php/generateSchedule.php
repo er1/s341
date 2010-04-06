@@ -10,10 +10,10 @@ $qCompleted = 'select CourseID, ClassID from Class where CourseID in (7326, 7324
 
 $result = $db->Query( $qCompleted );
 
-$coursArr = array();
+$courseArr = array();
 while($row = mysql_fetch_row( $result ) )
 {
-	$course[$row[0]] = $row[1];
+	$courseArr[$row[0]] = $row[1];
 }
 
 print_r($courseArr);
