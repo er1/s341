@@ -78,7 +78,7 @@ class StudentRecord
 		$result = $db->Query($query, array( $Student ));
 		$id = 0;
 
-		$jsonMessage .= '	{' . "\n" . '    "Course": ['. // HEADER
+		$jsonMessage .= '	{' . "\n" . '    "Course": ['; // HEADER
 
 		while( $info = $db->FetchFirstRow($result) )
 		{
