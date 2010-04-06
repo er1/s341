@@ -8,7 +8,7 @@ $auth->EnforceCurrentLevel( 2 );
 //testing version
 $qCompleted = 'select CourseID, ClassID from Class where CourseID in (7326, 7324) order by CourseID, ClassID;'; //soen 228 and 341
 
-$sID = 0; //schedule id
+global $sID = 0; //schedule id
 
 $result = $db->Query( $qCompleted );
 
@@ -32,7 +32,7 @@ function perm($data, $head = array())
 	if(empty($data))
 	{
 		$sID += 1;
-		append($head, sID);
+		append($head, $sID);
 	}
 	else
 	{
@@ -52,7 +52,7 @@ function append($class_list, $scheduleID)
 	{
 		//replace with an actual db query
 		echo("insert into TempSched (ClassID, UserID, ScheduleID)\n\t" .
-			"values('" . e . "', '1234567', '" . $scheduleID . "');\n" );//temporary userID
+			"values('" . $e . "', '1234567', '" . $scheduleID . "');\n" );//temporary userID
 	}
 }
 
