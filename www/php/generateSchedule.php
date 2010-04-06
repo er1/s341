@@ -27,7 +27,7 @@ function perm($data, $head = array())
 	if(empty($data))
 	{
 		$sID += 1;
-		append($head, sID)
+		append($head, sID);
 	}
 	else
 	{
