@@ -8,6 +8,8 @@ $auth->EnforceCurrentLevel( 2 );
 //testing version
 $qCompleted = 'select CourseID, ClassID from Class where CourseID in (7326, 7324) order by CourseID, ClassID;'; //soen 228 and 341
 
+$sID = 0; //schedule id
+
 $result = $db->Query( $qCompleted );
 
 $courseArr = array();
@@ -20,8 +22,10 @@ while($row = mysql_fetch_row( $result ) )
 		$courseArr[$row[0]][] = $row[1];//append to the array of classes with the course as its key
 }
 
-//print_r($courseArr);
-$sID = 0; //schedule id
+print_r($courseArr);
+echo("\n\n");
+perm($courseArr, array());
+
 //recursive function for producing all permutations
 function perm($data, $head = array())
 {
@@ -47,7 +51,8 @@ function append($class_list, $scheduleID)
 	{
 		//replace with an actual db query
 		echo("insert into TempSched (ClassID, UserID, ScheduleID)\n\t" .
-			"values('" . e . "', '1234567', '" . $scheduleID . "');" );//temporary userID
+			"values('" . e . "', '1234567', '" . $scheduleID . "');\n" );//temporary userID
 	}
 }
+
 ?>
