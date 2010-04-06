@@ -4,7 +4,8 @@ require_once("Authentication.php");
 
 $auth->EnforceCurrentLevel( 2 );
 
-//will do some thing with $_REQUEST later
+//post request for sequence based on a string like "SOEN"
+//will do some thing with $_REQUEST etc. later
 $q = 'select * from SequenceDetails where ProgramID=(select ProgramID from Program where DepartmentID=\'SOEN\');';
 $result = $db->Query( $q );
 
@@ -21,8 +22,6 @@ while($row = mysql_fetch_row( $result ) )
 		"\t\t Semester: " . $subRow[1] . "\n" .
 		"\t}\n" .
 		"\t,\n");	//this feels SO EVIL.... ECMA is weird (hanging comma)
-		
-	echo("" . $subRow[0] . $subRow[1] . "\t" . $row[2] . "\n");
 	
 }
 echo("]\n");
