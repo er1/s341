@@ -43,7 +43,7 @@ class Database
 	 *
 	 * @return boolean True if successful, False otherwise.
 	 */
-	public function Query($query, $param)
+	public function Query($query, $param=array())
 	{
 		//require_once("Authentication.php");
 		//$auth->EnforceCurrentLevel(2);
