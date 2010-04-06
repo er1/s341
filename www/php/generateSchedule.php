@@ -36,7 +36,7 @@ function perm($data, $head = array())
 	}
 	else
 	{
-		foreach($data[0] as $classElem)
+		foreach($data[0] as &$classElem)
 		{
 			//append to head
 			$head[] = $classElem;
@@ -47,7 +47,7 @@ function perm($data, $head = array())
 
 function append($class_list, $scheduleID)
 {
-	foreach($class_list as $e)
+	foreach($class_list as &$e)
 	{
 		//replace with an actual db query
 		echo("insert into TempSched (ClassID, UserID, ScheduleID)\n\t" .
