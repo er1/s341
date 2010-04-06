@@ -5,7 +5,7 @@ require_once("Authentication.php");
 $auth->EnforceCurrentLevel( 2 );
 
 $q = 'select * from SequenceDetails where ProgramID=(select ProgramID from Program where DepartmentID=\'SOEN\');'
-result = $db->Query( $q );
+$result = $db->Query( $q );
 
 echo("CourseID\t Semester\n");
 while($row = mysql_fetch_row( $result ) )
