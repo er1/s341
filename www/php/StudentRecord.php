@@ -62,14 +62,15 @@ class StudentRecord
 		$result =   $db->Query($query, array( $Student ));
 		$userInfo = $db->FetchFirstRow($result);
 
-		$jsonMessage = '	{' . "\n" . '    "events": ['. // HEADER
+		$jsonMessage = '	{' . "\n" . '    "AcademicRecord": ['. // HEADER
 						"\n        {" .
 						"\n" . '            "id": 0 ,' .
 						"\n" . '            "StudentID": '. $userInfo["UserID"]    .',' .
 						"\n" . '            "Name": "'    . $userInfo["FirstName"] . ' ' . $userInfo["LastName"] .'",' .
 						"\n" . '            "Program": "' . $this->GetProgram($Student)   . '",' .
 						"\n" . '            "GPA": ' . $this->GetGPA($Student)       . ',' .
-						"\n" . '        }';
+						"\n" . '        }'.
+						"\n    ]\n}"; // FOOTER
 
 
 		$query = 'SELECT * FROM Class JOIN Course JOIN RegisteredIn ON Course.CourseID = Class.CourseID AND Class.ClassID = RegisteredIn.ClassID WHERE RegisteredIn.UserID =('. 				'SELECT UserID FROM User WHERE Username = %s'.
@@ -77,10 +78,10 @@ class StudentRecord
 		$result = $db->Query($query, array( $Student ));
 		$id = 0;
 
+		$jsonMessage .= '	{' . "\n" . '    "Course": ['. // HEADER
+
 		while( $info = $db->FetchFirstRow($result) )
 		{
-			$id++;
-
 			$jsonMessage .= ",\n        {" .
 			"\n" . '            "id": ' . $id .' ,' .
 			"\n" . '            "Name": "' . $info["Name"] .'",' .
@@ -91,7 +92,11 @@ class StudentRecord
 			"\n" . '            "Semester": ' . $info["Semester"] .',' .
 			"\n" . '            "Year": ' . $info["Year"] .',' .
 			"\n" . '        }';
+
+			$id++;
 		}
+
+
 
 		$jsonMessage .= "\n    ]\n}"; // FOOTER
 
