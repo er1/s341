@@ -33,7 +33,7 @@ if (isset($_REQUEST["action"]))
                         require ("viewSchedule.php");
                         break;
 		case("viewTranscript"):
-                        require_once ("showTranscript.php");
+                        require_once ("StudentRecord.php");
 			$record = new StudentRecord();
 			$record->showTranscript( $auth->getUsername() );
                         break;
