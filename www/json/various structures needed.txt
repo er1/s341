@@ -6,6 +6,20 @@ Obj1 - (XYZ) = (Properties of OBJ1 but XYZ is not required)
 
 This is just what I need to render each tabs, the fields can be renamed as you please, or at best like they are specified in the DB/Domain Model Diagram.
 
+Sequence :
+[
+	{
+		Course: "SOEN228",
+		Semester: 1
+	}
+	,
+	{
+		Course: "SOEN229",
+		Semester: 2
+	}
+	,
+]
+
 AcademicRecord :
 {	
 	[ (Course + Status/Grade) ]
@@ -17,7 +31,7 @@ Program Requirement:
 	AcademicRecord
 }
 
-Course:
+Course:`
 {
 	symbol :"COMP342",
 	name:"MATH FOR BLABLABLA",
