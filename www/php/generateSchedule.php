@@ -36,7 +36,8 @@ function perm($data, $head = array())
 	}
 	else
 	{
-		foreach(car($data)[0] as &$classElem)
+		$first_elem_in_data = car($data);//had to do this hack because "function(arg)[num]" fails in PHP even though function returns an array... WTF??!!
+		foreach($first_elem_in_data[0] as &$classElem)
 		{
 			//append to head
 			$head[] = $classElem;
