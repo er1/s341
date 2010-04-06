@@ -8,7 +8,8 @@ $auth->EnforceCurrentLevel( 2 );
 //testing version
 $qCompleted = 'select CourseID, ClassID from Class where CourseID in (7326, 7324) order by CourseID, ClassID;'; //soen 228 and 341
 
-global $sID = 0; //schedule id
+global $sID; // (am fighting with php here and about to get kicked out of this room...)
+$sID = 0; //schedule id
 
 $result = $db->Query( $qCompleted );
 
