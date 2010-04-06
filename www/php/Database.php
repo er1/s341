@@ -49,15 +49,17 @@ class Database
 		//$auth->EnforceCurrentLevel(2);
 
 		$this->Connect(); //connect if that's not already the case..
-		
-		if (!is_array($param))	//make $param an array in case it's not..
-			$param = array($param);
+		if ( isset ($param) )
+		{
+			if (!is_array($param))	//make $param an array in case it's not..
+				$param = array($param);
 
-		$param = $this->EscapeString($param);	//escape all parameters!
+			$param = $this->EscapeString($param);	//escape all parameters!
 
-		$query = str_replace("%s", "'%s'", $query);
+			$query = str_replace("%s", "'%s'", $query);
 
-		$query = sprintf_array($query,$param); //parsing the query and replace all parameters by their value
+			$query = sprintf_array($query,$param); //parsing the query and replace all parameters by their value
+		}
 		$result =  mysql_query($query, $this->database_handler) or dieNicely("Error in querying the DB:" . mysql_error() . (constant("debug")) ? ". Query:" . $query : "");
 		return $result;
 	}
