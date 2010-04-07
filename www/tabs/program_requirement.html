@@ -2,6 +2,12 @@
 
 	<h2>Program Requirement</h2>
 
+	<div id="noProgram" class="ui-state-error ui-corner-all" style="display:none;margin-top: 20px; padding: 15px"> 
+		<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
+			You are actually NOT registered in any courses for the current semester.. Please do so in Sequence Planner
+		</p>
+	</div>
+
 
 	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0pt 0.7em;"> 
 		<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
@@ -26,7 +32,13 @@ $(function() {	//Runs when tab is loaded
 	var wrapAround = {"Symbol": "<span class='course_symbol fakeLink'/>"};
 
 	getData({"action":"getSequence"}, function(response) 
-	{
+	{		if (response.length == 0)
+			{
+				$("#noProgram").show();			
+				$(""#sequence").show();
+				return;
+			}
+			
 			var template = $("#sequence").find("#course");
 			parseTemplate(response, template, wrapAround);
 			template.hide();
