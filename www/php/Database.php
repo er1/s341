@@ -74,6 +74,13 @@ class Database
 		return mysql_fetch_array($result);
 	}
 
+	public function FetchEntireArray($result)
+	{	
+		$answer = array();
+		while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
+		  $answer[] = $row; 
+		return $answer;
+	}
 	/**
 	 * @brief A lot of the time our recordset only has 0 or one row.. In the case of one row we might often want get straight to the point and access it.
 	 *
