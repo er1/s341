@@ -1,14 +1,41 @@
 <div>
-Program Requirement
+
+	<h2>Program Requirement</h2>
+
+
+	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0pt 0.7em;"> 
+		<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
+			You must fullfill all these requirements before graduation
+		</p>
+	</div>
+			
+	<fieldset id="sequence">
+		<legend>Courses to take</legend>
+		<div id="course">
+			<span class="Symbol"></span><span class="Name"></span>
+			<label>Grade: </label><span class="Grade"></span>
+		</div>
+	</fieldset>
+	
+
 </div>
 
 <script>
-$(document).ready(function() {	//Runs when tab is loaded
+$(function() {	//Runs when tab is loaded
 
-})
+	var wrapAround = {"Symbol": "<span class='course_symbol fakeLink'/>"};
 
+	getData({"action":"getSequence"}, function(response) 
+	{
+			var template = $("#sequence").find("#course");
+			parseTemplate(response, template, wrapAround);
+			template.hide();
+	});
+
+});
 
 function tabCallBack() { //Runs when tab is shown
 
 }
+
 </script>

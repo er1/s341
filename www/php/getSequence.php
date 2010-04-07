@@ -6,24 +6,15 @@ $auth->EnforceCurrentLevel( 2 );
 
 //post request for sequence based on a string like "SOEN"
 //will do some thing with $_REQUEST etc. later
-$q = 'select * from SequenceDetails where ProgramID=(select ProgramID from Program where DepartmentID=\'SOEN\');';
-$result = $db->Query( $q );
+$q =  "select transcript.UserID, Program.DepartmentId, Program.Name, concat(Course.DepartmentID, Course.Number) as Symbol, transcript.Grade from SequenceDetails seq
+inner join Course on Course.CourseID = seq.CourseID
+inner join Program on Program.ProgramID = seq.ProgramID
+left join CleanTranscript transcript on transcript.course = concat(Course.DepartmentID, Course.Number)
+left join User on User.UserId = transcript.userId and User.Username = %s
+where Program.DepartmentId = 'SOEN'";
 
-echo("Sequence :\n[\n");
-while($row = mysql_fetch_row( $result ) )
-{
-	$q2 = 'select DepartmentID, Number from Course where CourseID=\'' .
-		$row[1] . '\';';
-	$subResult = $db->Query( $q2 );
-	$subRow = mysql_fetch_row( $subResult ) or dieNicely("Expected Course info for ID#" . $row[1]);
+$result = $db->Query( $q, array($auth->getUsername()) );
 
-	echo("\t{\n" .
-		"\t\t Course: \"" . $subRow[0] . "\"\n" .
-		"\t\t Semester: " . $subRow[1] . "\n" .
-		"\t}\n" .
-		"\t,\n");	//this feels SO EVIL.... ECMA is weird (hanging comma)
-	
-}
-echo("]\n");
+print json_encode($db->FetchEntireArray($result));	
 
 ?>
