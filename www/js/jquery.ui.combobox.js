@@ -17,16 +17,20 @@
 					.insertAfter(select)
 					.autocomplete({
 						source: function(request, response) {
-							var matcher = new RegExp(request.term, "i");
-							response(select.children("option").map(function() {
-								var text = $(this).text();
-								if (!request.term || matcher.test(text))
-									return {
-										id: $(this).val(),
-										label: text.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + request.term.replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1") + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>"),
-										value: text
-									};
-							}));
+							getData({"action":"searchForCourse","s":request.term}, function(found)
+							{
+								var ans = [];
+								$.each(found, function(index, record)
+								{
+									ans.push({
+												id: record.Symbol
+												,label: record.Symbol + " - " + record.Name
+												,value: record.Symbol
+											});
+									
+								})
+								response(ans);
+							});
 						},
 						delay: 0,
 						select: function(e, ui) {

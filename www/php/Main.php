@@ -32,6 +32,17 @@ if (isset($_REQUEST["action"]))
 		case("viewSchedule"):
                         require ("viewSchedule.php");
                         break;
+		case("searchForCourse"):
+	        require ("Course.php");
+			$course = new Course();
+			$course->getCourseList($_REQUEST['s']);
+	        break;
+		case("getCourseInfo"):
+	        require ("Course.php");
+			$course = new Course();
+			$course->getCourseInfo($_REQUEST['symbol']);
+	        break;
+
 		case("viewTranscript"):
                         require_once ("StudentRecord.php");
 			$record = new StudentRecord();

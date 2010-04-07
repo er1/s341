@@ -223,27 +223,49 @@ function getDistinct(data, key)
 	return ans;
 }
 
-function displayCourse(ui)
-{	var course = {"code":"COMP 238", "prerequisites": ["COMP 242","COMP 243"], "name":"Math for Computer Sciences I", "description":"Computer Science is the foundation of all computer technologies concerned with receiving, storing, processing, sharing and delivering information. At Concordia we have put together a curriculum leading to the BCompSc degree to satisfy two major objectives for sound, relevant and dynamic computer science education: understanding the theoretical developments that have made it possible for computers to transform the way we work and live, and acquiring the necessary skills to intelligently use this technology in the real world."};
-
-	var wrapAround = {"prerequisites": "<span class='course_symbol fakeLink'/>"}
-
-	parseResponseToFields(course, $("#courseDisplay"), wrapAround);
+function displayCourse(symbol)
+{	
+	$("#courseDisplay").find(".ui-widget-header").text(symbol);
+	getData({"action":"getCourseInfo", "symbol":symbol}, function(response)
+	{
+		parseResponseToFields(response, $("#courseDisplay"));
+	 	$("#courseDisplay").find(".prerequisites").empty().prepend(parsePrereq(response.prerequisites));	
+	});
 }
 
-function displayPopupCourse(course)
+function displayPopupCourse(symbol)
 {
-	var course = {"code":"COMP 238", "prerequisites": ["COMP 242","COMP 243"], "name":"Math for Computer Sciences I", "description":"Computer Science is the foundation of all computer technologies concerned with receiving, storing, processing, sharing and delivering information. At Concordia we have put together a curriculum leading to the BCompSc degree to satisfy two major objectives for sound, relevant and dynamic computer science education: understanding the theoretical developments that have made it possible for computers to transform the way we work and live, and acquiring the necessary skills to intelligently use this technology in the real world."};
-	var wrapAround = {"prerequisites": "<span class='course_symbol fakeLink'/>"}
-
-	var modalWindow = $("#modalCourseDescription").attr("title",course.code);
-
-	parseResponseToFields(course, modalWindow, wrapAround);
-	modalWindow.dialog(
-	{	//Options for .dialog()
-		show:"drop", hide:"drop"
+	var modalWindow = $("#modalCourseDescription");
+	
+	getData({"action":"getCourseInfo", "symbol":symbol}, function(response)
+	{
+		parseResponseToFields(response, modalWindow);
+		modalWindow.find(".prerequisites").empty().prepend(parsePrereq(response.prerequisites));	
+		modalWindow.dialog(
+		{	//Options for .dialog()
+			show:"drop"
+			,hide:"drop"
+			,width:500
+			,title:symbol
+			,position:"center"
+		});
+	
 	});
 
+}
+
+// input: an array of Needs:"prereq".
+// output: an HTML string that list all pre-req..
+function parsePrereq(prereq)
+{
+	if (prereq.length == 0)
+		return "None";
+	var ans = [];
+	$.each(prereq, function(index, record)
+	{
+		ans.push(record.Needs.replace(/\[/g,"<span class='course_symbol fakeLink'>").replace(/\]/g,"</span>"));
+	});
+	return ans.join("");
 }
 
 //One liner section, no function below this mark can take more than one line..

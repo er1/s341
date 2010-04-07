@@ -20,12 +20,6 @@
 	
 	
 		<select id="comboBoxCourse">
-			<option value="COMP428">COMP 428 Introduction to Loosing time</option>
-	        <option value="COMP340">COMP 340 Introduction to sticking things in your nose</option>
-	        <option value="COMP567">COMP 567 Advanced ultra cool stuff</option>
-	        <option value="COMP485">COMP 485 Operating Systems</option>
-	        <option value="COMP382">COMP 382 Applied Advanced Calculus 3</option>
-	        <option value="COMP549">COMP 549 Diagrams</option>
 		</select>
 
 	</fieldset>
@@ -35,8 +29,10 @@
 <div id="courseDisplay" style="display:none;margin-top:15px;">
 	<div class="ui-widget-header ui-corner-all ui-helper-clearfix code" style="padding:5px"></div>
 	<div>
-		<strong>Course Name:</strong> <span class="name"></span><br>
-		<strong>Description:</strong> <div class="description"></div><br>
+		<strong>Course Name:</strong> <span class="Name"></span><br>
+		<strong>Credits:</strong> <span class="Credits"></span><br>
+		<strong>Description:</strong> <div class="Description"></div><br>
+		<strong>Note:</strong> <div class="Note"></div><br>
 		<strong>Pre-requisites:</strong> <div class="prerequisites"></div>
 	</div>
 </div>
@@ -45,10 +41,11 @@
 $(function() {
 	var course = $("#comboBoxCourse").combobox({
 		onSelect:function(e, ui) 
-		{	$("#courseDisplay").slideDown("slow");
-			 displayCourse(ui.id)
+		{	
+			$("#courseDisplay").slideDown("slow");
+			 displayCourse(ui.item.value);
 		} 
-		, defaultText:"SOEN 341 - Software Process"
+		, defaultText:"Start typing to get search result"
 	});
 
 	$("#term").add("#department").combobox();
