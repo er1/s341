@@ -216,6 +216,22 @@ function displayPopupCourse(course)
 
 }
 
+//helper functions, more than one liners
+function ttoISOString(i){
+    return "".concat(
+        i.getUTCFullYear(), "-",
+        t(i.getUTCMonth() + 1), "-",
+        t(i.getUTCDate()), "T",
+        t(i.getUTCHours()), ":",
+        t(i.getUTCMinutes()), ":",
+        t(i.getUTCSeconds()), ".",
+        h("" + i.getUTCMilliseconds()), "+10:00"
+)
+
+function t(i){return i<10?"0"+i:i};
+function h(i){return i.length<2?"00"+i:i.length<3?"0"+i:3<i.length?Math.round(i/Math.pow(10,i.length-3)):i};
+
+}
 
 //One liner section, no function below this mark can take more than one line..
 function isSecure() { return location.protocol == 'https:';}

@@ -5,14 +5,33 @@ $(document).ready(function() {
 	showSchedule();
 })
 
+var dayOfWeek = {"M":0,"T":1,"W":2,"J":3,"F":4,"S":5,"D":6};
 
 function showSchedule(callback)
 {	
+
+		var beginDate = new Date(2010,00,2);
 		getData({action:"viewSchedule"}, function(response) {
+			var data = {};
+			data.events = response;
+			$.each(data.events, function(index, record) {
+
+				record.id = index;
+				record.start = "2010-01-0" + (4+dayOfWeek[record.Day]) + "T" + record.StartTime + ".000+10:00";
+				record.end = "2010-01-0" + (4+dayOfWeek[record.Day]) + "T" + record.EndTime + ".000+10:00";
+
+				record.title = record.symbol + " / LEC XYZ";
+				record.read_only = true;
+				record.course = record.symbol;
+				
+				alert(record.start + " / " + record.end);
+			});
+
+
 			$('#calViewSchedule').weekCalendar({
 				readonly:true
 				,buttons:false
-				,date:new Date(2010, 00,5)
+				,date:beginDate
 				,businessHours: {start:8, end:22, limitDisplay:true}
 				,timeslotsPerHour: 4
 				,data: response
