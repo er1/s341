@@ -23,7 +23,7 @@ while($row = mysql_fetch_row( $result ) )
 		$courseArr[$row[0]][] = $row[1];//append to the array of classes with the course as its key
 }
 
-print_r($courseArr);
+print_r($courseArr);//just for debugging the input to perm()
 echo("\n\n");
 perm($courseArr, array());
 
@@ -32,7 +32,7 @@ function perm($data, $head = array())
 {
 	if(empty($data))
 	{
-		$GLOBALS['sID'] += 1;
+		//$GLOBALS['sID'] += 1; //moved in to the append
 		append($head, $GLOBALS['sID']);
 	}
 	else
@@ -51,9 +51,10 @@ function append($class_list, $scheduleID)
 {
 	foreach($class_list as &$e)
 	{
+		$GLOBALS['sID'] += 1;
 		//replace with an actual db query
 		echo("insert into TempSched (ClassID, UserID, ScheduleID)\n\t" .
-			"values('" . $e . "', '1234567', '" . $scheduleID . "');\n" );//temporary userID
+			"values('" . $e . "', '1234567', '" . $GLOBALS['sID'] . "');\n" );//temporary userID
 	}
 }
 
