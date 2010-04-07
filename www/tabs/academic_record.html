@@ -1,14 +1,49 @@
 <div>
-Academic Record
+
+	<h2>Academic Record</h2>
+	
+	<fieldset id="AcademicRecord">
+		<legend>Student Information</legend>
+		<label>StudentID: </label><span class="StudentID"></span><br>
+		<label>Name: </label><span class="Name"></span><br>
+		<label>Program: </label><span class="Program"></span><br>
+		<label>GPA: </label><span class="GPA"></span><br>
+	</fieldset>
+	
+	<fieldset id="Course">
+		<legend>Courses</legend>
+		<div id="Session">
+			<h3 class="Session"></h3>
+			<div id="row"><span class="Symbol"></span> <span class="Name"></span><span class="Grade"></span><span class="Semester"></span>&nbsp;<span class="Year"></span></div>
+		</div>
+	</fieldset>
+
 </div>
 
 <script>
-$(document).ready(function() {	//Runs when tab is loaded
+$(function() {	//Runs when tab is loaded
+
+	var wrapAround = {"Symbol": "<span class='course_symbol fakeLink'/>"};
+
+	getData({"action":"viewTranscript"}, function(response) 
+	{
+		parseResponseToFields(response.AcademicRecord, $("#AcademicRecord"));
+
+		var sessionList = getDistinct(response.Course, "Session");
+
+		$.each(sessionList, function(sessionName, sessionList)
+		{	//sessionList contains all the courses followed during sessionName
+			var newSession = $("#Session").clone().attr("id",sessionName).find("h3").text(sessionName + " term").end();
+			$("#Session").after(newSession);
+			parseTemplate(sessionList, newSession.find("#row"), wrapAround);
+		})
+		$("#Session").hide();
+	});
 
 })
-
 
 function tabCallBack() { //Runs when tab is shown
 
 }
+
 </script>

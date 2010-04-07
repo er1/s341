@@ -62,45 +62,22 @@ class StudentRecord
 		$result =   $db->Query($query, array( $Student ));
 		$userInfo = $db->FetchFirstRow($result);
 
-		$jsonMessage = '	{' . "\n" . '    "AcademicRecord": ['. // HEADER
+		 print '	{' . "\n" . '    "AcademicRecord": '. // HEADER
 						"\n        {" .
 						"\n" . '            "id": 0 ,' .
 						"\n" . '            "StudentID": '. $userInfo["UserID"]    .',' .
 						"\n" . '            "Name": "'    . $userInfo["FirstName"] . ' ' . $userInfo["LastName"] .'",' .
 						"\n" . '            "Program": "' . $this->GetProgram($Student)   . '",' .
-						"\n" . '            "GPA": ' . $this->GetGPA($Student)       . ',' .
-						"\n" . '        }'.
-						"\n    ]\n}"; // FOOTER
+						"\n" . '            "GPA": "' . $this->GetGPA($Student)       . '"' .
+						"\n" . '        }';
 
 
-		$query = 'SELECT * FROM Class JOIN Course JOIN RegisteredIn ON Course.CourseID = Class.CourseID AND Class.ClassID = RegisteredIn.ClassID WHERE RegisteredIn.UserID =('. 				'SELECT UserID FROM User WHERE Username = %s'.
-		');';
+		$query = 'SELECT Name, concat(DepartmentId, Number) as Symbol, concat(Semester,"/",Year) as Session, Section, Credits, Grade, Semester, Year FROM Class JOIN Course JOIN RegisteredIn ON Course.CourseID = Class.CourseID AND Class.ClassID = RegisteredIn.ClassID WHERE RegisteredIn.UserID =(SELECT UserID FROM User WHERE Username = %s);';
 		$result = $db->Query($query, array( $Student ));
-		$id = 0;
+		print ', "Course":' . json_encode($db->FetchEntireArray($result));
 
-		$jsonMessage .= '	{' . "\n" . '    "Course": ['; // HEADER
+		print  "\n}"; // FOOTER
 
-		while( $info = $db->FetchFirstRow($result) )
-		{
-			$jsonMessage .= ",\n        {" .
-			"\n" . '            "id": ' . $id .' ,' .
-			"\n" . '            "Name": "' . $info["Name"] .'",' .
-			"\n" . '            "Course": "' . $info["DepartmentId"] . $info["Number"] .'",' .
-			"\n" . '            "Section": "' . $info["Section"] .'",' .
-			"\n" . '            "Credits": ' . $info["Credits"] .',' .
-			"\n" . '            "Grade": "' . $info["Grade"] .'",' .
-			"\n" . '            "Semester": ' . $info["Semester"] .',' .
-			"\n" . '            "Year": ' . $info["Year"] .',' .
-			"\n" . '        }';
-
-			$id++;
-		}
-
-
-
-		$jsonMessage .= "\n    ]\n}"; // FOOTER
-
-		echo $jsonMessage;
 	}
 
 	/**

@@ -54,6 +54,24 @@ h1 {
 	text-shadow: 0.1em 0.1em 0.2em black
 }
 
+h2 {
+	color: #1D5987;
+	font-weight: bold;
+	font-size: 1.5em;
+}
+
+
+h3 {
+	color: #1D5987;
+	font-weight: bold;
+	font-size: 1em;
+}
+
+legend {
+	color: #1D5987;
+	font-weight: bold;
+	font-size: 1.2em;
+}
 
 .modalInstruction {	/*Block of p() appearing usually at the top of a modal dialog window.. */
 	margin-bottom:10px;
@@ -84,11 +102,6 @@ p.bsod {
     text-align:left;
 }
 
-h2 {
-	color: #1D5987;
-	font-weight: bold;
-	font-size: 14pt;
-}
 
 fieldset {
 	margin:5px;

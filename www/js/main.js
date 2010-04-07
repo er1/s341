@@ -87,7 +87,6 @@ function showNetworkError(params, callback)
                             })
 			}		
 		}})
-
 }
 function showLogin(callback) 
 {	var modalWindow = $("#modalLogin");
@@ -192,6 +191,37 @@ function parseResponseToFields(data, fieldContainer, wrapAround)
 
 }
 
+function parseTemplate(data, fieldContainer, wrapAround)
+{	wrapAround = wrapAround || {};
+
+	var template = fieldContainer;
+	$.each(data, function(index, record)
+	{
+		var newItem = template.clone();
+		parseResponseToFields(record, newItem, wrapAround);
+		template.after(newItem);		
+	});
+	template.hide();
+}
+
+/**
+ * getDistinct
+ * This function takes an array of object as input and a key that all these objets must have
+ * it groups them by key
+ * @param data, an array of object
+ * @param key, the key to group object against
+ * @return an object with as many key as their is distinct values of key
+ */
+function getDistinct(data, key)
+{
+	var ans = {};
+	$.each(data, function(index, record)
+	{	var val = record[key];
+		ans[val] = ans[val] || [];	
+		ans[val].push(record);	
+	});
+	return ans;
+}
 
 function displayCourse(ui)
 {	var course = {"code":"COMP 238", "prerequisites": ["COMP 242","COMP 243"], "name":"Math for Computer Sciences I", "description":"Computer Science is the foundation of all computer technologies concerned with receiving, storing, processing, sharing and delivering information. At Concordia we have put together a curriculum leading to the BCompSc degree to satisfy two major objectives for sound, relevant and dynamic computer science education: understanding the theoretical developments that have made it possible for computers to transform the way we work and live, and acquiring the necessary skills to intelligently use this technology in the real world."};
@@ -213,23 +243,6 @@ function displayPopupCourse(course)
 	{	//Options for .dialog()
 		show:"drop", hide:"drop"
 	});
-
-}
-
-//helper functions, more than one liners
-function ttoISOString(i){
-    return "".concat(
-        i.getUTCFullYear(), "-",
-        t(i.getUTCMonth() + 1), "-",
-        t(i.getUTCDate()), "T",
-        t(i.getUTCHours()), ":",
-        t(i.getUTCMinutes()), ":",
-        t(i.getUTCSeconds()), ".",
-        h("" + i.getUTCMilliseconds()), "+10:00"
-)
-
-function t(i){return i<10?"0"+i:i};
-function h(i){return i.length<2?"00"+i:i.length<3?"0"+i:3<i.length?Math.round(i/Math.pow(10,i.length-3)):i};
 
 }
 
