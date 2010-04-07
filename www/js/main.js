@@ -172,6 +172,8 @@ function parseResponseToFields(data, fieldContainer, wrapAround)
 	{	
 		var cell = fieldContainer.find("." + fieldName).empty();
 
+		if (!fieldValue)
+			return;
 		if (fieldValue.constructor != Array)
 			fieldValue = [fieldValue];
 			
