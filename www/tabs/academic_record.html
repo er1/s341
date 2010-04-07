@@ -1,6 +1,8 @@
 <div>
 
 	<h2>Academic Record</h2>
+
+
 	
 	<fieldset id="AcademicRecord">
 		<legend>Student Information</legend>
@@ -9,6 +11,12 @@
 		<label>Program: </label><span class="Program"></span><br>
 		<label>GPA: </label><span class="GPA"></span><br>
 	</fieldset>
+
+	<div id="noRecord" class="ui-state-error ui-corner-all" style="display:none;margin-top: 20px; padding: 15px"> 
+		<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
+			It seems you do not have an academic record yet.. Please register for some courses so we can start big brothering you.
+		</p>
+	</div>
 	
 	<fieldset id="Course">
 		<legend>Courses</legend>
@@ -29,6 +37,11 @@ $(function() {	//Runs when tab is loaded
 	{
 		parseResponseToFields(response.AcademicRecord, $("#AcademicRecord"));
 
+		if (response.Course.length == 0)
+		{
+			$("#Course").hide();
+			$("#noRecord").show();
+		}
 		var sessionList = getDistinct(response.Course, "Session");
 
 		$.each(sessionList, function(sessionName, sessionList)
