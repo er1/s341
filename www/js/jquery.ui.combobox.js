@@ -3,7 +3,8 @@
 		   // default options
 		   options: {
 				onSelect: function() {},
-				defaultText: ""
+				defaultText: "",
+				dataSource:"document"
 		   },
 			_create: function() {
 				var self = this;
@@ -17,20 +18,36 @@
 					.insertAfter(select)
 					.autocomplete({
 						source: function(request, response) {
-							getData({"action":"searchForCourse","s":request.term}, function(found)
-							{
-								var ans = [];
-								$.each(found, function(index, record)
+							if (options.dataSource == "document")
+							{	//Ok, let's look at the <options> of the original input field
+								var matcher = new RegExp(request.term, "i");
+								response(select.children("option").map(function() {
+									var text = $(this).text();
+									if (!request.term || matcher.test(text) || request.term == options.defaultText)
+										return {
+											id: $(this).val(),
+											label: text.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + request.term.replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1") + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>"),
+											value: text
+										};
+								}));
+							}
+							else if (options.dataSource == "ajax") {	//Let's do an AJAX request :P
+								if (request.term == options.defaultText)
+									request.term = "";
+								getData({"action":"searchForCourse","s":request.term}, function(found)
 								{
-									ans.push({
-												id: record.Symbol
-												,label: record.Symbol + " - " + record.Name
-												,value: record.Symbol
-											});
-									
-								})
-								response(ans);
-							});
+									response($.map(found, function(record, index)
+									{
+										var text = record.Symbol + " - " + record.Name;
+										return {
+													id: record.Symbol
+													,label: text.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + request.term.replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1") + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<span class='foundText'>$1</span>")
+													,value: record.Symbol
+												};
+									}));
+	
+								});
+							}
 						},
 						delay: 0,
 						select: function(e, ui) {
@@ -71,7 +88,7 @@
 						return;
 					}
 					// pass empty string as value to search for, displaying all results
-					input.autocomplete("search", "");
+					input.autocomplete("search", input.val());
 					input.focus();
 				});
 			}

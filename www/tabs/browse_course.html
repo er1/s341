@@ -46,8 +46,9 @@ $(function() {
 			 displayCourse(ui.item.value);
 		} 
 		, defaultText:"Start typing to get search result"
+		, dataSource:"ajax"
 	});
 
-	$("#term").add("#department").combobox();
+	$("#term").add("#department").combobox({"dataSource":"document"});
 });
 </script>

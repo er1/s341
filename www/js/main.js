@@ -260,12 +260,11 @@ function parsePrereq(prereq)
 {
 	if (prereq.length == 0)
 		return "None";
-	var ans = [];
-	$.each(prereq, function(index, record)
+
+	return $.map(prereq, function(record, index)
 	{
-		ans.push(record.Needs.replace(/\[/g,"<span class='course_symbol fakeLink'>").replace(/\]/g,"</span>"));
-	});
-	return ans.join("");
+		return record.Needs.replace(/\[/g,"<span class='course_symbol fakeLink'>").replace(/\]/g,"</span>");
+	}).join("");
 }
 
 //One liner section, no function below this mark can take more than one line..

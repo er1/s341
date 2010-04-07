@@ -77,6 +77,11 @@ legend {
 	margin-bottom:10px;
 }
 
+.foundText {
+	font-weight:bold;
+	color:#E17009;
+}
+
 /***** BSOD ******/
 body.bsod {
     background:#0000aa;
