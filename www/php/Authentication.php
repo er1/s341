@@ -50,8 +50,6 @@ class Authentication
 	{
 		$this->ValidateUsername($Username);
 		$this->ValidatePassword($Password);
-
-		
 	}
 
 
@@ -62,10 +60,8 @@ class Authentication
 	 */
 	public function ValidateUsername($Username)
 	{
-
-		if (preg_match ("/^.*(?=.{5,25})(?=.*[a-zA-Z]).*$/", $Username) === 0 )
-			$this->loginError ("Your username must be at least 5 characters and must contain at least one letter (no special characters are allowed). Please try again.");
-
+		if (preg_match("/^[0-9a-zA-Z_]*$/", $Password) === 0)
+			$this->loginError("Your login may only be alphanumerics");
 	}
 	
 
@@ -77,9 +73,18 @@ class Authentication
 	 */
 	public function ValidatePassword($Password)
 	{
-
-		if (preg_match ("/^.*(?=.{6,64})(?=.*[0-9])(?=.*[a-zA-Z]).*$/", $Password) === 0 )
-			$this->loginError ("Your password must be at least 6 characters and must contain at least one letter and one digit (no special characters are allowed). Please try again.");
+		if (preg_match("/[0-9]/", $Password) === 0) {
+			$this->loginError("Your password must contain a digit.");
+			return;
+		}
+		if (preg_match("/[a-zA-Z]/", $Password) === 0) {
+			$this->loginError("Your password must contain a letter.");
+			return;
+		}
+		if (preg_match("/....../", $Password) === 0) {
+			$this->loginError("Your password must be at least 6 characters long.");
+			return;
+		}
 	}
 
 
@@ -125,13 +130,13 @@ class Authentication
 	 */
 	public function Login($Username, $Password)
 	{	
-		$this->ValidateUsername($Username);
-		$this->ValidatePassword($Password);
+		// If the values are bad they just wont be in the db and the login will fail
+		// $this->ValidateUsername($Username);
+		// $this->ValidatePassword($Password);
 
        		global $db;
         
-
-        $query = "SELECT PasswordHash, PasswordSalt, UserRoleID FROM User WHERE Username=%s";
+        	$query = "SELECT PasswordHash, PasswordSalt, UserRoleID FROM User WHERE Username = %s";
 		$result = $db->Query($query, $Username);
 		$pwInfo = $db->FetchFirstRow($result);
                 
@@ -186,7 +191,6 @@ class Authentication
 
 		global $db;
 
-
 		if (!is_numeric($Type) || $Type < 0 || $Type > 2)
 			dieNicely("The Role type you have provided is invalid. Please try again.");
 
@@ -209,7 +213,7 @@ class Authentication
                 while ($db->NumRows($result_userid) > 0);
 
 		$PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
-		$PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $safe_password));
+		$PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $Password));
 
 		$query = 'INSERT INTO User VALUES(%s,%s,%s,%s,%s,%s,%s);';
 
