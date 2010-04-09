@@ -127,6 +127,13 @@ strong {
 	color:#1D5987;
 	padding-right:5px;
 }
+
+/* Transcript */
+#Transcript span.Symbol { display:block; float:left; width:80px; }
+#Transcript span.Name { display:block; float:left; width:350px; }
+#Transcript span.Grade {display:block; float:left;  width:30px; }
+#AcademicRecord label { width:100px; display:block; float:left}
+
 /* TODO shouldn't be necessary */
 .ui-button-icon-only .ui-button-text { padding: 0.35em; } 
 .ui-autocomplete-input { padding: 0.48em 0 0.47em 0.45em; width:500px; }
