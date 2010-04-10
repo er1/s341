@@ -38,6 +38,17 @@ $(function() {	//To be run when DOM is constructed
 	); 
 
 	$(".course_symbol").live("click", function() { displayPopupCourse($(this).text()) });
+
+	$('.course_symbol').live('mouseover mouseout', function(event) {
+	  if (event.type == 'mouseover') {
+	    // do something on mouseover
+		$(".course_symbol:contains(" + $(this).text() + ")").addClass("course_symbol_hover");
+	  } else {
+	    // do something on mouseout
+		$(".course_symbol:contains(" + $(this).text() + ")").removeClass("course_symbol_hover");
+	  }
+	});
+
 });
 
 

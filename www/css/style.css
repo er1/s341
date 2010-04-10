@@ -132,6 +132,7 @@ strong {
 }
 
 
+.template { display:none; }
 /* Transcript */
 #Transcript span.Symbol { display:block; float:left; width:80px; }
 #Transcript span.Name { display:block; float:left; width:350px; }
@@ -147,3 +148,8 @@ strong {
 #Legend { padding:15px; float:right; margin:15px;}
 .sequenceRow { clear:both; width:100px; }
 #Legend p { width:150px; }
+.course_symbol_hover { background-color:red; }
+
+/*SEQUENCE PLANNER*/
+#selectedCourse { padding:15px; }
+#selectedCourse .courses { padding:3px; margin-right:5px; width:85px; height:16px; overflow:none; float:left; }
