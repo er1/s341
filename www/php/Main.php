@@ -77,6 +77,12 @@ if (isset($_REQUEST["action"]))
 			$sequence->Get();
 			break;
 
+                case("registerCourse"):
+                        require_once ("registerCourse.php");
+                        $registerCourse = new registerCourse();
+                        $registerCourse->Get();
+                        break;
+
 		case("getSessionInfo"):
                         $auth->GetSessionInfo();
                         break;
