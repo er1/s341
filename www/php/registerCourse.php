@@ -23,13 +23,18 @@
 
 require_once("Main.php");
 
-require_once("Authentication.php");
 $auth->EnforceCurrentLevel(2);
 
 
 class StudentRecord
 {
 
+	/**
+	*/
+	public function checkAvailablilty($Symbol)
+	{
+		echo("test");
+	}
 	/**
 	 *
 	 * @param string $Student

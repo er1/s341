@@ -92,7 +92,7 @@ if (isset($_REQUEST["action"]))
 }
 else
 {	// Keep people out of the back-end..
-	//header ('Location: ../');		//REMEMBER TO UNCOMMENT THIS!!! (when im done)
+	//header ('Location: ../');
 }
 
 
