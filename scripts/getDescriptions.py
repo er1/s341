@@ -37,6 +37,8 @@ for url in desc:
 
     for course in rx:
         match = re.search('b>(\w{4}) (\d{3}) *([a-zA-Z0-9 ]+) *\((\d) credits\)([^<]+)', course, re.DOTALL)
-        #print match.group(1) + match.group(2) + " -- " + match.group(3) + "[" + match.group(4) + " credits]"
-        #print match.group(5)
-        print "update Course set Description='" + match.group(3) + "\n" + re.sub('\'', '', match.group(5)) + "', Credits='" + match.group(4) + "' where DepartmentId='" + match.group(1) + "' and Number='" + match.group(2) + "';"
+        if match.group(1) == "BCEE":
+            print match.group(1) + match.group(2) + " -- " + match.group(3) + "[" + match.group(4) + " credits]"
+            print match.group(5)
+        #print "update Course set Description='" + match.group(3) + "\n" + re.sub('\'', '', match.group(5)) + "', Credits='" + match.group(4) + "' where DepartmentId='" + match.group(1) + "' and Number='" + match.group(2) + "';"
+        #break;
