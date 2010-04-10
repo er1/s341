@@ -18,14 +18,22 @@
 		</p>
 	</div>
 	
-	<fieldset id="Course">
-		<legend>Courses</legend>
-		<div id="Session">
-			<h3 class="Session"></h3>
-			<div id="row"><span class="Symbol"></span> <span class="Name"></span><span class="Grade"></span><span class="Semester"></span>&nbsp;<span class="Year"></span></div>
-		</div>
-	</fieldset>
-
+	<div id="Transcript">
+		<fieldset id="Course">
+			<legend>Courses</legend>
+			<div id="Session">
+				<h3 class="Session"></h3>
+				<div id="row">
+					<span class="Symbol"></span>
+					<span class="Name">&nbsp;</span>
+					<span class="Grade"></span>
+					<span class="Semester">
+					</span>&nbsp;
+					<span class="Year"></span>
+				</div>
+			</div>
+		</fieldset>
+	</div>
 </div>
 
 <script>
@@ -49,6 +57,7 @@ $(function() {	//Runs when tab is loaded
 			var newSession = $("#Session").clone().attr("id",sessionName).find("h3").text(sessionName + " term").end();
 			$("#Session").after(newSession);
 			parseTemplate(sessionList, newSession.find("#row"), wrapAround);
+			newSession.find(".Name").each(function() { if ($(this).text() == "") à$(this).html("&nbsp;"); });
 		})
 		$("#Session").hide();
 	});

@@ -3,10 +3,20 @@ function tabCallBack() {};
 		document.location = document.location.href.replace("http://","https://").replace(":8080","");
 
 $(function() {	//To be run when DOM is constructed
+	var reloadTab = function() { $("#tabs").tabs("load",$("#tabs").tabs('option', 'selected')); };
 
 	$("#tabs").tabs({
-		fx: { opacity: 'toggle' },
-		show: function(event, ui){{ tabCallBack(); }}
+		fx: { opacity: 'toggle' }
+		,show: function(event, ui){{ tabCallBack(); }}
+		,ajaxOptions:
+		{
+			"error":function(XMLHttpRequest, textStatus, errorThrown) {showNetworkError(reloadTab);}
+		  , "success": function(response) 
+			{
+				if (!response || response == "")
+					showNetworkError(reloadTab);
+			}
+		}
 	});
 	getSessionInfo();
 
@@ -35,6 +45,7 @@ $(function() {	//To be run when DOM is constructed
 function getData(params, callback, options)
 {	options = options || {};
 	options.type = options.type || "get";
+	selfRepeatCall = function() { getData(params, callback, options); }
 
 	if (arguments.length > 3 && arguments.length < 2)
 		return BSOD("Invalid call for getData, you need 2 params, you gave me " + arguments.length + "... Crashing!");
@@ -46,12 +57,12 @@ function getData(params, callback, options)
 	, "success": function(response) 
 	{
 		if (!response)
-			showNetworkError(params, callback);
+			return showNetworkError(selfRepeatCall);
 		if (response.error && response.error=="true")
 		{	if (response.reason == "notLoggedIn")
-				showLogin(function() { getData(params, callback); });
+				showLogin(selfRepeatCall);
 			else
-				BSOD('Unknown error occured.. Please try again');
+				BSOD('Unknown error occured.. Please try again. <hr>' + response.msg);
 		}
 		else
 		{
@@ -64,7 +75,7 @@ function getData(params, callback, options)
 		if (textStatus == "parsererror")	//Not a valid JSON object
 			BSOD("Not a valid JSON object. " + XMLHttpRequest.responseText);
 		else 
-			showNetworkError(params, callback); 
+			showNetworkError(selfRepeatCall); 
 	}
 	
 	});
@@ -72,21 +83,38 @@ function getData(params, callback, options)
 }
 
 
-function showNetworkError(params, callback)
+function showNetworkError(callback)
 {
-		var modalNetworkError = $("#modalTimeout");	
-		modalNetworkError.dialog({
-                    modal:true,
-                    resizable:false,
-                    buttons: {
+	var modalNetworkError = $("#modalTimeout");	
+	modalNetworkError.dialog({
+	    modal:true,
+	    resizable:false,
+	    buttons: {
 			Ok: function()
-                        {
-                            getData(params, function() {
-                                modalNetworkError.dialog('close');
-                                callback();
-                            })
+	        {
+	            modalNetworkError.dialog('close');
+	            callback();
 			}		
-		}})
+	}})
+
+
+	function connectionTest() {
+		$.ajax({"cache":"false", "type":"get", "data":{rand:Math.random()}, "dataType":"json", "url":"connectionTest.html"
+		, "success": function(response) 
+		{	if (response && response.a == "true")
+			{
+			    modalNetworkError.dialog('close');
+			    callback();	
+			}
+			else
+				window.setTimeout(connectionTest, 500);
+		}
+		, "error": function() { window.setTimeout(connectionTest, 500); }
+		});
+	}
+	
+	connectionTest();
+	
 }
 function showLogin(callback) 
 {	var modalWindow = $("#modalLogin");
@@ -109,7 +137,7 @@ function showLogin(callback)
 			}
 		}
 	
-	}).unbind("keyup").keyup(function(e) {
+	}).unbind("keypress").keypress(function(e) {
 		if (e.which == 13)
 		{	
 			e.preventDefault();
@@ -197,9 +225,10 @@ function parseTemplate(data, fieldContainer, wrapAround)
 	var template = fieldContainer;
 	$.each(data, function(index, record)
 	{
-		var newItem = template.clone();
+		var newItem = template.clone().removeClass("template");
 		parseResponseToFields(record, newItem, wrapAround);
-		template.after(newItem);		
+		template.before(newItem);
+		newItem.data("record",record);
 	});
 	template.hide();
 }
@@ -248,6 +277,8 @@ function displayPopupCourse(symbol)
 			,width:500
 			,title:symbol
 			,position:"center"
+			,closeOnEscape: true
+			,modal:true
 		});
 	
 	});
