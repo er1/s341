@@ -38,44 +38,55 @@ if (isset($_REQUEST["action"]))
 		case("login"):
                         $auth->Login($_POST['username'], $_POST["password"]);
                         break;
+
 		case("logout"):
                         $auth->Logout();
                         break;
+
 		case("CreateUser"):
                         $auth->CreateUser($_POST['username'], $_POST["password"], $_POST['FirstName'], $_POST['LastName'], $_POST['type']);
                         break;
+
 		case("DeleteUser"):
                         $auth->DeleteUser($_POST['username']);
                         break;
+
 		case("ChangePassword"):
                         $auth->ChangePassword($_POST['username'], $_POST["password"]);
                         break;
+
 		case("viewSchedule"):
                         require ("viewSchedule.php");
                         break;
+
 		case("searchForCourse"):
-	        require ("Course.php");
+                        require ("Course.php");
 			$course = new Course();
 			$course->getCourseList($_REQUEST['s']);
-	        break;
+                        break;
+
 		case("getCourseInfo"):
-	        require ("Course.php");
+                        require ("Course.php");
 			$course = new Course();
 			$course->getCourseInfo($_REQUEST['symbol']);
-	        break;
+                        break;
 
 		case("viewTranscript"):
                         require_once ("StudentRecord.php");
 			$record = new StudentRecord();
 			$record->showTranscript( $auth->getUsername() );
                         break;
+
 		case("getSequence"):
-            require_once ("getSequence.php");
-            break;
+                        require_once ("Sequence.php");
+                        $sequence = new Sequence();
+                        $sequence->Get();
+                        break;
 
 		case("getSessionInfo"):
                         $auth->GetSessionInfo();
                         break;
+                
 		default:
 			dieNicely("Invalid action");
 	}
