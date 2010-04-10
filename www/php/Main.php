@@ -77,6 +77,10 @@ if (isset($_REQUEST["action"]))
 			$sequence->Get();
 			break;
 
+	        case("canRegisterCourse"):
+			require_once("registerCourse.php");
+			$registerCourse = new registerCourse();								   $registerCourse->checkAvailability($_REQUEST['symbol']);
+			break;
                 case("registerCourse"):
                         require_once ("registerCourse.php");
                         $registerCourse = new registerCourse();
@@ -86,13 +90,14 @@ if (isset($_REQUEST["action"]))
 		case("getSessionInfo"):
                         $auth->GetSessionInfo();
                         break;
+
 		default:
 			dieNicely("Invalid action");
 	}
 }
 else
 {	// Keep people out of the back-end..
-	//header ('Location: ../');		//REMEMBER TO UNCOMMENT THIS!!! (when im done)
+	//header ('Location: ../');
 }
 
 
