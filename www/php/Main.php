@@ -6,6 +6,7 @@
 
     Copyright (C) Marc-Andre Moreau <marcandre.moreau@gmail.com> 2010
     Copyright (C) Corey Clayton <can.of.tuna@gmail.com> 2010
+    Copyright (C) GMail <gmail@gmail.com> 2010
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -75,6 +76,12 @@ if (isset($_REQUEST["action"]))
 			$sequence = new Sequence();
 			$sequence->Get();
 			break;
+
+                case("registerCourse"):
+                        require_once ("registerCourse.php");
+                        $registerCourse = new registerCourse();
+                        $registerCourse->Get();
+                        break;
 
 		case("getSessionInfo"):
                         $auth->GetSessionInfo();
