@@ -49,6 +49,8 @@ class Sequence
 	    
 		print json_encode($db->FetchEntireArray($result));
 	}
+	
+	
 }
 
 ?>
