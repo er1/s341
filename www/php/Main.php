@@ -79,7 +79,7 @@ if (isset($_REQUEST["action"]))
 
 	        case("canRegisterCourse"):
 			require_once("registerCourse.php");
-			$registerCourse = new registerCourse();								   $registerCourse->checkAvailability($_REQUEST['symbol']);
+			$registerCourse = new registerCourse();								   $registerCourse->checkAvailability($_REQUEST['symbol'], $_REQUEST['section']);
 			break;
                 case("registerCourse"):
                         require_once ("registerCourse.php");

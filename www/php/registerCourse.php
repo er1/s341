@@ -31,9 +31,9 @@ class registerCourse
 
 	/**
 	*/
-	public function checkAvailability($Symbol)
+	public function checkAvailability($Symbol, $Section)
 	{
-		echo("test:" . $Symbol );
+		echo("test: " . $Symbol . $Section  );
 	}
 	/**
 	 *
