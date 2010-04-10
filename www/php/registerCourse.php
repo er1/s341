@@ -33,7 +33,7 @@ class StudentRecord
 	*/
 	public function checkAvailablilty($Symbol)
 	{
-		echo("test");
+		echo("test:" . $Symbol );
 	}
 	/**
 	 *
