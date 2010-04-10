@@ -69,9 +69,12 @@ if (isset($_REQUEST["action"]))
 			$record = new StudentRecord();
 			$record->showTranscript( $auth->getUsername() );
                         break;
+		
 		case("getSequence"):
-            require_once ("getSequence.php");
-            break;
+			require_once ("Sequence.php");
+			$sequence = new Sequence();
+			$sequence->Get();
+			break;
 
 		case("getSessionInfo"):
                         $auth->GetSessionInfo();
