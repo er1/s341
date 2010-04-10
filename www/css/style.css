@@ -33,15 +33,16 @@ body {
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;
-	margin: 0 auto -1.2em; /* the bottom margin is the negative value of the footer's height */
+	margin: 0 auto -1.3em; /* the bottom margin is the negative value of the footer's height */
 	padding-left:3px;
 	padding-right:3px;
 }
 .footer, .push {
-	height: 1em; /* .push must be the same height as .footer */
+	height: 0.8em; /* .push must be the same height as .footer */
 }
 .footer {
-	border-top:1px black solid;
+	margin-top:-1.6em;
+	border-top:1px #4297D7 solid;
 }
 
 a, .fakeLink {
@@ -142,5 +143,7 @@ strong {
 .ui-autocomplete-input { padding: 0.48em 0 0.47em 0.45em; width:500px; }
 
 #termCombo { width:100px; }
-#departmentombo {width:250px; }
+#departmentCombo {width:200px; }
 #Legend { padding:15px; float:right; margin:15px;}
+.sequenceRow { clear:both; width:100px; }
+#Legend p { width:150px; }
