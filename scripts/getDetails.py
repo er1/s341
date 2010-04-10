@@ -12,8 +12,8 @@ import sys
 
 #get the course from command line args
 
-#myCourse = "COMP"
-#myCourseNum = "249"
+#myCourse = "BCEE"
+#myCourseNum = "342"
 myCourse = sys.argv[1] #example "SOEN"
 myCourseNum = sys.argv[2] #example "341"
 
@@ -23,8 +23,8 @@ FALL = 2
 FALL_WINTER = 3
 WINTER = 4
 
-course = "SOEN"
-course_num = "341"
+#course = "SOEN"
+#course_num = "341"
 
 class Derp:
     def __init__(self):
