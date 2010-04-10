@@ -4,7 +4,7 @@
 
 	<div id="noProgram" class="ui-state-error ui-corner-all" style="display:none;margin-top: 20px; padding: 15px"> 
 		<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-			You are actually NOT registered in any courses for the current semester.. Please do so in Sequence Planner
+			You are actually NOT registered in any program for the current semester.. Please do so in Sequence Planner
 		</p>
 	</div>
 
@@ -17,9 +17,8 @@
 			
 	<fieldset id="sequence">
 		<legend>Courses to take</legend>
-		<div id="course">
+		<div class="course template">
 			<span class="Symbol"></span><span class="Name"></span>
-			- <label>Grade: </label><span class="Grade"></span>
 		</div>
 	</fieldset>
 	
@@ -39,8 +38,25 @@ $(function() {	//Runs when tab is loaded
 				return;
 			}
 			
-			var template = $("#sequence").find("#course");
+			var template = $("#sequence").find(".course");
 			parseTemplate(response, template, wrapAround);
+			$("#sequence").find(".course").not(".template").each(function() {
+				var record = $(this).data("record");
+				var icon;
+				
+				if (record.Grade != null)
+					icon = "check";
+				else if (record.canTakeCourse == "0")
+					icon = "cancel";
+				else if (record.canTakeCourse == "1")
+					icon = "bullet";
+				else
+					icon = "play";
+
+				var icon = "<span style='float:left' class='ui-icon ui-icon-" + icon + "'></span>";
+				$(this).prepend(icon);
+
+			});			
 			template.hide();
 	});
 

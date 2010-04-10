@@ -28,10 +28,12 @@ $auth->EnforceCurrentLevel( 2 );
 //post request for sequence based on a string like "SOEN"
 //will do some thing with $_REQUEST etc. later
 $q =  "	
-		Select CourseName as Symbol, Semester, transcript.Grade, canTakeCourse(User.UserID, sequence.CourseName) as canTakeCourse
+		Select Symbol, Semester, CourseName, transcript.Grade, canTakeCourse(User.UserID, Symbol) as canTakeCourse
 		from CleanSequence sequence
 		join User on User.Username = %s
-		join CleanTranscript transcript on transcript.course = sequence.CourseName and User.UserId = transcript.UserId
+    	join StudentProgram on StudentProgram.ProgramId = sequence.ProgramId and User.UserID = StudentProgram.UserID
+		left join CleanTranscript transcript on transcript.course = sequence.Symbol and User.UserId = transcript.UserId
+		order by Semester, Symbol;
 ";
 
 $result = $db->Query( $q, array($auth->getUsername()) );
