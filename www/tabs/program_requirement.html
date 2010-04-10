@@ -17,8 +17,20 @@
 			
 	<fieldset id="sequence">
 		<legend>Courses to take</legend>
-		<div class="course template">
-			<span class="Symbol"></span><span class="Name"></span>
+
+		<fieldset id="Legend" class="ui-widget ui-widget-content ui-corner-all">
+			<legend>Legend</legend>
+			<p><span class="ui-icon ui-icon-check" style="float:left;"></span>Completed</p>
+			<p><span class="ui-icon ui-icon-cancel" style="float:left;"></span>Prereq Needed</p>
+			<p><span class="ui-icon ui-icon-bullet" style="float:left;"></span>Prereq Met</p>
+			<p><span class="ui-icon ui-icon-play" style="float:left;"></span>In Progress</p>
+		</fieldset>
+
+		<div id="Semester">
+			<h3 class="Semester"></h3>
+			<div class="row template">
+				<span class="Symbol"></span><span class="Name"></span>
+			</div>
 		</div>
 	</fieldset>
 	
@@ -37,10 +49,17 @@ $(function() {	//Runs when tab is loaded
 				$("#sequence").show();
 				return;
 			}
-			
-			var template = $("#sequence").find(".course");
-			parseTemplate(response, template, wrapAround);
-			$("#sequence").find(".course").not(".template").each(function() {
+
+		var distinctSemester = getDistinct(response, "Semester");
+		$.each(distinctSemester, function(Semester, SemesterList)
+		{	
+			//SemesterList contains all the courses followed during SemesterName
+			var newSemester = $("#Semester").clone().attr("id","Semester" + Semester).find("h3").text("Semester " + Semester).end();
+			$("#Semester").before(newSemester);
+
+			var template = newSemester.find(".row");
+			parseTemplate(SemesterList, template, wrapAround);
+			newSemester.find(".row").not(".template").each(function() {
 				var record = $(this).data("record");
 				var icon;
 				
@@ -58,6 +77,11 @@ $(function() {	//Runs when tab is loaded
 
 			});			
 			template.hide();
+
+
+		});
+
+			
 	});
 
 });

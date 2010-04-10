@@ -65,6 +65,8 @@ h3 {
 	color: #1D5987;
 	font-weight: bold;
 	font-size: 1em;
+	margin-top:0.6em;
+	margin-bottom:0.1em;
 }
 
 legend {
@@ -128,6 +130,7 @@ strong {
 	padding-right:5px;
 }
 
+
 /* Transcript */
 #Transcript span.Symbol { display:block; float:left; width:80px; }
 #Transcript span.Name { display:block; float:left; width:350px; }
@@ -140,3 +143,4 @@ strong {
 
 #termCombo { width:100px; }
 #departmentombo {width:250px; }
+#Legend { padding:15px; float:right; margin:15px;}
