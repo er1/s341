@@ -225,7 +225,7 @@ function parseTemplate(data, fieldContainer, wrapAround)
 	var template = fieldContainer;
 	$.each(data, function(index, record)
 	{
-		var newItem = template.clone();
+		var newItem = template.clone().data("record",record);
 		parseResponseToFields(record, newItem, wrapAround);
 		template.after(newItem);		
 	});
