@@ -21,6 +21,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+session_start();
+require_once("Main.php");
+require_once("Database.php");
+
 /**
  * @class Authentication
  * @brief Authentication module for authenticating, creating or modifying users.
@@ -307,6 +311,7 @@ class Authentication
 		$result = $db->Query($query, array($this->Username));
 		$name = $db->FetchFirstRow($result);
 		
+
 		$response = array();
 
 		$response["name"] = $name["FirstName"] . " " . $name["LastName"];
@@ -326,6 +331,7 @@ class Authentication
 		}
 
 		print json_encode($response);
+	
 	}
 
 	/**
