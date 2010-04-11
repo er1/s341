@@ -1,0 +1,5 @@
+DET - data entry type
+RET - record entry type
+ILF - internal logic file
+EIF - external logic file
+
