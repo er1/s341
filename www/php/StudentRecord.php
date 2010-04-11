@@ -164,6 +164,7 @@ class StudentRecord
 		else if($numGradedClasses > 0)
 		{
 			$this->GPA = $grade_counter / $credits_total ;
+                        $this->GPA = number_format($this->GPA,2);
 			return $this->GPA ;
 		}
 	}
