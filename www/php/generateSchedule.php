@@ -64,7 +64,7 @@ class GenerateSchedule {
 		}
 
 		if (count($courseList) < 1) {
-			return "[] lol empty";
+			return "[]";
 		}
 
 
@@ -128,11 +128,9 @@ class GenerateSchedule {
 
 		while ($row = $db->FetchFirstRow($result)) {
 			if ($row["ScheduleID"] != $scheduleCurrent) {
-				print "|";
 				$scheduleCurrent = $row["ScheduleID"];
 				array_unshift($scheduleSet, array());
 			}
-			print ".";
 			unset($row["ScheduleID"]);
 			$scheduleSet[0][] = $row;
 		}
