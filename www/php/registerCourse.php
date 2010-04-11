@@ -63,23 +63,21 @@ class registerCourse
 	 * @param int $Semester
 	 * @return boolean Registration success or failure.
 	 */
-	public function RegisterInCourses($Student, $CourseList, $Year, $Semester)
+	public function RegisterInCourses($Student, $CourseList, $Year, $Semester, $Section)
 	{
 
             global $db;
 
-            if($auth->Username != $Student)
-                    $auth->EnforceCurrentLevel(0);
+            //if($auth->Username != $Student)
+            //      $auth->EnforceCurrentLevel(0);
 
-            foreach($CourseList as &$course)
+            foreach($CourseList as $course)
             {
 
                 $query = 'INSERT INTO RegisteredIn VALUES ( '.
                          '(SELECT UserID FROM User WHERE Username=%s), '.
-                         '(SELECT ClassID FROM CleanCourseSection WHERE Course = %s AND Section LIKE %s), ' .
-                         '\'IP\');';
-                $result = $db->Query($query, array($Student, $course, $Year . '/' . $Semester . '%'));
-                $status = $db->FetchFirstRow($result);
+                         '(SELECT ClassID FROM CleanCourseSection WHERE Course = %s AND Section LIKE %s));';
+                $result = $db->Query($query, array($Student, $course, $Year . '/' . $Semester . ' ' . $Section));
             }
 
 	}
