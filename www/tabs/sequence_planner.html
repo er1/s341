@@ -19,23 +19,24 @@
 
 	</fieldset>
 
-	<div id="pagination" style="clear:both;margin:4px;">
-		<button style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses">Adopt this schedule <span class="ui-icon ui-icon-circle-arrow-s" style="float:left"></span></button>
-
-		<button id="next" style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses"><span class="ui-icon ui-icon-triangle-1-e" style="float:left"></span></button>
-		<div style="float:right"><span id="current"></span> of <span id="total"></span></div>
-		<button id="previous" style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses"><span class="ui-icon ui-icon-triangle-1-w" style="float:left"></span></button>
-
+	<div style="clear:both">
+		<div id="pagination" style="margin:4px;">
+			<button style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses">Adopt this schedule <span class="ui-icon ui-icon-circle-arrow-s" style="float:left"></span></button>	
+			<button id="next" style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses"><span class="ui-icon ui-icon-triangle-1-e" style="float:left"></span></button>
+			<div style="float:right"><span id="current"></span> of <span id="total"></span></div>
+			<button id="previous" style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses"><span class="ui-icon ui-icon-triangle-1-w" style="float:left"></span></button>
+		</div>
 		<h2 style="float:left">Generated tentative schedule</h2>
 	</div>
 
-	<div id="calendar" style="clear:both"></div>
-
-	<div id="noPossibleSchedule" class="ui-state-error ui-corner-all" style="clear:both; margin-top: 40px; padding: 15px"> 
+	<div id="noPossibleSchedule" class="ui-state-error ui-corner-all" style="clear:both; margin-top: 15px; margin-bottom:15px; padding: 15px"> 
 		<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-			There is no possible way of arranging a schedule with the given courses.. Please try removing courses.	
+			There is no possible way of arranging a schedule with the given courses and/or constraints.. Please try removing courses.	
 		</p>
 	</div>
+		
+	<div id="calendar" style="clear:both"></div>
+
 
 
 </div>
@@ -43,9 +44,9 @@
 <script>
 
 $(document).ready(function() {
-	
+		constraintStore = {filteredSchedule: [], length:150,  store:{}, count:0};
+		dataStore = [];
 		current = 1;
-		var dayOfWeek = {"M":0,"T":1,"W":2,"J":3,"F":4,"S":5,"D":6};
 	
 	
 		var course = $("#courseInput").combobox({

@@ -481,7 +481,7 @@
 
                var $newEvent = $("<div class=\"wc-cal-event wc-new-cal-event wc-new-cal-event-creating\"></div>");
 
-               $newEvent.css({lineHeight: (options.timeslotHeight - 2) + "px", fontSize: (options.timeslotHeight / 2) + "px"});
+               $newEvent.css({lineHeight: (options.timeslotHeight - 2) + "px", fontSize: (options.timeslotHeight / 1.3) + "px"});
                $target.append($newEvent);
 
                var columnOffset = $target.offset().top;
@@ -533,7 +533,7 @@
                   self._adjustOverlappingEvents($weekDay);
                }
 
-               options.eventNew(eventDuration, $renderedCalEvent);
+               options.eventNew(newCalEvent, $renderedCalEvent);
             }
          });
       },
@@ -711,7 +711,7 @@
          $calEvent = $(eventHtml);
          $modifiedEvent = options.eventRender(calEvent, $calEvent);
          $calEvent = $modifiedEvent ? $modifiedEvent.appendTo($weekDay) : $calEvent.appendTo($weekDay);
-         $calEvent.css({lineHeight: (options.timeslotHeight - 2) + "px", fontSize: (options.timeslotHeight / 2) + "px"});
+         $calEvent.css({lineHeight: (options.timeslotHeight - 2) + "px", fontSize: (options.timeslotHeight / 1.3) + "px"});
 
          self._refreshEventDetails(calEvent, $calEvent);
          self._positionEvent($weekDay, $calEvent);
@@ -961,12 +961,12 @@
          var $weekDay = self._findWeekDayForEvent(calEvent, self.element.find(".wc-time-slots .wc-day-column-inner"));
          $calEvent.draggable({
             handle : ".wc-time",
-            containment: ".wc-scrollable-grid",
+            containment: ".wc-scrollable-grid:visible",
             revert: 'valid',
             opacity: 0.5,
             grid : [$calEvent.outerWidth() + 1, options.timeslotHeight ],
             start : function(event, ui) {
-               var $calEvent = ui.draggable;
+               var $calEvent = ui.helper;
                options.eventDrag(calEvent, $calEvent);
             }
          });
@@ -982,12 +982,10 @@
          $weekDay.droppable({
             accept: ".wc-cal-event",
             drop: function(event, ui) {
-               var $calEvent = ui.draggable;
+               var $calEvent = ui.helper;
                var top = Math.round(parseInt(ui.position.top));
                var eventDuration = self._getEventDurationFromPositionedEventElement($weekDay, $calEvent, top);
                var calEvent = $calEvent.data("calEvent");
-
-                
 
                var newCalEvent = $.extend(true, {}, calEvent, {start: eventDuration.start, end: eventDuration.end});
                self._adjustForEventCollisions($weekDay, $calEvent, newCalEvent, calEvent, true);

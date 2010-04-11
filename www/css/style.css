@@ -38,7 +38,7 @@ body {
 	padding-right:3px;
 }
 .footer, .push {
-	height: 0.8em; /* .push must be the same height as .footer */
+	height: 1em; /* .push must be the same height as .footer */
 }
 .footer {
 	margin-top:-1.6em;
