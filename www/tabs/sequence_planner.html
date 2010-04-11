@@ -21,6 +21,11 @@
 
 	<div style="clear:both;margin:4px;">
 		<button style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses">Adopt this schedule <span class="ui-icon ui-icon-circle-arrow-s" style="float:left"></span></button>
+
+		<button id="next" style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses"><span class="ui-icon ui-icon-triangle-1-e" style="float:left"></span></button>
+		<div style="float:right"><span id="current"></span> of <span id="total"></span></div>
+		<button id="previous" style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses"><span class="ui-icon ui-icon-triangle-1-w" style="float:left"></span></button>
+
 		<h2 style="float:left">Generated tentative schedule</h2>
 	</div>
 
@@ -30,63 +35,4 @@
 </div>
 
 
-<script>
-$(function() {
-
-	var course = $("#courseInput").combobox({
-		onSelect:function(e, ui) 
-		{	
-			 selectCourse(ui.item.value);
-		} 
-		, defaultText:"Add a course by typing it's name or number"
-		, dataSource:"ajax"
-	});
-
-
-	getData({"action":"getSequence"}, function(response) 
-	{		
-		$.each(response, function(index, record) {
-			if (record.Grade == null && record.canTakeCourse == "1")
-			{	
-				$("#suggestedCourses").append("<span class='course_symbol fakeLink'>" + record.Symbol + "</span><br>");
-				selectCourse(record.Symbol);
-			}
-		});
-	});
-
-
-	$('#calendar').weekCalendar({
-		readonly:false
-		,buttons:false
-		,date: new Date(2010, 00,5)
-		,businessHours: {start:8, end:22, limitDisplay:true}
-		,timeslotsPerHour: 4
-		,data: {"events":[]}
-		,height: function($calendar){
-			return $(window).height()-310;
-		}
-		,eventDrop:function(calEvent, element)
-		{
-			alert('Obviously you should not drag&drop courses you are in but its just a demo');
-		
-		}
-		, eventClick:function(calEvent, element)
-		{
-			displayPopupCourse(calEvent.course);
-		}				
-				
-	});
-
-	function selectCourse(symbol)
-	{
-		var template = $("#selectedCourse").find(".template").clone().removeClass("template");
-		template.find(".symbol").text(symbol).addClass("course_symbol");
-		template.find(".ui-icon").click(function() {
-		 var label = $(this).parent()
-		 label.animate({width:1}, 500, function() { label.remove(); });
-		})
-		template.css({width:1}).animate({"width":85}, 500);
-		template.prependTo($("#selectedCourse"));
-	}
-});
-</script>
+<script src="js/sequenceplanner.js"></script>

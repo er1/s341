@@ -84,24 +84,23 @@ if (isset($_REQUEST["action"]))
 			$registerCourse = new registerCourse();
 			$registerCourse->checkAvailability($_REQUEST['symbol'], $_REQUEST['section']);
 			break;
-                case("registerCourse"):
-                        require_once ("registerCourse.php");
-                        $registerCourse = new registerCourse();
-                        $registerCourse->Get();
-                        break;
-
+        case("registerCourse"):
+            require_once ("registerCourse.php");
+            $registerCourse = new registerCourse();
+            $registerCourse->Get();
+            break;
 		case("getSessionInfo"):
-                        $auth->GetSessionInfo();
-                        break;
-                case("registerCourse"):
-                        require_once ("registerCourse.php");
-                        $registerCourse = new registerCourse();
-                        $registerCourse->RegisterInCourses($_REQUEST['username'], $_REQUEST['courselist'], $_REQUEST['year'], $_REQUEST['semester'], $_REQUEST['section']);
-                        break;
+	        $auth->GetSessionInfo();
+	        break;
+        case("registerCourse"):
+            require_once ("registerCourse.php");
+            $registerCourse = new registerCourse();
+            $registerCourse->RegisterInCourses($_REQUEST['username'], $_REQUEST['courselist'], $_REQUEST['year'], $_REQUEST['semester'], $_REQUEST['section']);
+            break;
 		case("generateSchedule"):
-                        require_once ("generateSchedule.php");
+			require_once ("generateSchedule.php");
 			$genSched = new GenerateSchedule();
-			print $genSched->Generate($_REQUEST['courses']);
+			print $genSched->Generate(split("-",$_REQUEST['courses']));
 			break;
 		default:
 			dieNicely("Invalid action");

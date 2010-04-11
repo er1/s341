@@ -152,4 +152,7 @@ strong {
 
 /*SEQUENCE PLANNER*/
 #selectedCourse { padding:15px; }
-#selectedCourse .courses { padding:3px; margin-right:5px; width:85px; height:16px; overflow:none; float:left; }
+#selectedCourse .courses { padding:3px; margin-right:5px; width:90px; height:16px; overflow:none; float:left; }
+#calendar .constraint .wc-title { background-color:red;}
+#calendar .constraint .wc-time { background-color:red;}
+#calendar .constraint { background-color:red;}

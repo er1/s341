@@ -4,21 +4,6 @@
 	<fieldset>
 		<legend>Search for a course</legend>
 
-		<select name="term" id="term">
-			<option value="W2009">Winter 2009</option>
-			<option value="F2010" selected>Fall 2010</option>
-			<option value="S2010">Summer 2010</option>
-			<option value="W2010">Winter 2010</option>
-		</select>
-	
-		<select name="department" id="department">
-			<option value="*" selected>All Department</option>
-			<option value="comp">COMP - Computer Sciences</option>
-			<option value="soen">SOEN - Software Engineering</option>
-			<option value="engr">ENGR - Engineering</option>
-		</select>
-	
-	
 		<select id="comboBoxCourse">
 		</select>
 
@@ -49,6 +34,5 @@ $(function() {
 		, dataSource:"ajax"
 	});
 
-	$("#term").add("#department").combobox({"dataSource":"document"});
 });
 </script>
