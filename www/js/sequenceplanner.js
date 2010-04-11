@@ -22,7 +22,7 @@ $(function() {
 			{	if (++ctp > 5)
 					return;
 				$("#suggestedCourses").append("<span class='course_symbol fakeLink'>" + record.Symbol + "</span><br>");
-				selectCourse(record.Symbol);
+				selectCourse(record.Symbol, true);
 			}
 		});
 	
@@ -40,6 +40,14 @@ $(function() {
 			});
 
 			getData({action:"generateSchedule", "courses":selectedCoursesArray.join('-')}, function(response) {
+				if (response.length==0 || response[0].length ==0)
+				{	$("#noPossibleSchedule").show();
+					$("#calendar").hide();
+					return;
+				}
+				$("#calendar").show();
+				$("#noPossibleSchedule").hide();
+
 				dataStore = response;
 				$("#total").text(response.length);
 				showTentativeSchedule(current-1);
@@ -117,15 +125,17 @@ $(function() {
 			showTentativeSchedule(--current-1);	
 	});	
 
-	function selectCourse(symbol)
+	function selectCourse(symbol, batch)
 	{
 		var template = $("#selectedCourse").find(".template").clone().removeClass("template");
 		template.find(".symbol").text(symbol).addClass("course_symbol");
 		template.find(".ui-icon").click(function() {
 		 var label = $(this).parent()
-		 label.animate({width:1}, 500, function() { label.remove(); });
+		 label.animate({width:1}, 500, function() { label.remove(); generateSchedule(); });
 		})
 		template.css({width:1}).animate({"width":90}, 500);
 		template.prependTo($("#selectedCourse"));
+		if (!batch)
+			generateSchedule();
 	}
 });
