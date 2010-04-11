@@ -108,7 +108,7 @@ class GenerateSchedule {
 		< (cb1.EndTime - cb1.StartTime + cb2.EndTime - cb2.StartTime)";
 
 		// Clear them if any;
-		if ($row = mysql_fetch_row($db->Query($findConflicts, array($userID)))) {
+		if ($row = mysql_fetch_row($db->Query($findConflicts, array($this->userID)))) {
 			if (isset($row[0]) && (strlen($row[0] > 0))) {
 				$clearConflicts = "DELETE FROM TemporarySchedule WHERE ScheduleID IN (" . $row[0] . ") AND UserID = %s";
 				$db->Query($clearConflicts, array($userID));
