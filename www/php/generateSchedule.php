@@ -56,7 +56,6 @@ class GenerateSchedule {
 		}
 	}
 
-
 	public function Generate($courseList = array()) {
 		global $db;
 		global $auth;
@@ -122,7 +121,7 @@ class GenerateSchedule {
 		JOIN CleanCourseSection ccs ON ccs.ClassID = ts.ClassID
 		WHERE UserID = %s ORDER BY ScheduleID";
 
-		$result = $db->Query($scheduleData, array($userID));
+		$result = $db->Query($scheduleData, array($this->userID));
 
 		$scheduleSet = array();
 		$scheduleCurrent = "";
@@ -140,7 +139,6 @@ class GenerateSchedule {
 
 		return json_encode($scheduleSet);
 	}
-
 
 }
 
