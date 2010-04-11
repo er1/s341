@@ -171,7 +171,7 @@ class Authentication
 		if ($UnknownHash == $PasswordHash)
 		{
 			$_SESSION['AuthenticationLevel'] = $this->AuthenticationLevel = $UserRoleID;
-                        $this->UserID = $pwInfo["UserID"];
+                        $_SESSION['UserID'] = $this->UserID = $pwInfo["UserID"];
 			$_SESSION['Username'] = $this->Username = $Username;
 			print(json_encode(array("status"=>"ok","loginError"=>"false","role"=>$UserRoleID)));
 			return true;
