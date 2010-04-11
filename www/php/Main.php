@@ -93,6 +93,11 @@ if (isset($_REQUEST["action"]))
 		case("getSessionInfo"):
                         $auth->GetSessionInfo();
                         break;
+                case("registerCourse"):
+                        require_once ("registerCourse.php");
+                        $registerCourse = new registerCourse();
+                        $registerCourse->RegisterInCourses($_REQUEST['username'], $_REQUEST['courselist'], $_REQUEST['year'], $_REQUEST['semester'], $_REQUEST['section']);
+                        break;
 		case("generateSchedule"):
                         require_once ("generateSchedule.php");
 			$genSched = new GenerateSchedule();

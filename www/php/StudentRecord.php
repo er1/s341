@@ -35,18 +35,6 @@ class StudentRecord
 	private $Program; /*!< Student's Program */
 	private $GPA; /*!< Student's GPA */
 
-	/**
-	 *
-	 * @param string $Student
-	 * @param string $CourseList
-	 * @param int $Year
-	 * @param int $Semester
-	 * @return boolean Registration success or failure.
-	 */
-	public function RegisterInCourses($Student, $CourseList, $Year, $Semester)
-	{
-		
-	}
 
 	/**
 	 *
@@ -147,13 +135,13 @@ class StudentRecord
 		);
 
 	
-		$query = 'SELECT Grade FROM  RegisteredIn WHERE UserID ='.
+		$query = 'SELECT ClassID, Grade FROM  RegisteredIn WHERE UserID ='.
 		'(SELECT UserID FROM User WHERE Username = %s' .
 		');';
 
 		$result = $db->Query($query, array( $Student ));
 		
-		while( $grade = $db->FetchFirstRow($result))
+		while( $grade = $db->FetchFirstRow($result) )
 		{
 			if( array_key_exists($grade["Grade"], $GPA_VAL) )
 			{
@@ -163,7 +151,7 @@ class StudentRecord
 		}
 		if($numGradedClasses == 0)
 		{
-			return ' ';
+			return 0;
 		}
 		else if($numGradedClasses > 0)
 		{
