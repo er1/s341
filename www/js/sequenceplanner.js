@@ -1,6 +1,6 @@
 	var current;
 	var dataStore = [];
-	var constraintStore = {filteredSchedule: [], length:150,  store:{}, count:0};
+	var constraintStore = {originalStore: [], filteredSchedule: [], length:150,  store:{}, count:0};
 	var dayOfWeek = {"M":0,"T":1,"W":2,"J":3,"F":4,"S":5,"D":6};
 
 
@@ -11,47 +11,51 @@
 				selectedCoursesArray.push($(this).text()) 
 			});
 
-			dataStore = [];
 
 			getData({action:"generateSchedule", "courses":selectedCoursesArray.join('-')}, function(response) {
-
-				$.each(response, function(index, schedule)
-				{	var conflict = false;
-					$.each(schedule, function(iindex, class)
-					{
-						if (isConflict(class))
-						{	conflict=true;
-							return false;
-						}
-
-					})
-
-					if (!conflict)
-						dataStore.push(schedule);
-				})
-				
-				if (dataStore.length == 0)
-				{	$("#noPossibleSchedule").show();
-					$("#pagination").hide();
-					if (constraintStore.count==0)
-						$("#calendar").hide();
-					else
-						showTentativeSchedule(-1);
-										
-				}
-				else 
-				{
-					$("#calendar").add("#pagination").show();
-					$("#noPossibleSchedule").hide();
-	
-					$("#total").text(dataStore.length);
-					showTentativeSchedule(current-1);
-				
-				}
+				constraintStore.originalStore = response;
+				filterSchedule(response);
 			});
 
 	}
 
+	function filterSchedule(response)
+	{
+		dataStore = [];
+		$.each(response, function(index, schedule)
+		{	var conflict = false;
+			$.each(schedule, function(iindex, class)
+			{
+				if (isConflict(class))
+				{	conflict=true;
+					return false;
+				}
+	
+			})
+	
+			if (!conflict)
+				dataStore.push(schedule);
+		})
+		
+		if (dataStore.length == 0)
+		{	$("#noPossibleSchedule").show();
+			$("#pagination").hide();
+			if (constraintStore.count==0)
+				$("#calendar").hide();
+			else
+				showTentativeSchedule(-1);
+								
+		}
+		else 
+		{
+			$("#calendar").add("#pagination").show();
+			$("#noPossibleSchedule").hide();
+	
+			$("#total").text(dataStore.length);
+			showTentativeSchedule(current-1);
+		
+		}
+	}
 	function isConflict(record)
 	{	var rStart = parseTimeToInt(record.StartTime);
 		var rEnd = parseTimeToInt(record.EndTime);
@@ -64,7 +68,10 @@
 			var cStart = parseTimeToInt(constraint.start);
 			var cEnd = parseTimeToInt(constraint.end);			
 
-			if ((rStart >= cStart && rStart <= cEnd) || (rEnd >= cStart && rEnd <= cEnd))
+			if (
+					(rStart >= cStart && rStart <= cEnd) || (rEnd >= cStart && rEnd <= cEnd)
+					 || (cStart >= rStart && cStart <= rEnd) || (cEnd >= rStart && cEnd <= rEnd)
+ 				)
 			{	
 				flag=true;
 				return false;
@@ -157,14 +164,13 @@
 				if (calEvent.title == "")
 					element.find("div").add(element).css({borderWidth:"0", color:"#CD0A0A", backgroundColor:"#FF6666"}).find(".wc-title")
 			}
-
 			, eventClick:function(calEvent, element)
 			{
 				if (calEvent.title == "")
 				{
 					$("#calendar").weekCalendar("removeEvent", calEvent.id);
 					delete constraintStore.store[calEvent.id];
-					generateSchedule();
+					filterSchedule(constraintStore.originalStore);
 					constraintStore.count--;
 				}
 				else
@@ -177,12 +183,12 @@
 				calEvent.id = newId;
 				constraintStore.store[newId] = calEvent;
 				constraintStore.count++;
-				generateSchedule();
+				filterSchedule(constraintStore.originalStore);
 
 			}
 			, draggable: function(calEvent, element)
 			{
-				return (calEvent.title == "");
+				return false;
 			}
 			, resizable: function(calEvent, element)
 			{
