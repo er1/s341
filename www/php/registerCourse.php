@@ -45,7 +45,23 @@ class registerCourse
 	 */
 	public function RegisterInCourses($Student, $CourseList, $Year, $Semester)
 	{
-            
+
+            global $db;
+
+            if($auth->Username != $Student)
+                    $auth->EnforceCurrentLevel(0);
+
+            foreach($CourseList as &$course)
+            {
+
+                $query = 'INSERT INTO RegisteredIn VALUES ( '.
+                         '(SELECT UserID FROM User WHERE Username=%s), '.
+                         '(SELECT ClassID FROM CleanCourseSection WHERE Course = %s AND Section LIKE %s), ' .
+                         '\'IP\');';
+                $result = $db->Query($query, array($Student, $course, $Year . '/' . $Semester . '%'));
+                $status = $db->FetchFirstRow($result);
+            }
+
 	}
 
 }
