@@ -34,7 +34,24 @@ class registerCourse
 	public function checkAvailability($Symbol, $Section)
 	{
 		echo("test: " . $Symbol . $Section  );
+
+		$q = "SELECT CourseID FROM Requires
+		      WHERE RequirementID NOT IN (
+			SELECT RequirementID FROM Satisfies
+			  JOIN (
+			    SELECT CourseID FROM RegisteredIn
+			      JOIN Class ON Class.ClassID = RegisteredIn.ClassID
+			      WHERE UserID = '%s'
+			    ) Taken ON Taken.CourseID = Satisfies.CourseID
+			)
+		    )";
+
+
+		$result = $db->Query( $q, array($auth->getUsername()) );		
+		
+		print json_encode($db->FetchEntireArray($result));
 	}
+	
 	/**
 	 *
 	 * @param string $Student
