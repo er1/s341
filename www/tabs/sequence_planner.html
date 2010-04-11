@@ -19,7 +19,7 @@
 
 	</fieldset>
 
-	<div style="clear:both;margin:4px;">
+	<div id="pagination" style="clear:both;margin:4px;">
 		<button style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses">Adopt this schedule <span class="ui-icon ui-icon-circle-arrow-s" style="float:left"></span></button>
 
 		<button id="next" style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses"><span class="ui-icon ui-icon-triangle-1-e" style="float:left"></span></button>
@@ -31,7 +31,7 @@
 
 	<div id="calendar" style="clear:both"></div>
 
-	<div id="noPossibleSchedule" class="ui-state-error ui-corner-all" style="margin-top: 20px; padding: 15px"> 
+	<div id="noPossibleSchedule" class="ui-state-error ui-corner-all" style="clear:both; margin-top: 40px; padding: 15px"> 
 		<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
 			There is no possible way of arranging a schedule with the given courses.. Please try removing courses.	
 		</p>
@@ -40,5 +40,48 @@
 
 </div>
 
+<script>
 
-<script src="js/sequenceplanner.js"></script>
+$(document).ready(function() {
+	
+		current = 1;
+		var dayOfWeek = {"M":0,"T":1,"W":2,"J":3,"F":4,"S":5,"D":6};
+	
+	
+		var course = $("#courseInput").combobox({
+			onSelect:function(e, ui) 
+			{	
+				 selectCourse(ui.item.value);
+			} 
+			, defaultText:"Add a course by typing it's name or number"
+			, dataSource:"ajax"
+		});
+	
+		//Get suggestedcourse
+		getData({"action":"getSequence"}, function(response) 
+		{	var ctp =0;
+			$.each(response, function(index, record) {
+				if (record.Grade == null && record.canTakeCourse == "1")
+				{	if (++ctp > 5)
+						return;
+					$("#suggestedCourses").append("<span class='course_symbol fakeLink'>" + record.Symbol + "</span><br>");
+					selectCourse(record.Symbol, true);
+				}
+			});
+		
+			generateSchedule();
+		});
+	
+	
+		$("#next").click(function() {
+			if (current < dataStore.length)
+				showTentativeSchedule(++current-1);	
+		});	
+	
+		$("#previous").click(function() {
+			if (current-1 >=1)
+				showTentativeSchedule(--current-1);	
+		});	
+})
+
+</script>
