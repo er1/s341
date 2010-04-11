@@ -5,7 +5,7 @@
 		<legend>Selected courses</legend>
 
 		<h3>Add a Course</h3>
-		<select id="comboBoxCourse">
+		<select id="courseInput">
 		</select>
 
 		<div id="selectedCourse">
@@ -33,7 +33,7 @@
 <script>
 $(function() {
 
-	var course = $("#comboBoxCourse").combobox({
+	var course = $("#courseInput").combobox({
 		onSelect:function(e, ui) 
 		{	
 			 selectCourse(ui.item.value);
