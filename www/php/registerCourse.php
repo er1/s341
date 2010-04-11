@@ -31,10 +31,30 @@ class registerCourse
 
 	/**
 	*/
-	public function checkAvailability($Symbol)
+	public function checkAvailability($Symbol, $Section)
 	{
-		echo("test:" . $Symbol );
+		global $db;
+		global $auth;
+		
+		echo("test: " . $Symbol . $Section  );
+
+		$q = "SELECT CourseID FROM Requires
+		      WHERE RequirementID NOT IN (
+			SELECT RequirementID FROM Satisfies
+			  JOIN (
+			    SELECT CourseID FROM RegisteredIn
+			      JOIN Class ON Class.ClassID = RegisteredIn.ClassID
+			      WHERE UserID = '%s'
+			    ) Taken ON Taken.CourseID = Satisfies.CourseID
+			)
+		    )";
+
+
+		$result = $db->Query( $q, array($auth->getUsername()) );		
+		
+		print json_encode($db->FetchEntireArray($result));
 	}
+	
 	/**
 	 *
 	 * @param string $Student
@@ -45,7 +65,23 @@ class registerCourse
 	 */
 	public function RegisterInCourses($Student, $CourseList, $Year, $Semester)
 	{
-            
+
+            global $db;
+
+            if($auth->Username != $Student)
+                    $auth->EnforceCurrentLevel(0);
+
+            foreach($CourseList as &$course)
+            {
+
+                $query = 'INSERT INTO RegisteredIn VALUES ( '.
+                         '(SELECT UserID FROM User WHERE Username=%s), '.
+                         '(SELECT ClassID FROM CleanCourseSection WHERE Course = %s AND Section LIKE %s), ' .
+                         '\'IP\');';
+                $result = $db->Query($query, array($Student, $course, $Year . '/' . $Semester . '%'));
+                $status = $db->FetchFirstRow($result);
+            }
+
 	}
 
 }

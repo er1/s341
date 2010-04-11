@@ -81,6 +81,8 @@ if (isset($_REQUEST["action"]))
 			require_once("registerCourse.php");
 			$registerCourse = new registerCourse();
 			$registerCourse->checkAvailability($_REQUEST['symbol']);
+			$registerCourse = new registerCourse();
+			$registerCourse->checkAvailability($_REQUEST['symbol'], $_REQUEST['section']);
 			break;
                 case("registerCourse"):
                         require_once ("registerCourse.php");
