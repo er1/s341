@@ -26,8 +26,7 @@ require_once("Authentication.php");
 $auth->EnforceCurrentLevel( 2 );
 
 class GenerateSchedule {
-	private $userID;
-	private $scheduleID = 0;
+	private $scheduleSet;
 
 	//recursive function for producing all permutations of sections
 	private function perm($tail, $head = array()) {
@@ -45,100 +44,89 @@ class GenerateSchedule {
 
 	private function append($class_list)
 	{
-		global $db;
-		$this->scheduleID += 1;
-		foreach($class_list as $e)
-		{
-			$data = array($e, $this->userID, $this->scheduleID);
-			$query = "INSERT INTO TemporarySchedule (ClassID, UserID, ScheduleID) VALUES (%s, %s, %s);";
-
-			$db->Query($query, $data);
+		$classes = array();
+		$blocks = array();
+		foreach($class_list as $class) {
+			array_push($classes, array_shift($class));
+			while (count($class) > 0) {
+				array_push($blocks, array_shift($class));
+			}
 		}
+		for ($i = 0; $i < count($blocks); ++$i) {
+			for ($j = 0; $j < $i; ++$j) {
+				if (
+					($blocks[$i][2] == $blocks[$j][2]) &&
+					(abs($blocks[$i][1] + $blocks[$i][0]) -
+					($blocks[$j][1] + $blocks[$j][0])) <
+					($blocks[$i][1] - $blocks[$i][0] +
+					$blocks[$j][1] - $blocks[$j][0])) {
+
+					return;
+				}
+			}
+		}
+		$presBlocks = array();
+		foreach ($blocks as $blk) {
+			array_push($presBlocks, array(
+				"Symbol" => $blk[5],
+				"Section" => $blk[6],
+				"Name" => $blk[7],
+				"Day" => $blk[2],
+				"StartTime" => $blk[3],
+				"EndTime" => $blk[4]));
+		}
+		array_push($this->scheduleSet, $presBlocks);
 	}
 
 	public function Generate($courseList = array()) {
 		global $db;
-		global $auth;
-		if ($row = mysql_fetch_row($db->Query('SELECT UserID FROM User WHERE Username = %s', array($auth->getUsername())))) {
-			$this->userID = $row[0];
-		}
 
 		if (count($courseList) < 1) {
 			return "[]";
 		}
 
+		// -------------------------------------------------------------------------------------------------------------------
 
-		// Get all the Class Sections for the list of Courses in courseList
-
-		$qCompleted = "
-		SELECT CourseID, MAX(ClassID) FROM CleanCourseSection
+		$query = "SELECT CourseID, ccs.ClassID, TIME_TO_SEC(StartTime) start, TIME_TO_SEC(EndTime) end, Day,
+		StartTime, EndTime, Course Symbol, Section, Name
+	 	FROM ClassBlock cb
+		RIGHT JOIN
+		(SELECT CourseID, MAX(ClassID) ClassID, Course, Section, Name FROM CleanCourseSection
 		WHERE Course IN ('". join("', '", $courseList) ."')
 		AND Section LIKE '2009/4%%'
-		GROUP BY CourseID, Section
-		ORDER BY CourseID";
-		$result = $db->Query( $qCompleted );
+		GROUP BY Course, Section
+		ORDER BY CourseID) ccs
+		ON ccs.ClassID = cb.ClassID;";
 
-		// Parse the result such that the data is formed into arrays (courses) of arrays (sections)
+		// -----------------------------------------------------------------------------------------------------------------
 
-		$courseArr = array();
+		$result = $db->Query($query, array());
+
+		$allBlocks = array();
 		$currentCourse = "";
-		while ($row = mysql_fetch_row( $result ) )
-		{
+		$currentClass = "";
+
+		while ($row = mysql_fetch_row($result)) {
 			if ($currentCourse != $row[0]) {
-				array_unshift($courseArr, array());
+				array_unshift($allBlocks, array());
 				$currentCourse = $row[0];
+				$currentClass = "";
 			}
-			$courseArr[0][] = $row[1];
+			if ($currentClass != $row[1]) {
+				array_unshift($allBlocks[0], array($row[1]));
+				$currentClass = $row[1];
+			}
+			array_push($allBlocks[0][0], array($row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9]));
 		}
-
-		// Clear old schedules
-		$delQuery = "DELETE FROM TemporarySchedule WHERE UserID = %s AND ScheduleID > 0";
-		$db->Query($delQuery, array($this->userID));
-
+		$this->scheduleSet = array();
+	
 		// Make new schedules;
-		$this->perm($courseArr);
+		$this->perm($allBlocks);
 
-		// Find Conflicts
-		$findConflicts = "
-		SELECT GROUP_CONCAT(DISTINCT ts1.ScheduleID) FROM TemporarySchedule ts1
-		JOIN TemporarySchedule ts2 ON ts1.ClassID < ts2.ClassID AND ts1.ScheduleID = ts2.ScheduleID AND ts1.UserID = ts2.UserID
-		JOIN ClassBlock cb1 ON cb1.ClassID = ts1.ClassID
-		JOIN ClassBlock cb2 ON cb2.ClassID = ts2.ClassID
-		WHERE ts1.UserID = %s
-		AND ABS(cb1.EndTime + cb1.StartTime - cb2.EndTime - cb2.StartTime)
-		< (cb1.EndTime - cb1.StartTime + cb2.EndTime - cb2.StartTime)";
+		//print_r($this->scheduleSet);
 
-		// Clear them if any;
-		if ($row = mysql_fetch_row($db->Query($findConflicts, array($this->userID)))) {
-			if (isset($row[0]) && (strlen($row[0] > 0))) {
-				$clearConflicts = "DELETE FROM TemporarySchedule WHERE ScheduleID IN (" . $row[0] . ") AND UserID = %s";
-				$db->Query($clearConflicts, array($this->userID));
-			}
-		}
-
-		// Get out sexy Schedule data
-		$scheduleData = "SELECT ScheduleID, ts.ClassID, Course Symbol, Section, Name, StartTime, EndTime, Day FROM TemporarySchedule ts
-		JOIN ClassBlock cb ON cb.ClassID = ts.ClassID
-		JOIN CleanCourseSection ccs ON ccs.ClassID = ts.ClassID
-		WHERE UserID = %s ORDER BY ScheduleID";
-
-		$result = $db->Query($scheduleData, array($this->userID));
-
-		$scheduleSet = array();
-		$scheduleCurrent = "";
-
-		while ($row = $db->FetchFirstRow($result)) {
-			if ($row["ScheduleID"] != $scheduleCurrent) {
-				$scheduleCurrent = $row["ScheduleID"];
-				array_unshift($scheduleSet, array());
-			}
-			unset($row["ScheduleID"]);
-			$scheduleSet[0][] = $row;
-		}
-
-		return json_encode($scheduleSet);
+		return json_encode($this->scheduleSet);
 	}
-
 }
 
 ?>
