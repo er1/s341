@@ -79,7 +79,8 @@ if (isset($_REQUEST["action"]))
 
 	        case("canRegisterCourse"):
 			require_once("registerCourse.php");
-			$registerCourse = new registerCourse();								   $registerCourse->checkAvailability($_REQUEST['symbol']);
+			$registerCourse = new registerCourse();
+			$registerCourse->checkAvailability($_REQUEST['symbol']);
 			break;
                 case("registerCourse"):
                         require_once ("registerCourse.php");
@@ -90,7 +91,11 @@ if (isset($_REQUEST["action"]))
 		case("getSessionInfo"):
                         $auth->GetSessionInfo();
                         break;
-
+		case("generateSchedule"):
+                        require_once ("generateSchedule.php");
+			$genSched = new GenerateSchedule();
+			print $genSched->Generate($_REQUEST['courses']);
+			break;
 		default:
 			dieNicely("Invalid action");
 	}
