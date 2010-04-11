@@ -36,82 +36,80 @@ if (isset($_REQUEST["action"]))
 {
 	switch ($_REQUEST["action"])
 	{
-		case("login"):
-                        $auth->Login($_POST['username'], $_POST["password"]);
-                        break;
-                    
-		case("logout"):
-                        $auth->Logout();
-                        break;
+            case("login"):
+                    $auth->Login($_POST['username'], $_POST["password"]);
+                    break;
 
-		case("CreateUser"):
-                        $auth->CreateUser($_POST['username'], $_POST["password"], $_POST['FirstName'], $_POST['LastName'], $_POST['type']);
-                        break;
+            case("logout"):
+                    $auth->Logout();
+                    break;
 
-		case("DeleteUser"):
-                        $auth->DeleteUser($_POST['username']);
-                        break;
+            case("CreateUser"):
+                    $auth->CreateUser($_POST['username'], $_POST["password"], $_POST['FirstName'], $_POST['LastName'], $_POST['type']);
+                    break;
 
-		case("ChangePassword"):
-                        $auth->ChangePassword($_POST['username'], $_POST["password"]);
-                        break;
+            case("DeleteUser"):
+                    $auth->DeleteUser($_POST['username']);
+                    break;
 
-		case("viewSchedule"):
-                        require ("viewSchedule.php");
-                        break;
+            case("ChangePassword"):
+                    $auth->ChangePassword($_POST['username'], $_POST["password"]);
+                    break;
 
-		case("searchForCourse"):
-                        require ("Course.php");
-			$course = new Course();
-			$course->getCourseList($_REQUEST['s']);
-                        break;
+            case("viewSchedule"):
+                    require ("viewSchedule.php");
+                    break;
 
-		case("getCourseInfo"):
-                        require ("Course.php");
-			$course = new Course();
-			$course->getCourseInfo($_REQUEST['symbol']);
-	        break;
+            case("searchForCourse"):
+                    require ("Course.php");
+                    $course = new Course();
+                    $course->getCourseList($_REQUEST['s']);
+                    break;
 
-		case("viewTranscript"):
-                        require_once ("StudentRecord.php");
-			$record = new StudentRecord();
-			$record->showTranscript( $auth->getUsername() );
-                        break;
-		
-		case("getSequence"):
-			require_once ("Sequence.php");
-			$sequence = new Sequence();
-			$sequence->Get();
-			break;
+            case("getCourseInfo"):
+                    require ("Course.php");
+                    $course = new Course();
+                    $course->getCourseInfo($_REQUEST['symbol']);
+                    break;
 
-	        case("canRegisterCourse"):
-			require_once("registerCourse.php");
-			$registerCourse = new registerCourse();
-			$registerCourse->checkAvailability($_REQUEST['symbol']);
-			$registerCourse = new registerCourse();
-			$registerCourse->checkAvailability($_REQUEST['symbol'], $_REQUEST['section']);
-			break;
-        case("registerCourse"):
-            require_once ("registerCourse.php");
-            $registerCourse = new registerCourse();
-            $registerCourse->Get();
-            break;
-		case("getSessionInfo"):
-	        $auth->GetSessionInfo();
-	        break;
-        case("registerCourse"):
-            require_once ("registerCourse.php");
-            $registerCourse = new registerCourse();
-            $registerCourse->RegisterInCourses($_REQUEST['username'], $_REQUEST['courselist'], $_REQUEST['year'], $_REQUEST['semester'], $_REQUEST['section']);
-            break;
-		case("generateSchedule"):
-			require_once ("generateSchedule.php");
-			$genSched = new GenerateSchedule();
-			print $genSched->Generate(split("-",$_REQUEST['courses']));
-			break;
+            case("viewTranscript"):
+                    require_once ("StudentRecord.php");
+                    $record = new StudentRecord();
+                    $record->showTranscript( $auth->getUsername() );
+                    break;
 
-		default:
-			dieNicely("Invalid action");
+            case("getSequence"):
+                    require_once ("Sequence.php");
+                    $sequence = new Sequence();
+                    $sequence->Get();
+                    break;
+
+            case("canRegisterCourse"):
+                    require_once("registerCourse.php");
+                    $registerCourse = new registerCourse();
+                    $registerCourse->checkAvailability($_REQUEST['symbol']);
+                    $registerCourse = new registerCourse();
+                    $registerCourse->checkAvailability($_REQUEST['symbol'], $_REQUEST['section']);
+                    break;
+
+            case("getSessionInfo"):
+                $auth->GetSessionInfo();
+                break;
+
+            case("registerCourse"):
+                require_once ("registerCourse.php");
+                $registerCourse = new registerCourse();
+                $registerCourse->RegisterInCourses($_REQUEST['username'], $_REQUEST['courselist'], $_REQUEST['year'], $_REQUEST['semester'], $_REQUEST['section']);
+                break;
+
+            case("generateSchedule"):
+                    require_once ("generateSchedule.php");
+                    $genSched = new GenerateSchedule();
+                    print $genSched->Generate(split("-",$_REQUEST['courses']));
+                    break;
+
+            default:
+                    dieNicely("Invalid action");
 	}
 }
 else

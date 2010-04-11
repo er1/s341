@@ -140,12 +140,20 @@ class StudentRecord
 		');';
 
 		$result = $db->Query($query, array( $Student ));
-		
+                $credits_total = 0;
+
 		while( $grade = $db->FetchFirstRow($result) )
 		{
+
 			if( array_key_exists($grade["Grade"], $GPA_VAL) )
 			{
-				$grade_counter += $GPA_VAL[$grade["Grade"]];
+				$query2 = "select Credits from CleanCourseSection where ClassID =%s";
+				$Credits = $db->Query($query2, array( $grade["ClassID"] ));
+				$credits = $db->FetchFirstRow($Credits);
+				
+				$numCredits = (float) $credits;
+				$grade_counter += ($GPA_VAL[$grade["Grade"]] * $numCredits );
+				$credits_total += $numCredits;
 				$numGradedClasses++;
 			}
 		}
@@ -155,7 +163,7 @@ class StudentRecord
 		}
 		else if($numGradedClasses > 0)
 		{
-			$this->GPA = $grade_counter / $numGradedClasses;
+			$this->GPA = $grade_counter / $credits_total ;
 			return $this->GPA ;
 		}
 	}
