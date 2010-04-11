@@ -71,8 +71,8 @@ class GenerateSchedule {
 		// Get all the Class Sections for the list of Courses in courseList
 
 		$qCompleted = "
-		SELECT CourseID, ClassID FROM Class
-		WHERE CourseID IN (". join(", ", $courseList) .")
+		SELECT CourseID, ClassID FROM CleanCourseSection
+		WHERE Course IN (". join(", ", $courseList) .")
 		AND Year = 2009 AND Semester = 4
 		ORDER BY CourseID";
 		$result = $db->Query( $qCompleted );
@@ -111,7 +111,7 @@ class GenerateSchedule {
 		if ($row = mysql_fetch_row($db->Query($findConflicts, array($this->userID)))) {
 			if (isset($row[0]) && (strlen($row[0] > 0))) {
 				$clearConflicts = "DELETE FROM TemporarySchedule WHERE ScheduleID IN (" . $row[0] . ") AND UserID = %s";
-				$db->Query($clearConflicts, array($userID));
+				$db->Query($clearConflicts, array($this->userID));
 			}
 		}
 
