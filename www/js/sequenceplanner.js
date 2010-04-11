@@ -1,51 +1,20 @@
-$(function() {
-
-	var current = 1;
+	var current;
 	var dataStore;
-	var dayOfWeek = {"M":0,"T":1,"W":2,"J":3,"F":4,"S":5,"D":6};
-
-
-	var course = $("#courseInput").combobox({
-		onSelect:function(e, ui) 
-		{	
-			 selectCourse(ui.item.value);
-		} 
-		, defaultText:"Add a course by typing it's name or number"
-		, dataSource:"ajax"
-	});
-
-	//Get suggestedcourse
-	getData({"action":"getSequence"}, function(response) 
-	{	var ctp =0;
-		$.each(response, function(index, record) {
-			if (record.Grade == null && record.canTakeCourse == "1")
-			{	if (++ctp > 5)
-					return;
-				$("#suggestedCourses").append("<span class='course_symbol fakeLink'>" + record.Symbol + "</span><br>");
-				selectCourse(record.Symbol, true);
-			}
-		});
 	
-		generateSchedule();
-
-
-	});
-
 	function generateSchedule()
 	{
 			var selectedCoursesArray = [];
-			$("#selectedCourse").find(".symbol:visible").each(function() { 
+			$("#selectedCourse").find(".symbol").not(".template").each(function() { 
 				selectedCoursesArray.push($(this).text()) 
-				console.log(selectedCoursesArray);
 			});
 
 			getData({action:"generateSchedule", "courses":selectedCoursesArray.join('-')}, function(response) {
 				if (response.length==0 || response[0].length ==0)
 				{	$("#noPossibleSchedule").show();
-					$("#calendar").hide();
+					$("#calendar").add("#pagination").hide();
 					return;
 				}
-				$("#calendar").show();
+				$("#calendar").add("#pagination").show();
 				$("#noPossibleSchedule").hide();
 
 				dataStore = response;
@@ -85,11 +54,11 @@ $(function() {
 			,buttons:false
 			,date: new Date(2010, 00,5)
 			,businessHours: {start:minTime, end:maxTime, limitDisplay:true}
-			,timeslotsPerHour: 4
+			,timeslotsPerHour: 1
 			,data: data
 			,newEventText: ""
 			,height: function($calendar){
-				return $(window).height()-310;
+				return $(window).height()-300;
 			}
 			,eventDrop:function(calEvent, element)
 			{
@@ -115,16 +84,6 @@ $(function() {
 	}
 
 
-	$("#next").click(function() {
-		if (current+1 < dataStore.length)
-			showTentativeSchedule(++current-1);	
-	});	
-
-	$("#previous").click(function() {
-		if (current-1 >=1)
-			showTentativeSchedule(--current-1);	
-	});	
-
 	function selectCourse(symbol, batch)
 	{
 		var template = $("#selectedCourse").find(".template").clone().removeClass("template");
@@ -138,4 +97,4 @@ $(function() {
 		if (!batch)
 			generateSchedule();
 	}
-});
+
