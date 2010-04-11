@@ -33,6 +33,9 @@ class registerCourse
 	*/
 	public function checkAvailability($Symbol, $Section)
 	{
+		global $db;
+		global $auth;
+		
 		echo("test: " . $Symbol . $Section  );
 
 		$q = "SELECT CourseID FROM Requires
