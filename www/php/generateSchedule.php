@@ -71,9 +71,10 @@ class GenerateSchedule {
 		// Get all the Class Sections for the list of Courses in courseList
 
 		$qCompleted = "
-		SELECT CourseID, ClassID FROM CleanCourseSection
+		SELECT CourseID, MAX(ClassID) FROM CleanCourseSection
 		WHERE Course IN ('". join("', '", $courseList) ."')
 		AND Section LIKE '2009/4%%'
+		GROUP BY CourseID, Section
 		ORDER BY CourseID";
 		$result = $db->Query( $qCompleted );
 
@@ -96,7 +97,7 @@ class GenerateSchedule {
 
 		// Make new schedules;
 		$this->perm($courseArr);
-		
+
 		// Find Conflicts
 		$findConflicts = "
 		SELECT GROUP_CONCAT(DISTINCT ts1.ScheduleID) FROM TemporarySchedule ts1
