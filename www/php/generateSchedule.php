@@ -116,7 +116,7 @@ class GenerateSchedule {
 		}
 
 		// Get out sexy Schedule data
-		$scheduleData = "SELECT ScheduleID, ts.ClassID, Course Symbol, Name, StartTime, EndTime, Day FROM TemporarySchedule ts
+		$scheduleData = "SELECT ScheduleID, ts.ClassID, Course Symbol, Section, Name, StartTime, EndTime, Day FROM TemporarySchedule ts
 		JOIN ClassBlock cb ON cb.ClassID = ts.ClassID
 		JOIN CleanCourseSection ccs ON ccs.ClassID = ts.ClassID
 		WHERE UserID = %s ORDER BY ScheduleID";
