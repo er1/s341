@@ -72,8 +72,8 @@ class GenerateSchedule {
 
 		$qCompleted = "
 		SELECT CourseID, ClassID FROM CleanCourseSection
-		WHERE Course IN (". join(", ", $courseList) .")
-		AND Year = 2009 AND Semester = 4
+		WHERE Course IN ('". join("', '", $courseList) ."')
+		AND Section LIKE '2009/4%%'
 		ORDER BY CourseID";
 		$result = $db->Query( $qCompleted );
 
