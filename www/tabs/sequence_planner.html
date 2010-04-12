@@ -83,6 +83,8 @@ $(document).ready(function() {
 			if (current-1 >=1)
 				showTentativeSchedule(--current-1);	
 		});	
+
+		window.setTimeout(function() { $("#calendar").weekCalendar("refresh");}, 1000)
 })
 
 </script>

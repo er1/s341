@@ -148,7 +148,7 @@ strong {
 #Legend { padding:15px; float:right; margin:15px;}
 .sequenceRow { clear:both; width:100px; }
 #Legend p { width:150px; }
-.course_symbol_hover { background-color:red; }
+.course_symbol_hover { background-color: #FF5C5C; }
 
 /*SEQUENCE PLANNER*/
 #selectedCourse { padding:15px; }
