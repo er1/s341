@@ -38,6 +38,17 @@ $(function() {	//To be run when DOM is constructed
 	); 
 
 	$(".course_symbol").live("click", function() { displayPopupCourse($(this).text()) });
+
+	$('.course_symbol').live('mouseover mouseout', function(event) {
+	  if (event.type == 'mouseover') {
+	    // do something on mouseover
+		$(".course_symbol:contains(" + $(this).text() + ")").addClass("course_symbol_hover");
+	  } else {
+	    // do something on mouseout
+		$(".course_symbol:contains(" + $(this).text() + ")").removeClass("course_symbol_hover");
+	  }
+	});
+
 });
 
 
@@ -225,9 +236,10 @@ function parseTemplate(data, fieldContainer, wrapAround)
 	var template = fieldContainer;
 	$.each(data, function(index, record)
 	{
-		var newItem = template.clone();
+		var newItem = template.clone().removeClass("template");
 		parseResponseToFields(record, newItem, wrapAround);
-		template.after(newItem);		
+		template.before(newItem);
+		newItem.data("record",record);
 	});
 	template.hide();
 }

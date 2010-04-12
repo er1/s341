@@ -43,6 +43,7 @@ class Authentication
 
 
     private $Username;
+    private $UserID;
 
 
 	/**
@@ -157,7 +158,7 @@ class Authentication
 
        		global $db;
         
-        	$query = "SELECT PasswordHash, PasswordSalt, UserRoleID FROM User WHERE Username = %s";
+        	$query = "SELECT PasswordHash, PasswordSalt, UserRoleID, UserID FROM User WHERE Username = %s";
 		$result = $db->Query($query, $Username);
 		$pwInfo = $db->FetchFirstRow($result);
                 
@@ -170,6 +171,7 @@ class Authentication
 		if ($UnknownHash == $PasswordHash)
 		{
 			$_SESSION['AuthenticationLevel'] = $this->AuthenticationLevel = $UserRoleID;
+                        $_SESSION['UserID'] = $this->UserID = $pwInfo["UserID"];
 			$_SESSION['Username'] = $this->Username = $Username;
 			print(json_encode(array("status"=>"ok","loginError"=>"false","role"=>$UserRoleID)));
 			return true;

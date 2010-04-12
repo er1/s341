@@ -192,14 +192,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="243.27581"
+     inkscape:cx="156.15015"
      inkscape:cy="910.50482"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1680"
-     inkscape:window-height="987"
-     inkscape:window-x="0"
+     inkscape:window-height="1027"
+     inkscape:window-x="1680"
      inkscape:window-y="0"
      inkscape:window-maximized="1" />
   <metadata
@@ -231,7 +231,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#00a7f9;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:4.17474878999999977;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:4.17474878999999977;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        id="rect2818"
        width="150.51273"
        height="79.802048"
@@ -263,7 +263,7 @@
          y="68.659477"
          style="font-size:14px">Presentation</tspan></text>
     <rect
-       style="fill:#00a7f9;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.49900007;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.99479167;stroke-dasharray:none"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.49900007000000013;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.99479167000000002;stroke-dasharray:none"
        id="rect2818-3"
        width="108.43216"
        height="39.691814"
@@ -284,7 +284,7 @@
          y="160.16626"
          style="font-size:14px">Logic</tspan></text>
     <rect
-       style="fill:#00a7f9;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.49900007;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.49900007000000013;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect2818-3-3"
        width="108.43216"
        height="39.691814"

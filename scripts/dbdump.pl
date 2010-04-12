@@ -401,7 +401,6 @@ sub printClass_SQL
 		        print "insert into Class(Year, Semester, Section, CourseID)\n";
 			print "values('2009', '04', '$class->{'group'}', (select min(CourseID) from Course where DepartmentId='$course->{'department'}' and Number='$course->{'number'}'));\n";
 
-
 			my @classblocks = @{$class->{'blocks'}};
 			foreach my $cb (@classblocks)
 			{

@@ -31,7 +31,7 @@ Program Requirement:
 	AcademicRecord
 }
 
-Course:`
+Course:
 {
 	symbol :"COMP342",
 	name:"MATH FOR BLABLABLA",

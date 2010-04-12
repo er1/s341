@@ -4,22 +4,33 @@
 
 	<div id="noProgram" class="ui-state-error ui-corner-all" style="display:none;margin-top: 20px; padding: 15px"> 
 		<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
-			You are actually NOT registered in any courses for the current semester.. Please do so in Sequence Planner
+			You are actually NOT registered in any program for the current semester. Please do so in the Schedule Planner.
 		</p>
 	</div>
 
 
 	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0pt 0.7em;"> 
 		<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
-			You must fullfill all these requirements before graduation
+			You must fulfill all these requirements prior to graduation
 		</p>
 	</div>
 			
 	<fieldset id="sequence">
 		<legend>Courses to take</legend>
-		<div id="course">
-			<span class="Symbol"></span><span class="Name"></span>
-			- <label>Grade: </label><span class="Grade"></span>
+
+		<fieldset id="Legend" class="ui-widget ui-widget-content ui-corner-all">
+			<legend>Legend</legend>
+			<p><span class="ui-icon ui-icon-check" style="float:left;"></span>Completed</p>
+			<p><span class="ui-icon ui-icon-cancel" style="float:left;"></span>Prereq Needed</p>
+			<p><span class="ui-icon ui-icon-bullet" style="float:left;"></span>Prereq Met</p>
+			<p><span class="ui-icon ui-icon-play" style="float:left;"></span>In Progress</p>
+		</fieldset>
+
+		<div id="Semester" style="float:left;padding:10px;">
+			<h3 class="Semester"></h3>
+			<div class="row template sequenceRow">
+				<span class="Symbol"></span><span class="Name"></span>
+			</div>
 		</div>
 	</fieldset>
 	
@@ -38,10 +49,39 @@ $(function() {	//Runs when tab is loaded
 				$("#sequence").show();
 				return;
 			}
-			
-			var template = $("#sequence").find("#course");
-			parseTemplate(response, template, wrapAround);
+
+		var distinctSemester = getDistinct(response, "Semester");
+		$.each(distinctSemester, function(Semester, SemesterList)
+		{	
+			//SemesterList contains all the courses followed during SemesterName
+			var newSemester = $("#Semester").clone().attr("id","Semester" + Semester).find("h3").text("Semester " + Semester).end();
+			$("#Semester").before(newSemester);
+
+			var template = newSemester.find(".row");
+			parseTemplate(SemesterList, template, wrapAround);
+			newSemester.find(".row").not(".template").each(function() {
+				var record = $(this).data("record");
+				var icon;
+				
+				if (record.Grade != null)
+					icon = "check";
+				else if (record.canTakeCourse == "0")
+					icon = "cancel";
+				else if (record.canTakeCourse == "1")
+					icon = "bullet";
+				else
+					icon = "play";
+
+				var icon = "<span style='float:left' class='ui-icon ui-icon-" + icon + "'></span>";
+				$(this).prepend(icon);
+
+			});			
 			template.hide();
+
+
+		});
+
+			
 	});
 
 });

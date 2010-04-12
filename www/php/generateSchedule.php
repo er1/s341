@@ -25,57 +25,107 @@ require_once("Authentication.php");
 
 $auth->EnforceCurrentLevel( 2 );
 
-//query to get the courses that the student has completed
-//testing version
-$qCompleted = 'select CourseID, ClassID from Class where CourseID in (7326, 7324) order by CourseID, ClassID;'; //soen 228 and 341
+class GenerateSchedule {
+	private $scheduleSet;
 
-global $sID; // (am fighting with php here and about to get kicked out of this room...)
-$sID = 0; //schedule id
-
-$result = $db->Query( $qCompleted );
-
-$courseArr = array();
-while($row = mysql_fetch_row( $result ) )
-{
-	if(!isset($courseArr[$row[0]]))//if we dont have an enty
-	//if(!is_array($courseArr[$row[0]]))//if the entry in courseArr is not an array, make one
-		$courseArr[$row[0]] = array($row[1]);
-	else
-		$courseArr[$row[0]][] = $row[1];//append to the array of classes with the course as its key
-}
-
-print_r($courseArr);//just for debugging the input to perm()
-echo("\n\n");
-perm($courseArr, array());
-
-//recursive function for producing all permutations
-function perm($data, $head = array())
-{
-	if(empty($data))
-	{
-		//$GLOBALS['sID'] += 1; //moved in to the append
-		append($head, $GLOBALS['sID']);
-	}
-	else
-	{
-		$first_elem_in_data = car($data);//had to do this hack because "function(arg)[num]" fails in PHP even though function returns an array... WTF??!!
-		foreach($first_elem_in_data[0] as &$classElem)
-		{
-			//append to head
-			$head[] = $classElem;
-			perm(cdr($data), $head); //recursive call
+	//recursive function for producing all permutations of sections
+	private function perm($tail, $head = array()) {
+		if (count($tail) < 1) {
+			$this->append($head);
+		} else {
+			$iter = array_shift($tail);
+			foreach ($iter as $e) {
+				$newhead = $head;
+				array_push($newhead, $e);
+				$this->perm($tail, $newhead);
+			}
 		}
-	}	
-}
+	}
 
-function append($class_list, $scheduleID)
-{
-	foreach($class_list as &$e)
+	private function append($class_list)
 	{
-		$GLOBALS['sID'] += 1;
-		//replace with an actual db query
-		echo("insert into TempSched (ClassID, UserID, ScheduleID)\n\t" .
-			"values('" . $e . "', '1234567', '" . $GLOBALS['sID'] . "');\n" );//temporary userID
+		$classes = array();
+		$blocks = array();
+		foreach($class_list as $class) {
+			array_push($classes, array_shift($class));
+			while (count($class) > 0) {
+				array_push($blocks, array_shift($class));
+			}
+		}
+		for ($i = 0; $i < count($blocks); ++$i) {
+			for ($j = 0; $j < $i; ++$j) {
+				if (
+					($blocks[$i][2] == $blocks[$j][2]) &&
+					(abs($blocks[$i][1] + $blocks[$i][0]) -
+					($blocks[$j][1] + $blocks[$j][0])) <
+					($blocks[$i][1] - $blocks[$i][0] +
+					$blocks[$j][1] - $blocks[$j][0])) {
+
+					return;
+				}
+			}
+		}
+		$presBlocks = array();
+		foreach ($blocks as $blk) {
+			array_push($presBlocks, array(
+				"Symbol" => $blk[5],
+				"Section" => $blk[6],
+				"Name" => $blk[7],
+				"Day" => $blk[2],
+				"StartTime" => $blk[3],
+				"EndTime" => $blk[4]));
+		}
+		array_push($this->scheduleSet, $presBlocks);
+	}
+
+	public function Generate($courseList = array()) {
+		global $db;
+
+		if (count($courseList) < 1) {
+			return "[]";
+		}
+
+		// -------------------------------------------------------------------------------------------------------------------
+
+		$query = "SELECT CourseID, ccs.ClassID, TIME_TO_SEC(StartTime) start, TIME_TO_SEC(EndTime) end, Day,
+		StartTime, EndTime, Course Symbol, Section, Name
+	 	FROM ClassBlock cb
+		RIGHT JOIN
+		(SELECT CourseID, MAX(ClassID) ClassID, Course, Section, Name FROM CleanCourseSection
+		WHERE Course IN ('". join("', '", $courseList) ."')
+		AND Section LIKE '2009/4%%'
+		GROUP BY Course, Section
+		ORDER BY CourseID) ccs
+		ON ccs.ClassID = cb.ClassID;";
+
+		// -----------------------------------------------------------------------------------------------------------------
+
+		$result = $db->Query($query, array());
+
+		$allBlocks = array();
+		$currentCourse = "";
+		$currentClass = "";
+
+		while ($row = mysql_fetch_row($result)) {
+			if ($currentCourse != $row[0]) {
+				array_unshift($allBlocks, array());
+				$currentCourse = $row[0];
+				$currentClass = "";
+			}
+			if ($currentClass != $row[1]) {
+				array_unshift($allBlocks[0], array($row[1]));
+				$currentClass = $row[1];
+			}
+			array_push($allBlocks[0][0], array($row[2], $row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9]));
+		}
+		$this->scheduleSet = array();
+	
+		// Make new schedules;
+		$this->perm($allBlocks);
+
+		//print_r($this->scheduleSet);
+
+		return json_encode($this->scheduleSet);
 	}
 }
 

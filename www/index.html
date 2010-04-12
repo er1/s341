@@ -28,18 +28,18 @@
 		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript" src="js/jquery.weekcalendar.js"></script>
 		<script type="text/javascript" src="js/jquery.ui.combobox.js"></script>
-		
+		<script src="js/sequenceplanner.js"></script>
 	</head>
 	<body>
 		<div class=wrapper>
 			<div id="tabs">
-				<h1 class="logo">Planzilla</h1>
+				<img class="logo" src="img/planzilla.png">
 				<span class="ui-state-default ui-corner-all ui-hover fakeLink" id="logout">Login</span>
 				<ul>
 					<li><a href="tabs/view_schedule.html" title="View Schedule" class="requireLogin">View Schedule</a></li>
 					<li><a href="tabs/browse_course.html" title="Browse Course">Browse Course</a></li>
 					<li><a href="tabs/program_requirement.html" title="Program Requirement" class="requireLogin">Program Requirement</a></li>
-					<li><a href="tabs/sequence_planner.html" title="Sequence Planner" class="requireLogin">Sequence Planner</a></li>
+					<li><a href="tabs/sequence_planner.html" title="Schedule Planner" class="requireLogin">Schedule Planner</a></li>
 					<li><a href="tabs/academic_record.html" title="Academic Record" class="requireLogin">Academic Record</a></li>
 				</ul>
 			</div>
@@ -57,7 +57,7 @@
 		<form action="" onSubmit="return false;">
 			<span class="ui-icon ui-icon-locked" style="float:left; margin-right:5px;"></span>
 			<div class="modalInstruction"><p>You have to be logged in to continue...</p></div>
-			<label for="username">Username</label><input type="text" class="username" name="username" value="gibson"><br>
+			<label for="username">Username</label><input type="text" class="username" name="username"><br>
 			<label for="password">Password</label><input type="password" class="password" name="password">
 		</form>
 	</div>

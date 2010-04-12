@@ -1,14 +1,88 @@
-<div>
-Sequence Planner
+<div id="sequencePlanner">
+	<h2>Sequence Planner</h2>
+
+	<fieldset  style="width:70%;float:left">
+		<legend>Selected courses</legend>
+
+		<h3>Add a Course</h3>
+		<select id="courseInput">
+		</select>
+
+		<div id="selectedCourse">
+			<div class="template ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses"><span class="symbol"></span><span class="ui-icon ui-icon-closethick" style="float:right"></span></div>
+		</div>
+	</fieldset>
+
+	<fieldset id="suggestedCourses" style="width:25%;float:left">
+		<legend>Suggested Courses</legend>
+
+
+	</fieldset>
+
+	<div style="clear:both">
+		<div id="pagination" style="margin:4px;">
+			<button style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses">Adopt this schedule <span class="ui-icon ui-icon-circle-arrow-s" style="float:left"></span></button>	
+			<button id="next" style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses"><span class="ui-icon ui-icon-triangle-1-e" style="float:left"></span></button>
+			<div style="float:right"><span id="current"></span> of <span id="total"></span></div>
+			<button id="previous" style="float:right;padding:4px;font-weight:bold" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only courses"><span class="ui-icon ui-icon-triangle-1-w" style="float:left"></span></button>
+		</div>
+		<h2 style="float:left">Generated tentative schedule</h2>
+	</div>
+
+	<div id="noPossibleSchedule" class="ui-state-error ui-corner-all" style="clear:both; margin-top: 15px; margin-bottom:15px; padding: 15px"> 
+		<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
+			There is no possible way of arranging a schedule with the given courses and/or constraints.. Please try removing courses.	
+		</p>
+	</div>
+		
+	<div id="calendar" style="clear:both"></div>
+
+
+
 </div>
 
 <script>
-$(document).ready(function() {	//Runs when tab is loaded
 
+$(document).ready(function() {
+		constraintStore = {filteredSchedule: [], length:150,  store:{}, count:0};
+		dataStore = [];
+		current = 1;
+	
+	
+		var course = $("#courseInput").combobox({
+			onSelect:function(e, ui) 
+			{	
+				 selectCourse(ui.item.value);
+			} 
+			, defaultText:"Add a course by typing it's name or number"
+			, dataSource:"ajax"
+		});
+	
+		//Get suggestedcourse
+		getData({"action":"getSequence"}, function(response) 
+		{	var ctp =0;
+			$.each(response, function(index, record) {
+				if (record.Grade == null && record.canTakeCourse == "1")
+				{	if (++ctp > 5)
+						return;
+					$("#suggestedCourses").append("<span class='course_symbol fakeLink'>" + record.Symbol + "</span><br>");
+					selectCourse(record.Symbol, true);
+				}
+			});
+		
+			generateSchedule();
+		});
+	
+	
+		$("#next").click(function() {
+			if (current < dataStore.length)
+				showTentativeSchedule(++current-1);	
+		});	
+	
+		$("#previous").click(function() {
+			if (current-1 >=1)
+				showTentativeSchedule(--current-1);	
+		});	
 })
 
-
-function tabCallBack() { //Runs when tab is shown
-
-}
 </script>

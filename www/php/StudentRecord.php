@@ -35,18 +35,6 @@ class StudentRecord
 	private $Program; /*!< Student's Program */
 	private $GPA; /*!< Student's GPA */
 
-	/**
-	 *
-	 * @param string $Student
-	 * @param string $CourseList
-	 * @param int $Year
-	 * @param int $Semester
-	 * @return boolean Registration success or failure.
-	 */
-	public function RegisterInCourses($Student, $CourseList, $Year, $Semester)
-	{
-		
-	}
 
 	/**
 	 *
@@ -131,43 +119,52 @@ class StudentRecord
 		global $db;		
 
 		$GPA_VAL= array(
-			'A+'	=>	5.00,
+			'A+'	=>	4.30,
 			'A'	=>	4.00,
-			'A-'	=>	3.67,
-			'B+'	=>	3.33,
+			'A-'	=>	3.70,
+			'B+'	=>	3.30,
 			'B'	=>	3.00,
-			'B-'	=>	2.67,
-			'C+'	=>	2.33,
+			'B-'	=>	2.70,
+			'C+'	=>	2.30,
 			'C'	=>	2.00,
-			'C-'	=>	1.67,
-			'D+'	=>	1.33,
+			'C-'	=>	1.70,
+			'D+'	=>	1.30,
 			'D'	=>	1.00,
-			'D-'	=>	0.67,
+			'D-'	=>	0.70,
 			'U'	=>	0.00
 		);
 
 	
-		$query = 'SELECT Grade FROM  RegisteredIn WHERE UserID ='.
+		$query = 'SELECT ClassID, Grade FROM  RegisteredIn WHERE UserID ='.
 		'(SELECT UserID FROM User WHERE Username = %s' .
 		');';
 
 		$result = $db->Query($query, array( $Student ));
-		
-		while( $grade = $db->FetchFirstRow($result))
+                $credits_total = 0;
+
+		while( $grade = $db->FetchFirstRow($result) )
 		{
+
 			if( array_key_exists($grade["Grade"], $GPA_VAL) )
 			{
-				$grade_counter += $GPA_VAL[$grade["Grade"]];
+				$query2 = "select Credits from CleanCourseSection where ClassID =%s";
+				$Credits = $db->Query($query2, array( $grade["ClassID"] ));
+				$credits = $db->FetchFirstRow($Credits);
+				
+				$numCredits = (float) $credits;
+				$grade_counter += ($GPA_VAL[$grade["Grade"]] * $numCredits );
+				$credits_total += $numCredits;
 				$numGradedClasses++;
 			}
 		}
 		if($numGradedClasses == 0)
 		{
-			return ' ';
+			return 0;
 		}
 		else if($numGradedClasses > 0)
 		{
-			$this->GPA = $grade_counter / $numGradedClasses;
+			$this->GPA = $grade_counter / $credits_total ;
+                        $this->GPA = number_format($this->GPA,2);
 			return $this->GPA ;
 		}
 	}
