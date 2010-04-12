@@ -20,7 +20,7 @@
 	}
 
 	function filterSchedule(response)
-	{
+	{	current=1;
 		dataStore = [];
 		$.each(response, function(index, schedule)
 		{	var conflict = false;

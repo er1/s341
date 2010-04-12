@@ -57,7 +57,7 @@ $(function() {	//Runs when tab is loaded
 			var newSession = $("#Session").clone().attr("id",sessionName).find("h3").text(sessionName + " term").end();
 			$("#Session").after(newSession);
 			parseTemplate(sessionList, newSession.find("#row"), wrapAround);
-			newSession.find(".Name").each(function() { if ($(this).text() == "") à$(this).html("&nbsp;"); });
+			newSession.find(".Name").each(function() { if ($(this).text() == "") $(this).html("&nbsp;"); });
 		})
 		$("#Session").hide();
 	});

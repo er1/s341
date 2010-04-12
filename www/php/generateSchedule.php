@@ -88,10 +88,10 @@ class GenerateSchedule {
 		// -------------------------------------------------------------------------------------------------------------------
 
 		$query = "SELECT CourseID, ccs.ClassID, TIME_TO_SEC(StartTime) start, TIME_TO_SEC(EndTime) end, Day,
-		StartTime, EndTime, Course Symbol, Section, Name
+		StartTime, EndTime, Course Symbol, concat(Type,' ',SectionSymbol) as Section, Name
 	 	FROM ClassBlock cb
 		RIGHT JOIN
-		(SELECT CourseID, MAX(ClassID) ClassID, Course, Section, Name FROM CleanCourseSection
+		(SELECT CourseID, MAX(ClassID) ClassID, Course, SectionSymbol, Name FROM CleanCourseSectionWSymbol
 		WHERE Course IN ('". join("', '", $courseList) ."')
 		AND Section LIKE '2009/4%%'
 		GROUP BY Course, Section
