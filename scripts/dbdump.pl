@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 # Perl routines to dump Concordia database information
 
 # This will generate the Departments table and Course table
@@ -8,6 +8,7 @@ use warnings;
 
 use IO::Handle;
 use WWW::Curl::Easy;
+use Clone qw(clone);
 
 my $tmp; #for cURL to write to
 my $page; #handle for accessing cURL's stuff
@@ -28,16 +29,17 @@ $curl->setopt(CURLOPT_WRITEDATA, $tmp);
 
 &printDepartments_SQL();
 
-#&getDepartmentCourses("SOEN", "2009", "4", "04", "U");
+#&getDepartmentCourses("ELEC", "2010", "1", "04", "U");
 #&getDepartmentCourses("SOEN", "2009", "2", "04", "U");
 #&printCourses();
 foreach my $dept (@departments) 
 {
-	&getDepartmentCourses($dept, "2009", "2", "04", "U");
+#	#&getDepartmentCourses($dept, "2009", "2", "04", "U");
 	&getDepartmentCourses($dept, "2009", "4", "04", "U");
 }
 
 #&debugCourses();
+#&debugClasses();
 &printCourse_SQL();
 &printClass_SQL();
 
@@ -94,22 +96,20 @@ sub getDepartmentCourses
 
 	$status = $curl->perform;
 
+	my %tmpclass = ();
+	my $level = 0;
+	
 	my @lines = split(/\n/, $page);
 
 	foreach my $line (@lines)
 	{
-		#print $line;
-		#if ($line =~ /Prerequisite:/)
-		#{
-		#	print $line;
-		#}
 		
 		# Remove some trash that makes parsing harder
                 $line =~ s/\&nbsp\;//g;
-		$line =~ s/<b>//g;
-		$line =~ s/<\/b>//g;
+		#$line =~ s/<b>//g;
+		#$line =~ s/<\/b>//g;
 		$line =~ s/\(\d\)//g;
-		$line =~ s/\.\.\.\.\.\.\.\.\.\.//g;
+		#$line =~ s/\.\.\.\.\.\.\.\.\.\.//g;
 
 		if($line =~ m/.*<img\ src="\/image\/\S+\.jpg"><\/td> # The dot image on the left
 			<td\ width=8%\ align=center>(\S+)\s*<\/td> # Department, such as "SOEN"
@@ -136,29 +136,156 @@ sub getDepartmentCourses
 			#<td width=9%>H- 549       </td>
 			#<td width=16%>CHEUNG, JOHN</td>
 
-		if($line =~ m/.*<td\ width=3%>\/(\d)<\/td> # Semester, such as "4" for Fall
-			<td\ witdh=15%>.*(Lec|Lab|Tut)\s+(\w+)\s*<\/td> # Type (Lec, Tut, Lab) and group
-			<td\ width=8%>([\-A-Z]+)<\/td> # Day
-			<td\ width=20%>(\d+\:\d+)\-(\d+\:\d+)\s*(\w+)[^<]*<\/td> #Start, End times and campus
-			<td\ width=9%>([\w\d\-\s]*)<\/td> # Room
-			<td\ width=16%>([^<]+)<\/td>.*/x) # Teacher's name
+		if($line =~ m/.*<td\ \w+=3%>\/(\d)<\/td> # Semester, such as "4" for Fall
+			<td\ \w+=15%>.*(Lec)\s+(\w{1,})\s*<\/td> # Type (Lec, Tut, Lab) and group
+			<td\ \w+=8%>([\-A-Z]+)<\/td> # Day
+			<td\ \w+=20%>(\d+\:\d+)\-(\d+\:\d+)\s*(\w+)[^<]*<\/td> #Start, End times and campus
+			<td\ \w+=9%>([\w\d\-\s]*)<\/td> # Room
+			<td\ \w+=16%>([^<]+)<\/td>.*/x) # Teacher's name
 		{
 			my %class = ();
+			my @blocks = ();
 
 			$class{'semester'} = $1;
-			$class{'type'} = $2;
+			#$class{'type'} = $2;
 			$class{'group'} = $3;
-			$class{'days'} = $4;
-			$class{'time1'} = $5;
-			$class{'time2'} = $6;
-			$class{'campus'} = $7;
-			$class{'room'} = $8;
-			$class{'teacher'} = $9;
+			#$class{'days'} = $4;
+			#$class{'time1'} = $5;
+			#$class{'time2'} = $6;
+			#$class{'campus'} = $7;
+			#$class{'room'} = $8;
+			#$class{'teacher'} = $9;
+			$class{'year'} = $year;
+			$class{'session'} = $session;
 
-			$class{'room'} =~ s/\s//; # Trim whitespaces
+			#$class{'room'} =~ s/\s//; # Trim whitespaces
 
-			push(@{$courses[-1]->{'classes'}}, \%class);
+			$class{'blocks'} = \@blocks;
+
+			my %block = ();
+			$block{'type'} = $2;
+			$block{'group'} = $3;
+			$block{'days'} = $4;
+			$block{'time1'} = $5;
+			$block{'time2'} = $6;
+			$block{'campus'} = $7;
+			$block{'room'} = $8;
+			$block{'teacher'} = $9;
+			$block{'room'} =~ s/\s//; # Trim whitespaces
+
+			
+			push(@{$class{'blocks'}}, \%block);
+			
+			#push(@{$courses[-1]->{'classes'}}, \%class);
+			%tmpclass = %class;
 		}
+
+
+
+
+		if($line =~ m/.*<td\ \w+=3%>\/(\d)<\/td> # Semester, such as "4" for Fall
+			<td\ \w+=15%>\.+.*(Lab|Tut)\s+(\w{1,})\s*<\/td> # Type (Lec, Tut, Lab) and group
+			<td\ \w+=8%>([\-A-Z]+)<\/td> # Day
+			<td\ \w+=20%>(\d+\:\d+)\-(\d+\:\d+)\s*(\w+)[^<]*<\/td> #Start, End times and campus
+			<td\ \w+=9%>([\w\d\-\s]*)<\/td> # Room
+			<td\ \w+=16%>([^<]+)<\/td>.*/x) # Teacher's name
+		{
+			my %block = ();
+			$block{'type'} = $2;
+			$block{'group'} = $3;
+			$block{'days'} = $4;
+			$block{'time1'} = $5;
+			$block{'time2'} = $6;
+			$block{'campus'} = $7;
+			$block{'room'} = $8;
+			$block{'teacher'} = $9;
+			$block{'room'} =~ s/\s//; # Trim whitespaces
+
+			if (@{$tmpclass{'blocks'}}[-1]->{'type'} =~ m/Tut/)
+			{
+				pop(@{$tmpclass{'blocks'}});
+				push(@{$tmpclass{'blocks'}}, \%block);
+			}
+			else
+			{
+				push(@{$tmpclass{'blocks'}}, \%block);
+			}
+			$tmpclass{'group'} .= $block{'group'};
+			#push(@{$courses[-1]->{'classes'}[-1]->{'blocks'}}, \%block);
+			$level = 1;
+		}
+
+
+		if($line =~ m/.*<td\ \w+=3%>\/(\d)<\/td> # Semester, such as "4" for Fall
+			<td\ \w+=15%><b>.*(Lab|Tut)\s+(\w{1,})\s*<\/td> # Type (Lec, Tut, Lab) and group
+			<td\ \w+=8%>([\-A-Z]+)<\/td> # Day
+			<td\ \w+=20%>(\d+\:\d+)\-(\d+\:\d+)\s*(\w+)[^<]*<\/td> #Start, End times and campus
+			<td\ \w+=9%>([\w\d\-\s]*)<\/td> # Room
+			<td\ \w+=16%>([^<]+)<\/td>.*/x) # Teacher's name
+		{
+			my %block = ();
+			$block{'type'} = $2;
+			$block{'group'} = $3;
+			$block{'days'} = $4;
+			$block{'time1'} = $5;
+			$block{'time2'} = $6;
+			$block{'campus'} = $7;
+			$block{'room'} = $8;
+			$block{'teacher'} = $9;
+			$block{'room'} =~ s/\s//; # Trim whitespaces
+
+			#if (@{$tmpclass{'blocks'}}[-1]->{'type'} =~ m/(Tut|Lab)/)
+			#{
+				#print "replacing " . @{$tmpclass{'blocks'}}[-1]->{'group'} . " with " . $block{'group'} . "\n";
+				#print " \$tmpclass = $\%tmpclass \$tmpclass{'blocks'} = $\$tmpclass{'blocks'} \n";
+
+				#pop(@{$tmpclass{'blocks'}});
+				#push(@{$tmpclass{'blocks'}}, \%block);
+
+				push(@{$tmpclass{'blocks'}}, \%block); #~~~~~~~~~~~~~~~~~~~
+				
+				#my @blkarr = $tmpclass{'blocks'};
+				#@blkarr[-1] = \%block;
+				#$tmpclass{'blocks'} = @blkarr;
+				#$tmpclass{'blocks'}[-1] = \%block;
+			#}
+			#else
+			#{
+			#	push(@{$tmpclass{'blocks'}}, \%block);
+			#}
+			#push(@{$tmpclass{'blocks'}}, \%block);
+			if($block{'type'} =~ m/Lab/)
+			{
+				$tmpclass{'group'} = @{$tmpclass{'blocks'}}[0]->{'group'} . @{$tmpclass{'blocks'}}[-1]->{'group'} . $block{'group'};
+			}
+			else
+			{
+				$tmpclass{'group'} = @{$tmpclass{'blocks'}}[0]->{'group'} . $block{'group'};
+			}
+			#push(@{$courses[-1]->{'classes'}[-1]->{'blocks'}}, \%block);
+
+			my %newclass = %{ clone (\%tmpclass) };
+			#%newclass =  %tmpclass;
+					
+			push(@{$courses[-1]->{'classes'}}, \%newclass);
+			#%tmpclass = ();
+			if($level == 1)
+			{
+				while (@{$tmpclass{'blocks'}}[-1]->{'type'} =~ m/Lab/)
+				{
+					pop(@{$tmpclass{'blocks'}});
+				}
+			}
+			else
+			{
+				while (@{$tmpclass{'blocks'}}[-1]->{'type'} =~ m/(Tut|Lab)/)
+				{
+					pop(@{$tmpclass{'blocks'}});
+				}
+			}
+		}
+
+		
 	}
 }
 
@@ -223,6 +350,43 @@ sub debugCourses
     }
 }
 
+sub debugClasses
+{
+	
+	foreach my $course (@courses)
+	{
+		my @classes = @{$course->{'classes'}};
+
+		foreach my $class (@classes)
+		{		
+			print "\tCLASS: group '$class->{'group'}' [$course->{'department'}$course->{'number'}]\n";# $class->{'year'}/$class->{'session'}\n";
+
+			my @classblocks = @{$class->{'blocks'}};
+			foreach my $cb (@classblocks)
+			{
+				my $days = $cb->{'days'};
+				$days =~ s/\-//g;
+				my @day_array = split(//, $days);
+				foreach my $slot (@day_array)
+				{
+					print "\t\t $cb->{'type'} $cb->{'group'} time 1 '$cb->{'time1'}', time 2 '$cb->{'time2'}', '$slot'\n";
+				}
+			}
+
+			#We now need to create a ClassBlock for every day that the class is scheduled for
+			#my $days = $class->{'days'};
+			#$days =~ s/\-//g;
+			#my @day_array = split(//, $days);
+			
+			#foreach my $block (@day_array)
+			#{
+			#	print "\ttime 1 '$class->{'time1'}', time 2 '$class->{'time2'}', '$block');\n";
+			#}
+			
+		}
+	}
+}
+
 sub printClass_SQL
 {
 	
@@ -233,20 +397,36 @@ sub printClass_SQL
 		foreach my $class (@classes)
 		{		
 			#print "insert into Class(Year, Semester, StartTime, EndTime, Days, Room, Section, CourseID ) ";
-		        print "start transaction;\n"; 
-		        print "insert into Class(Year, Semester, Section, CourseID) ";
+		        print "\nstart transaction;\n"; 
+		        print "insert into Class(Year, Semester, Section, CourseID)\n";
 			print "values('2009', '04', '$class->{'group'}', (select min(CourseID) from Course where DepartmentId='$course->{'department'}' and Number='$course->{'number'}'));\n";
 
-			#We now need to create a ClassBlock for every day that the class is scheduled for
-			my $days = $class->{'days'};
-			$days =~ s/\-//g;
-			my @day_array = split(//, $days);
-			
-			foreach my $block (@day_array)
+
+			my @classblocks = @{$class->{'blocks'}};
+			foreach my $cb (@classblocks)
 			{
-			        print "insert into ClassBlock(ClassID, StartTime, EndTime, Day) ";
-				print "values((select max(ClassID) from Class), '$class->{'time1'}', '$class->{'time2'}', '$block');\n";
+				my $days = $cb->{'days'};
+				$days =~ s/\-//g;
+				my @day_array = split(//, $days);
+				foreach my $slot (@day_array)
+				{
+					print "insert into ClassBlock(ClassID, StartTime, EndTime, Day, Room, Type)\n";
+					print "\tvalues((select max(ClassID) from Class), '$cb->{'time1'}', '$cb->{'time2'}', '$slot', '$cb->{'room'}', '$cb->{'type'}');\n";
+					#print "\t\t $cb->{'type'} $cb->{'group'} time 1 '$cb->{'time1'}', time 2 '$cb->{'time2'}', '$slot');\n";
+				}
 			}
+			#We now need to create a ClassBlock for every day that the class is scheduled for
+			#my $days = $class->{'days'};
+			#$days =~ s/\-//g;
+			#my @day_array = split(//, $days);
+			
+			#foreach my $block (@day_array)
+			#{
+			#        print "insert into ClassBlock(ClassID, StartTime, EndTime, Day) ";
+			#	print "values((select max(ClassID) from Class), '$class->{'time1'}', '$class->{'time2'}', '$block');\n";
+			#}
+
+			
 			#print "values('2009', '04', '$class->{'time1'}', '$class->{'time2'}', '$class->{'days'}', '$class->{'room'}', '$class->{'group'}', '(select CourseID from Course where DepartmentId='$course->{'department'}' and Number='$course->{'number'}')');\n";
 			print "commit;\n";
 		}
