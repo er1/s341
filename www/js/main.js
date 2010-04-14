@@ -1,6 +1,4 @@
 function tabCallBack() {};
-	if (!isSecure())
-		document.location = document.location.href.replace("http://","https://").replace(":8080","");
 
 $(function() {	//To be run when DOM is constructed
 	var reloadTab = function() { $("#tabs").tabs("load",$("#tabs").tabs('option', 'selected')); };
@@ -72,6 +70,11 @@ function getData(params, callback, options)
 		if (response.error && response.error=="true")
 		{	if (response.reason == "notLoggedIn")
 				showLogin(selfRepeatCall);
+			else if (response.msg == "HTTPS only")
+			{
+				document.location = document.location.href.replace("http://","https://").replace(":8080","");			
+				BSOD("You must use HTTPS. Redirecting you to the HTTPS version.. Maybe your server doesn't support HTTPS? You can use force_https = false in Config.php");
+			}	
 			else
 				BSOD('Unknown error occured.. Please try again. <hr>' + response.msg);
 		}
@@ -308,6 +311,3 @@ function parsePrereq(prereq)
 		return record.Needs.replace(/\[/g,"<span class='course_symbol fakeLink'>").replace(/\]/g,"</span>");
 	}).join("");
 }
-
-//One liner section, no function below this mark can take more than one line..
-function isSecure() { return location.protocol == 'https:';}

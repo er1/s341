@@ -22,8 +22,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once("Config.php");
+
 // Making sure we are dealing secure to avoid any problem..
-if(!$_SERVER['HTTPS']) dieNicely("Sorry, for security reasons only HTTPS is supported.");
+if (!defined("force_https"))	//set default to true
+	define("force_https",true);
+	
+if(constant("force_https") && !$_SERVER['HTTPS']) dieNicely("HTTPS only");
 
 require_once("Authentication.php");
 $auth = new Authentication();
