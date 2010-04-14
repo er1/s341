@@ -24,9 +24,9 @@
 		dataStore = [];
 		$.each(response, function(index, schedule)
 		{	var conflict = false;
-			$.each(schedule, function(iindex, class)
+			$.each(schedule, function(iindex, classItem)
 			{
-				if (isConflict(class))
+				if (isConflict(classItem))
 				{	conflict=true;
 					return false;
 				}
