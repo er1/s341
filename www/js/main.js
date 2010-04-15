@@ -54,6 +54,18 @@ $(function() {	//To be run when DOM is constructed
 function getData(params, callback, options)
 {	options = options || {};
 	options.type = options.type || "get";
+	var startTime = new Date();
+
+	function updateTimer() {
+		var stopTime = new Date();
+		var timeTaken = (stopTime-startTime)/1000 
+		if (!$("#querySpeed").data("timeStore")) 
+			$("#querySpeed").data("timeStore",[]);
+		var timeStore = $("#querySpeed").data("timeStore");
+		timeStore.push(timeTaken);
+		$("#querySpeed").text(Math.round(timeTaken*1000)/1000).attr("title",timeStore.length + " queries total. Avg run time: " + Math.round(average(timeStore)*1000)/1000);
+	}
+
 	selfRepeatCall = function() { getData(params, callback, options); }
 
 	if (arguments.length > 3 && arguments.length < 2)
@@ -64,7 +76,8 @@ function getData(params, callback, options)
 
 	$.ajax({"cache":"false", "type":options.type, "data":params, "dataType":"json", "url":"php/Main.php"
 	, "success": function(response) 
-	{
+	{  
+		updateTimer();
 		if (!response)
 			return showNetworkError(selfRepeatCall);
 		if (response.error && response.error=="true")
@@ -86,6 +99,7 @@ function getData(params, callback, options)
 	}
 	, "error":function(XMLHttpRequest, textStatus, errorThrown)
 	{ 
+		updateTimer();
 		if (textStatus == "parsererror")	//Not a valid JSON object
 			BSOD("Not a valid JSON object. " + XMLHttpRequest.responseText);
 		else 
@@ -310,4 +324,13 @@ function parsePrereq(prereq)
 	{
 		return record.Needs.replace(/\[/g,"<span class='course_symbol fakeLink'>").replace(/\]/g,"</span>");
 	}).join("");
+}
+
+
+function average(items)
+{
+   var sum = 0;
+   for (i = 0; i < items.length;i++)
+      sum += items[i];
+   return (sum / items.length);
 }
