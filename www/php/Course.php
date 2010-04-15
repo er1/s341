@@ -23,9 +23,6 @@
 
 require_once("Main.php");
 
-require_once("Authentication.php");
-$auth->EnforceCurrentLevel(2);
-
 /**
  * @class Course
  * @brief Module for obtaining course information, verifying dependencies,
