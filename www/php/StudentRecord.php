@@ -50,11 +50,8 @@ class StudentRecord
 		$semester = array();
 		$counter = 0;
 
-		$query = 'SELECT DISTINCT Name FROM ClassBlock JOIN Class JOIN Course ON ClassBlock.ClassID = Class.ClassID AND Course.CourseID = Class.CourseID WHERE Class.ClassID IN' .
-		'(SELECT ClassID FROM  RegisteredIn WHERE UserID ='.
-		'(SELECT UserID FROM User WHERE Username = %s' .
-		')) AND Year = %s AND Semester = %s;';
-		$result = $db->Query($query, array( $Student, $Year, $Semester ));
+		$query = 'SELECT Name FROM CleanTranscript WHERE UserID = (SELECT UserID WHERE Username = %s) AND Section LIKE %s';
+		$result = $db->Query($query, array( $Student, "$Year/$Semester%" ));
 		while( $info = $db->FetchFirstRow($result))
 			$semester[$counter++] = $info["Name"];
 
@@ -65,25 +62,28 @@ class StudentRecord
 	 *
 	 * @param string $Student
 	 */
-	public function showTranscript($Student)
+	public function showTranscript($StudID)
 	{
 		global $db;
-		$query = 'SELECT UserID, FirstName, LastName FROM User WHERE Username = %s;';
-		$result =   $db->Query($query, array( $Student ));
+		$query = "SELECT CONCAT(FirstName, ' ', LastName) FullName FROM User WHERE UserID = %s;";
+		$result =   $db->Query($query, array( $StudID ));
 		$userInfo = $db->FetchFirstRow($result);
+		$fullName = $userInfo["FullName"];
 
-		 print '	{' . "\n" . '    "AcademicRecord": '. // HEADER
-						"\n        {" .
-						"\n" . '            "id": 0 ,' .
-						"\n" . '            "StudentID": '. $userInfo["UserID"]    .',' .
-						"\n" . '            "Name": "'    . $userInfo["FirstName"] . ' ' . $userInfo["LastName"] .'",' .
-						"\n" . '            "Program": "' . $this->GetProgram($Student)   . '",' .
-						"\n" . '            "GPA": "' . $this->GetGPA($Student)       . '"' .
-						"\n" . '        }';
+		printf('{ "AcademicRecord": { "id": 0, "StudentID": "%s", "Name": "%s", "Program": "%s", "GPA": "%s" }', $StudID, $fullName, $this->GetProgram($StudID), $this->GetGPA($StudID));
 
+//		 print '	{' . "\n" . '    "AcademicRecord": '. // HEADER
+//						"\n        {" .
+//						"\n" . '            "id": 0 ,' .
+//						"\n" . '            "StudentID": '. $userInfo["UserID"]    .',' .
+//						"\n" . '            "Name": "'    . $userInfo["FirstName"] . ' ' . $userInfo["LastName"] .'",' .
+//						"\n" . '            "Program": "' . $this->GetProgram($StudID)   . '",' .
+//						"\n" . '            "GPA": "' . $this->GetGPA($StudID)       . '"' .
+//						"\n" . '        }';
 
-		$query = 'SELECT Name, concat(DepartmentId, Number) as Symbol, concat(Semester,"/",Year) as Session, Section, Credits, Grade, Semester, Year FROM Class JOIN Course JOIN RegisteredIn ON Course.CourseID = Class.CourseID AND Class.ClassID = RegisteredIn.ClassID WHERE RegisteredIn.UserID =(SELECT UserID FROM User WHERE Username = %s);';
-		$result = $db->Query($query, array( $Student ));
+		$query = 'SELECT Name, Course Symbol, SUBSTR(Section, 1, 6) Session, SUBSTR(Section,8) Section, Credits, Grade, SUBSTR(Section, 6, 1) Semester, SUBSTR(Section, 1, 4) Year FROM CleanTranscript WHERE UserID = %s';
+
+		$result = $db->Query($query, array( $StudID ));
 		print ', "Course":' . json_encode($db->FetchEntireArray($result));
 
 		print  "\n}"; // FOOTER
@@ -95,13 +95,11 @@ class StudentRecord
 	 * @param string $Student
 	 * @return string Student's program.
 	 */
-	public function GetProgram($Student)
+	public function GetProgram($StudID)
 	{
 		global $db;
-		$query = 'SELECT Name FROM Program JOIN StudentProgram JOIN User ON '.
-			'Program.ProgramID = StudentProgram.ProgramID AND StudentProgram.UserID = User.UserID WHERE User.UserID = '.
-			'(SELECT User.UserID FROM User WHERE Username = %s);';
-		$result = $db->Query($query, array( $Student ));
+		$query = 'SELECT Name FROM Program p JOIN StudentProgram sp ON sp.ProgramID = p.ProgramID WHERE sp.UserID = %s'; 
+		$result = $db->Query($query, array( $StudID ));
 		$this->Program = $db->FetchFirstRow($result);		
 
 		return $this->Program["Name"];
@@ -112,10 +110,8 @@ class StudentRecord
 	 * @param string $Student
 	 * @return int Student's GPA.
 	 */
-	public function GetGPA($Student)
+	public function GetGPA($StudID)
 	{
-		$grade_counter = 0;
-		$numGradedClasses = 0;
 		global $db;		
 
 		$GPA_VAL= array(
@@ -134,39 +130,25 @@ class StudentRecord
 			'U'	=>	0.00
 		);
 
-	
-		$query = 'SELECT ClassID, Grade FROM  RegisteredIn WHERE UserID ='.
-		'(SELECT UserID FROM User WHERE Username = %s' .
-		');';
+		$query = 'SELECT Credits, Grade FROM CleanTranscript WHERE UserID = %s';
+		$result = $db->Query($query, array($StudID));
 
-		$result = $db->Query($query, array( $Student ));
+		$grade_counter = 0;
                 $credits_total = 0;
 
 		while( $grade = $db->FetchFirstRow($result) )
 		{
-
 			if( array_key_exists($grade["Grade"], $GPA_VAL) )
 			{
-				$query2 = "select Credits from CleanCourseSection where ClassID =%s";
-				$Credits = $db->Query($query2, array( $grade["ClassID"] ));
-				$credits = $db->FetchFirstRow($Credits);
-				
-				$numCredits = (float) $credits;
-				$grade_counter += ($GPA_VAL[$grade["Grade"]] * $numCredits );
-				$credits_total += $numCredits;
-				$numGradedClasses++;
+				$grade_counter += ($GPA_VAL[$grade["Grade"]] * $grade["Credits"] );
+				$credits_total += $grade["Credits"];
 			}
 		}
-		if($numGradedClasses == 0)
+		if($credits_total <= 0)
 		{
 			return 0;
 		}
-		else if($numGradedClasses > 0)
-		{
-			$this->GPA = $grade_counter / $credits_total ;
-                        $this->GPA = number_format($this->GPA,2);
-			return $this->GPA ;
-		}
+		return number_format($grade_counter / $credits_total, 2);
 	}
 }
 

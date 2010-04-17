@@ -80,7 +80,7 @@ if (isset($_REQUEST["action"]))
             case("viewTranscript"):
                     require_once ("StudentRecord.php");
                     $record = new StudentRecord();
-                    $record->showTranscript( $auth->getUsername() );
+                    $record->showTranscript( $auth->getUserID() );
                     break;
 
             case("getSequence"):

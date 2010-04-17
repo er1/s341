@@ -1,24 +1,24 @@
 <?php
 
 /*
-    PlanZilla: a free online school system.
-    Authentication - handles authentication and modification of user credentials
+ PlanZilla: a free online school system.
+ Authentication - handles authentication and modification of user credentials
 
-    Copyright (C) Marc-Andre Moreau <marcandre.moreau@gmail.com> 2010
-    Copyright (C) Andreas Eminidis <andrease@gmail.com> 2010
+ Copyright (C) Marc-Andre Moreau <marcandre.moreau@gmail.com> 2010
+ Copyright (C) Andreas Eminidis <andrease@gmail.com> 2010
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 session_start();
@@ -35,16 +35,14 @@ class Authentication
 	 * @brief User authentication level. The lower the more powerful.
 	 *
 	 * @arg -1 = Not authenticated.
-	 * @arg 0  = Administrator.
-	 * @arg 1  = Teacher.
-	 * @arg 2  = Student.
+	 * @arg 0 = Administrator.
+	 * @arg 1 = Teacher.
+	 * @arg 2 = Student.
 	 */
-    public $AuthenticationLevel;
+	public $AuthenticationLevel;
 
-
-    private $Username;
-    private $UserID;
-
+	private $Username;
+	private $UserID;
 
 	/**
 	 * @brief Class constructor..
@@ -58,6 +56,7 @@ class Authentication
 		{
 				$this->AuthenticationLevel = $_SESSION['AuthenticationLevel'];
 				$this->Username = $_SESSION['Username'];
+				$this->UserID = $_SESSION['UserID'];
 		}
 	}
 
@@ -118,9 +117,9 @@ class Authentication
 	public function EnforceCurrentLevel($targetLevel, $message = "")
 	{
 		if ($this->AuthenticationLevel <= -1 || !isset($this->AuthenticationLevel) || is_null($this->AuthenticationLevel))
-			dieNicely("You are just not logged in", array("reason"=>"notLoggedIn", "role"=> $this->AuthenticationLevel));  
+			dieNicely("You are just not logged in", array("reason"=>"notLoggedIn", "role"=> $this->AuthenticationLevel)); 
 		if ($this->AuthenticationLevel > $targetLevel)
-			dieNicely("You do not have enough privilege to perform this action", array("reason"=>"notEnoughLevel"));            
+			dieNicely("You do not have enough privilege to perform this action", array("reason"=>"notEnoughLevel"));	 
 	}
 	
 	/**
@@ -130,18 +129,16 @@ class Authentication
 	 */
 	public function CheckUserExistence($Username)
 	{
-                $this->EnforceCurrentLevel(2);
+		$this->EnforceCurrentLevel(2);
 		$this->ValidateUsername($Username);
 
 		global $db;
 
-		$query = 'select UserID from User where UserID=%s';
+		$query = 'SELECT COUNT(*) as count FROM User WHERE UserID = %s';
 		$result = $db->Query($query, array($Username));
+		$row = $db->FetchFirstRow($result);
 
-		if ($db->NumRows($result) < 1)
-			return False;
-		else
-			return True;
+		return ($row["count"] > 0);
 	}
 
 	/**
@@ -156,12 +153,12 @@ class Authentication
 		// $this->ValidateUsername($Username);
 		// $this->ValidatePassword($Password);
 
-       		global $db;
-        
-        	$query = "SELECT PasswordHash, PasswordSalt, UserRoleID, UserID FROM User WHERE Username = %s";
+ 		global $db;
+	
+		$query = "SELECT PasswordHash, PasswordSalt, UserRoleID, UserID FROM User WHERE Username = %s";
 		$result = $db->Query($query, $Username);
 		$pwInfo = $db->FetchFirstRow($result);
-                
+		
 		$PasswordHash = $pwInfo["PasswordHash"];
 		$PasswordSalt = $pwInfo["PasswordSalt"];
 		$UserRoleID = $pwInfo["UserRoleID"];
@@ -171,7 +168,7 @@ class Authentication
 		if ($UnknownHash == $PasswordHash)
 		{
 			$_SESSION['AuthenticationLevel'] = $this->AuthenticationLevel = $UserRoleID;
-                        $_SESSION['UserID'] = $this->UserID = $pwInfo["UserID"];
+			$_SESSION['UserID'] = $this->UserID = $pwInfo["UserID"];
 			$_SESSION['Username'] = $this->Username = $Username;
 			print(json_encode(array("status"=>"ok","loginError"=>"false","role"=>$UserRoleID)));
 			return true;
@@ -207,7 +204,7 @@ class Authentication
 	 */
 	public function CreateUser($Username, $Password, $FirstName, $LastName, $Type)
 	{
-                $this->EnforceCurrentLevel(0);
+		$this->EnforceCurrentLevel(0);
 
 		$this->ValidateUsername($Username);
 		$this->ValidatePassword($Password);
@@ -220,20 +217,20 @@ class Authentication
 
 		$UserID;
 
-                
-                // check whether the username is unique
-                $query = "SELECT Username FROM User WHERE Username=%s;";
-                $result_username = $db->Query($query, array($Username));
-                if($db->NumRows($result_username) > 0)
-                        $this->loginError("The username you have chose already exists. Try again.");
-                // make sure that UserID is unique
+		
+		// check whether the username is unique
+		$query = "SELECT Username FROM User WHERE Username=%s;";
+		$result_username = $db->Query($query, array($Username));
+		if($db->NumRows($result_username) > 0)
+			$this->loginError("The username you have chose already exists. Try again.");
+		// make sure that UserID is unique
 		do
-                {
+		{
 			$UserID = rand(1000001,9999999);
 			$query = "SELECT UserID FROM User WHERE UserID=%s;";
 			$result_userid = $db->Query($query, array($UserID));
 		}
-                while ($db->NumRows($result_userid) > 0);
+		while ($db->NumRows($result_userid) > 0);
 
 		$PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
 		$PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $Password));
@@ -261,18 +258,18 @@ class Authentication
 	 */
 	public function DeleteUser($Username)
 	{
-                $this->EnforceCurrentLevel(0);
+		$this->EnforceCurrentLevel(0);
 		$this->ValidateUsername($Username);
 
-                 
+		 
 		global $db;
 		
 		$query = "DELETE FROM User WHERE Username=%s;";
 		$db->Query($query, array($Username));
-                if($this->Username == $Username) // logout if a user deletes his own account
-                        $this->Logout();
+		if($this->Username == $Username) // logout if a user deletes his own account
+			$this->Logout();
 	}
-        
+	
 
 	/**
 	 *
@@ -282,20 +279,20 @@ class Authentication
 	 */
 	public function ChangePassword($Username, $NewPassword)
 	{
-      		$this->ValidateUsername($Username);
+ 		$this->ValidateUsername($Username);
 		$this->ValidatePassword($NewPassword);
-                // a password can be changed either by a supervisor or by the user who owns the account
-                if($this->Username != $Username)
-                        $this->EnforceCurrentLevel(2);
+		// a password can be changed either by a supervisor or by the user who owns the account
+		if($this->Username != $Username)
+			$this->EnforceCurrentLevel(2);
 
-                global $db;
+		global $db;
 
 
-                $PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
-                $PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $NewPassword));
+		$PasswordSalt = (rand(1000000, 999999999999999999999999999) % 9999999999999999);
+		$PasswordHash = hash('sha256', hash('sha256', $PasswordSalt . $NewPassword));
 
-                $query = 'UPDATE User SET PasswordHash = %s, PasswordSalt = %s WHERE Username = %s;';
-                $db->Query($query, array($PasswordHash, $PasswordSalt, $Username));
+		$query = 'UPDATE User SET PasswordHash = %s, PasswordSalt = %s WHERE Username = %s;';
+		$db->Query($query, array($PasswordHash, $PasswordSalt, $Username));
 	}
 
 
@@ -326,8 +323,8 @@ class Authentication
 		}
 		else
 		{
-			$query = 'select Name from Program where ProgramID=(select ProgramID from StudentProgram where UserID=(select UserID from User where Username=%s));';
-			$result = $db->Query($query, array($this->Username));
+			$query = 'SELECT Name FROM Program WHERE ProgramID = (SELECT ProgramID FROM StudentProgram WHERE UserID = %s);';
+			$result = $db->Query($query, array($this->UserID));
 			$program = $db->FetchFirstRow($result);
 			$response["program"] = $program["Name"];
 		}
@@ -343,6 +340,11 @@ class Authentication
 	public function getUsername()
 	{
 		return $this->Username;
+	}
+	
+	public function getUserID()
+	{
+		return $this->UserID;
 	}
 
 	private function loginError($reason)
